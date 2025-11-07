@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Buscar Inscripciones por Tipo</title>
+</head>
+<body>
+    <h1>Buscar Inscripciones por Tipo</h1>
+
+    <form method="GET" th:action="@{/findInscripcionesByTipo}">
+        <label for="tipo">Tipo de inscripción:</label>
+        <select name="tipo">
+            <option value="INDIVIDUAL">Individual</option>
+            <option value="FAMILIAR">Familiar</option>
+        </select>
+        <input type="submit" value="Buscar">
+    </form>
+
+    <div th:if="${inscripciones != null}">
+        <h2>Resultados:</h2>
+        <table border="1">
+            <tr>
+                <th>ID</th>
+                <th>Fecha de creación</th>
+                <th>Tipo</th>
+                <th>Cuota Actual</th>
+                <th>DNI Titular</th>
+            </tr>
+            <tr th:each="inscripcion : ${inscripciones}">
+                <td th:text="${inscripcion.id}">0</td>
+                <td th:text="${inscripcion.fechaCreacion}">NULL</td>
+                <td th:text="${inscripcion.tipo}">NULL</td>
+                <td th:text="${inscripcion.cuotaActual}">NULL</td>
+                <td th:text="${inscripcion.dniTitular}">NULL</td>
+            </tr>
+        </table>
+    </div>
+
+    <div th:if="${inscripciones == null or #lists.isEmpty(inscripciones)}">
+        <p>No se encontraron inscripciones del tipo seleccionado.</p>
+    </div>
+</body>
+</html>
