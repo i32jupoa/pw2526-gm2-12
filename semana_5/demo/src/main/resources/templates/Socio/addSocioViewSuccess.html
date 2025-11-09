@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Socio añadido</title>
+</head>
+<body>
+    <h1>Socio añadido correctamente</h1>
+    <p>El socio se ha guardado en la base de datos con éxito.</p>
+
+    <p><strong>DNI:</strong> <span th:text="${socio.dni}">NULL</span></p>
+    <p><strong>Nombre:</strong> <span th:text="${socio.nombre}">NULL</span></p>
+    <p><strong>Apellidos:</strong> <span th:text="${socio.apellidos}">NULL</span></p>
+    <p><strong>Fecha de Nacimiento:</strong> <span th:text="${socio.fechaNacimiento}">NULL</span></p>
+    <p><strong>Dirección:</strong> <span th:text="${socio.direccion}">NULL</span></p>
+    <p><strong>Fecha de Inscripción:</strong> <span th:text="${socio.fechaInscripcion}">NULL</span></p>
+    <p><strong>Es Titular:</strong> <span th:text="${socio.esTitular}">NULL</span></p>
+    <p><strong>Tiene Título Patrón:</strong> <span th:text="${socio.tieneTituloPatron}">NULL</span></p>
+
+    <a href="/addSocioForm">Añadir otro socio</a> |
+    <a href="/">Volver al inicio</a>
+</body>
+</html>
