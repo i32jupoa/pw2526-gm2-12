@@ -1,11 +1,82 @@
 <!DOCTYPE html>
-<html   xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <title>My first application</title>
-        <body>
-            <h1>Welcome to...</h1>
-            <img th:src="@{/images/UCO.png}" />
-        </body>
-    </head>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Gestión del Club Náutico</title>
+</head>
+<body>
+    <h1>Bienvenido al Sistema de Gestión del Club Náutico</h1>
+    <h2>Menú principal</h2>
+
+    <!-- ===================================== -->
+    <h3>Alquileres</h3>
+    <ol>
+        <li><a href="/addAlquiler">Añadir un alquiler</a></li>
+        <li><a href="/findAlquiler">Buscar alquiler por ID</a></li>
+        <li><a href="/deleteAlquiler">Eliminar un alquiler</a></li>
+    </ol>
+
+    <!-- ===================================== -->
+    <h3>Alquiler - Socios</h3>
+    <ol>
+        <li><a href="/addAlquilerSocio">Añadir relación Alquiler-Socio</a></li>
+        <li><a href="/findAlquilerSocioById">Buscar relaciones por ID de Alquiler</a></li>
+        <li><a href="/findAlquilerSocioByDni">Buscar relaciones por DNI de Socio</a></li>
+        <li><a href="/deleteAlquilerSocio">Eliminar relación Alquiler-Socio</a></li>
+    </ol>
+
+    <!-- ===================================== -->
+    <h3>Embarcaciones</h3>
+    <ol>
+        <li><a href="/addEmbarcacion">Añadir una embarcación</a></li>
+        <li><a href="/findEmbarcacionByMatricula">Buscar embarcación por matrícula</a></li>
+        <li><a href="/findEmbarcacionByTipo">Buscar embarcaciones por tipo</a></li>
+    </ol>
+
+    <!-- ===================================== -->
+    <h3>Inscripciones</h3>
+    <ol>
+        <li><a href="/addInscripcion">Añadir inscripción</a></li>
+        <li><a href="/findInscripcionById">Buscar inscripción por ID</a></li>
+        <li><a href="/findInscripcionesByTipo">Buscar inscripciones por tipo</a></li>
+    </ol>
+
+    <!-- ===================================== -->
+    <h3>Patrones</h3>
+    <ol>
+        <li><a href="/addPatron">Añadir patrón</a></li>
+        <li><a href="/findPatron">Buscar patrón por ID</a></li>
+        <li><a href="/updatePatron">Actualizar patrón</a></li>
+    </ol>
+
+    <!-- ===================================== -->
+    <h3>Reservas</h3>
+    <ol>
+        <li><a href="/addReserva">Añadir una reserva</a></li>
+        <li><a href="/findReserva">Buscar reserva por ID</a></li>
+        <li><a href="/deleteReserva">Eliminar reserva</a></li>
+    </ol>
+
+    <!-- ===================================== -->
+    <h3>Socios</h3>
+    <ol>
+        <li><a href="/addSocio">Añadir socio</a></li>
+        <li><a href="/findSocio">Buscar socio por DNI</a></li>
+        <li><a href="/deleteSocio">Eliminar socio</a></li>
+    </ol>
+
+    <!-- ===================================== -->
+    <h3>Socio - Inscripción</h3>
+    <ol>
+        <li><a href="/addSocioInscripcion">Añadir relación Socio-Inscripción</a></li>
+        <li><a href="/findSocioInscripcionById">Buscar relación por ID de inscripción</a></li>
+        <li><a href="/findSocioInscripcionByDni">Buscar relación por DNI de socio</a></li>
+        <li><a href="/deleteSocioInscripcion">Eliminar relación Socio-Inscripción</a></li>
+    </ol>
+
+    <hr/>
+
+    <img th:src="@{/images/UCO.png}" alt="Logo UCO" style="width:200px; margin-top:20px;"/>
+
+</body>
 </html>
