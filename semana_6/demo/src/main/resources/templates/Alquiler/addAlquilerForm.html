@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Añadir Alquiler</title>
+</head>
+<body>
+<h1>Añadir un nuevo alquiler</h1>
+
+<form th:action="@{/addAlquiler}" th:object="${alquiler}" method="post">
+    <p>
+        <label>ID Alquiler:</label>
+        <input type="number" th:field="*{id}" required/>
+    </p>
+    <p>
+        <label>ID Usuario:</label>
+        <input type="number" th:field="*{idUsuario}" required/>
+    </p>
+    <p>
+        <label>Descripción:</label>
+        <input type="text" th:field="*{descripcion}" required/>
+    </p>
+    <p>
+        <label>Fecha de inicio:</label>
+        <input type="date" th:field="*{fechaInicio}" required/>
+    </p>
+    <p>
+        <label>Fecha de fin:</label>
+        <input type="date" th:field="*{fechaFin}" required/>
+    </p>
+    <p>
+        <label>ID Vehículo:</label>
+        <input type="number" th:field="*{idVehiculo}" required/>
+    </p>
+    <p>
+        <label>Precio total:</label>
+        <input type="number" step="0.01" th:field="*{precioTotal}" required/>
+    </p>
+    <input type="submit" value="Guardar Alquiler"/>
+</form>
+
+<a href="/">Volver al inicio</a>
+</body>
+</html>

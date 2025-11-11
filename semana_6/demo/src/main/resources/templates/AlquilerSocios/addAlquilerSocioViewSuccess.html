@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Alquiler-Socio añadido</title>
+</head>
+<body>
+<h1>Relación Alquiler-Socio añadida correctamente</h1>
+<p>La relación se ha guardado en la base de datos con éxito.</p>
+
+<p><strong>ID Alquiler:</strong> <span th:text="${alquilerSocio.idAlquiler}">0</span></p>
+<p><strong>DNI Socio:</strong> <span th:text="${alquilerSocio.dniSocio}">NULL</span></p>
+
+<a href="/addAlquilerSocio">Añadir otra relación</a> |
+<a href="/">Volver al inicio</a>
+</body>
+</html>

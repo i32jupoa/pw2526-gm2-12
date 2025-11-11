@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Error al eliminar relación</title>
+</head>
+<body>
+<h1>Error al eliminar la relación Alquiler-Socio</h1>
+
+<p>No se encontró o no se pudo eliminar la relación:</p>
+<ul>
+    <li><strong>ID Alquiler:</strong> <span th:text="${idAlquiler}">0</span></li>
+    <li><strong>DNI Socio:</strong> <span th:text="${dni}">NULL</span></li>
+</ul>
+
+<a href="/">Volver al inicio</a>
+</body>
+</html>

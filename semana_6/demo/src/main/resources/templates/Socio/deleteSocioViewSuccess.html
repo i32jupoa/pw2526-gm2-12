@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Socio eliminado</title>
+</head>
+<body>
+    <h1>Socio eliminado correctamente</h1>
+    <p>El socio con DNI <strong th:text="${dni}">NULL</strong> ha sido eliminado de la base de datos.</p>
+    
+    <a href="/deleteSocioForm">Eliminar otro socio</a> |
+    <a href="/">Volver al inicio</a>
+</body>
+</html>
