@@ -1,4 +1,4 @@
-package es.uco.pw.demo;
+package main.java.es.uco.pw.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
