@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Listado de Patrones</title>
+</head>
+<body>
+  <h1>Listado de Patrones</h1>
+  {% if patrons %}
+  <table border="1">
+    <tr>
+      <th>ID</th>
+      <th>Nombre</th>
+      <th>Email</th>
+      <th>Teléfono</th>
+    </tr>
+    {% for patron in patrons %}
+    <tr>
+      <td>{{ patron.id }}</td>
+      <td>{{ patron.nombre }}</td>
+      <td>{{ patron.email }}</td>
+      <td>{{ patron.telefono }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p>No hay patrones registrados.</p>
+  {% endif %}
+</body>
+</html>

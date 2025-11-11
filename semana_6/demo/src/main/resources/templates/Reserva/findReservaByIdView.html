@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Consulta de Reserva</title>
+</head>
+<body>
+  <h1>Consulta de Reserva por ID</h1>
+  {% if reserva %}
+  <ul>
+    <li><strong>ID:</strong> {{ reserva.id }}</li>
+    <li><strong>Fecha:</strong> {{ reserva.fecha }}</li>
+    <li><strong>Patrón:</strong> {{ reserva.patron.nombre }}</li>
+    <li><strong>Detalles:</strong> {{ reserva.detalles }}</li>
+  </ul>
+  {% else %}
+  <p>No se encontró ninguna reserva con ese ID.</p>
+  {% endif %}
+</body>
+</html>
