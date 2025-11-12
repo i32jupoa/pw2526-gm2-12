@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Tipos de Embarcaciones</title>
+</head>
+<body>
+    <h1>Listado de tipos de embarcaciones</h1>
+
+    <table border="1">
+        <tr>
+            <th>Tipo</th>
+            <th>Cantidad</th>
+        </tr>
+        <tr th:each="resumen : ${resumenTipos}">
+            <td th:text="${resumen.tipo}">Tipo</td>
+            <td th:text="${resumen.cantidad}">0</td>
+        </tr>
+    </table>
+</body>
+</html>
