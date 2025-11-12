@@ -1,4 +1,4 @@
-package main.java.es.uco.pw.demo.controller.AlquilerSocios;
+package main.java.es.uco.pw.demo.controller.AlquilerSocio;
 
 import main.java.es.uco.pw.demo.model.AlquilerSocio;
 import main.java.es.uco.pw.demo.model.AlquilerSocioRepository;
@@ -10,16 +10,16 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.List;
 
 @Controller
-public class ShowAlquilerSociosController {
+public class ShowAlquilerSocioController {
 
     @Autowired
     private AlquilerSocioRepository alquilerSocioRepository;
 
-    @GetMapping("/showAlquilerSocios")
-    public ModelAndView showAlquilerSocios() {
-        List<AlquilerSocio> alquilerSocios = alquilerSocioRepository.findAll();
-        ModelAndView mv = new ModelAndView("showAlquilerSociosView");
-        mv.addObject("alquilerSocios", alquilerSocios);
+    @GetMapping("/showAlquilerSocio")
+    public ModelAndView showAlquilerSocio() {
+        List<AlquilerSocio> alquilerSocio = alquilerSocioRepository.findAll();
+        ModelAndView mv = new ModelAndView("showAlquilerSocioView");
+        mv.addObject("alquilerSocio", alquilerSocio);
         return mv;
     }
 }

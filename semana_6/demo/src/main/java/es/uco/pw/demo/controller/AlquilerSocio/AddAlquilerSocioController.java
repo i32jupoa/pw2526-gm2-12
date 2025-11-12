@@ -1,4 +1,4 @@
-package main.java.es.uco.pw.demo.controller.AlquilerSocios;
+package main.java.es.uco.pw.demo.controller.AlquilerSocio;
 
 import main.java.es.uco.pw.demo.model.AlquilerSocio;
 import main.java.es.uco.pw.demo.model.AlquilerSocioRepository;

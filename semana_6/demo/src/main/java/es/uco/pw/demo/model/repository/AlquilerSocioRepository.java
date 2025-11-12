@@ -31,9 +31,9 @@ public class AlquilerSocioRepository {
     }
 
 
-    public List<AlquilerSocio> findAllAlquilerSocios() {
+    public List<AlquilerSocio> findAllAlquilerSocio() {
         try {
-            String query = sqlQueries.getProperty("select-findAllAlquilerSocios");
+            String query = sqlQueries.getProperty("select-findAllAlquilerSocio");
             if (query != null) {
                 return jdbcTemplate.query(query, new RowMapper<AlquilerSocio>() {
                     @Override

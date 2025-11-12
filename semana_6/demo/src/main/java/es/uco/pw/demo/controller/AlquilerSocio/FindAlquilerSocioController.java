@@ -1,4 +1,4 @@
-package main.java.es.uco.pw.demo.controller.AlquilerSocios;
+package main.java.es.uco.pw.demo.controller.AlquilerSocio;
 
 import main.java.es.uco.pw.demo.model.AlquilerSocio;
 import main.java.es.uco.pw.demo.model.AlquilerSocioRepository;
@@ -26,7 +26,7 @@ public class FindAlquilerSocioController {
         List<AlquilerSocio> results = alquilerSocioRepository.findByIdAlquiler(idAlquiler);
         if (results != null && !results.isEmpty()) {
             mv = new ModelAndView("findAlquilerSocioByIdViewSuccess");
-            mv.addObject("alquilerSocios", results);
+            mv.addObject("alquilerSocio", results);
             mv.addObject("idAlquiler", idAlquiler);
         } else {
             mv = new ModelAndView("findAlquilerSocioByIdViewFail");
@@ -45,7 +45,7 @@ public class FindAlquilerSocioController {
         List<AlquilerSocio> results = alquilerSocioRepository.findByDniSocio(dni);
         if (results != null && !results.isEmpty()) {
             mv = new ModelAndView("findAlquilerSocioByDniViewSuccess");
-            mv.addObject("alquilerSocios", results);
+            mv.addObject("alquilerSocio", results);
             mv.addObject("dni", dni);
         } else {
             mv = new ModelAndView("findAlquilerSocioByDniViewFail");
