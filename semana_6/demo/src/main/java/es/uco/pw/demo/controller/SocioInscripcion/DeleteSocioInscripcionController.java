@@ -1,4 +1,4 @@
-package main.java.es.uco.pw.demo.controller.socioInscripcion;
+package main.java.es.uco.pw.demo.controller.SocioInscripcion;
 
 import main.java.es.uco.pw.demo.model.SocioInscripcionRepository;
 import org.springframework.beans.factory.annotation.Autowired;

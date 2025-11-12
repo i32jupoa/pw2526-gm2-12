@@ -1,6 +1,6 @@
-package es.uco.pw.demo.controller.socio;
+package main.java.es.uco.pw.demo.controller.Socio;
 
-import es.uco.pw.demo.model.SocioRepository;
+import main.java.es.uco.pw.demo.model.SocioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
