@@ -1,4 +1,4 @@
-package es.uco.pw.demo.controller.embarcacion;
+package es.uco.pw.demo.controller.Embarcacion;
 
 import java.util.ArrayList;
 import java.util.List;

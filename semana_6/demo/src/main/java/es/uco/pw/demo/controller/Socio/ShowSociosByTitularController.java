@@ -1,10 +1,10 @@
-package main.java.es.uco.pw.demo.controller.Socio;
+package es.uco.pw.demo.controller.Socio;
 
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
-import main.java.es.uco.pw.demo.model.Socio;
-import main.java.es.uco.pw.demo.model.SocioRepository;
+import es.uco.pw.demo.model.Socio;
+import es.uco.pw.demo.model.SocioRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller

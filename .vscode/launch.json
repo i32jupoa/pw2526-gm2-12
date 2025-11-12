@@ -9,6 +9,16 @@
             "projectName": "demo",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-DemoApplication<es.uco.pw-demo>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "es.uco.pw.demo.DemoApplication",
+            "projectName": "es.uco.pw-demo",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }

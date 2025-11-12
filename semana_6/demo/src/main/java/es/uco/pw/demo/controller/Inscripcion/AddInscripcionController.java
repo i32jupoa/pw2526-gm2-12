@@ -1,4 +1,4 @@
-package es.uco.pw.demo.controller.inscripcion;
+package es.uco.pw.demo.controller.Inscripcion;
 
 import java.time.LocalDate;
 
