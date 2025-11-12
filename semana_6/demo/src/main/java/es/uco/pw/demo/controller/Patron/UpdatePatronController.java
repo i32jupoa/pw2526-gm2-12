@@ -1,75 +1,70 @@
-package main.java.es.uco.pw.demo.controller.reserva;
+package es.uco.pw.demo.controller.patron;
 
-import main.java.es.uco.pw.demo.model.Reserva;
-import main.java.es.uco.pw.demo.model.ReservaRepository;
+import es.uco.pw.demo.model.Patron;
+import es.uco.pw.demo.model.PatronRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.bind.support.SessionStatus;
 
-import java.time.LocalDate;
-
 /**
- * Controlador que gestiona la actualización de reservas existentes.
- * Usa un flujo GET → POST como en los ejemplos de la profesora:
- * - GET: muestra un formulario con los datos actuales
- * - POST: procesa la actualización
+ * Controlador que gestiona la actualización de patrones existentes.
+ * Sigue un flujo GET → POST:
+ * - GET: muestra el formulario con los datos actuales del patrón
+ * - POST: procesa la actualización en la base de datos
  */
 @Controller
-@SessionAttributes("reserva")
-public class UpdateReservaController {
+@SessionAttributes("patron")
+public class UpdatePatronController {
 
     @Autowired
-    private ReservaRepository reservaRepository;
+    private PatronRepository patronRepository;
 
-    /** 
-     * Paso 1: Mostrar el formulario de actualización 
-     * (carga los datos actuales de la reserva)
+    /**
+     * Paso 1: Mostrar el formulario de actualización del patrón
      */
-    @GetMapping("/updateReserva")
-    public ModelAndView showUpdateForm(@RequestParam("id") int id) {
-        reservaRepository.setSQLQueriesFileName("src/main/resources/sql/reserva_queries.sql");
-        Reserva reserva = reservaRepository.findReservaById(id);
+    @GetMapping("/updatePatron")
+    public ModelAndView showUpdateForm(@RequestParam("dni") String dni) {
+        patronRepository.setSQLQueriesFileName("src/main/resources/sql/patron_queries.sql");
+        Patron patron = patronRepository.findPatronByDni(dni);
 
         ModelAndView mv;
-        if (reserva != null) {
-            mv = new ModelAndView("updateReservaForm");
-            mv.addObject("reserva", reserva);
+        if (patron != null) {
+            mv = new ModelAndView("updatePatronForm");
+            mv.addObject("patron", patron);
         } else {
-            mv = new ModelAndView("findReservaViewFail");
+            mv = new ModelAndView("findPatronViewFail");
         }
         return mv;
     }
 
-    /** 
+    /**
      * Paso 2: Procesar los datos del formulario (HTTP POST)
      */
-    @PostMapping("/updateReserva")
+    @PostMapping("/updatePatron")
     public ModelAndView processUpdate(
-            @ModelAttribute("reserva") Reserva reservaActualizada,
+            @ModelAttribute("patron") Patron patronActualizado,
             SessionStatus sessionStatus) {
 
-        reservaRepository.setSQLQueriesFileName("src/main/resources/sql/reserva_queries.sql");
+        patronRepository.setSQLQueriesFileName("src/main/resources/sql/patron_queries.sql");
 
-        // No existe método updateReserva en tu repositorio, pero podemos reutilizar addReserva()
-        // si el SQL tiene un "INSERT ... ON DUPLICATE KEY UPDATE" o puedes crear update-reserva
         boolean updated = false;
         try {
-            String query = "update-reserva"; // key del archivo SQL
-            updated = reservaRepository.addReserva(reservaActualizada);
+            // Se asume que el PatronRepository tiene un método updatePatron()
+            updated = patronRepository.updatePatron(patronActualizado);
         } catch (Exception e) {
-            System.err.println("Error al actualizar reserva: " + e.getMessage());
+            System.err.println("Error al actualizar patrón: " + e.getMessage());
         }
 
         sessionStatus.setComplete();
 
         ModelAndView mv;
         if (updated) {
-            mv = new ModelAndView("updateReservaViewSuccess");
-            mv.addObject("reserva", reservaActualizada);
+            mv = new ModelAndView("updatePatronViewSuccess");
+            mv.addObject("patron", patronActualizado);
         } else {
-            mv = new ModelAndView("updateReservaViewFail");
+            mv = new ModelAndView("updatePatronViewFail");
         }
         return mv;
     }

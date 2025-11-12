@@ -1,7 +1,7 @@
-package main.java.es.uco.pw.demo.controller.patron;
+package es.uco.pw.demo.controller.patron;
 
-import main.java.es.uco.pw.demo.model.Patron;
-import main.java.es.uco.pw.demo.model.PatronRepository;
+import es.uco.pw.demo.model.Patron;
+import es.uco.pw.demo.model.PatronRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

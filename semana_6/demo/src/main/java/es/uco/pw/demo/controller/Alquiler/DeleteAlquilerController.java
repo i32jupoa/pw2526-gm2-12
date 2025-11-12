@@ -1,6 +1,6 @@
-package main.java.es.uco.pw.demo.controller.Alquiler;
+package es.uco.pw.demo.controller.Alquiler;
 
-import main.java.es.uco.pw.demo.model.AlquilerRepository;
+import es.uco.pw.demo.model.AlquilerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
