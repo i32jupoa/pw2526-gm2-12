@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Listado de Alquileres</title>
+</head>
+<body>
+    <h1>Listado de todos los alquileres</h1>
+
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>ID Socio</th>
+            <th>Descripción</th>
+            <th>Fecha Inicio</th>
+            <th>Fecha Fin</th>
+            <th>ID Instalación</th>
+            <th>Precio</th>
+        </tr>
+        <tr th:each="alquiler : ${alquileres}">
+            <td th:text="${alquiler.id}">1</td>
+            <td th:text="${alquiler.idSocio}">101</td>
+            <td th:text="${alquiler.descripcion}">Cancha de tenis</td>
+            <td th:text="${alquiler.fechaInicio}">2025-11-01</td>
+            <td th:text="${alquiler.fechaFin}">2025-11-02</td>
+            <td th:text="${alquiler.idInstalacion}">3</td>
+            <td th:text="${alquiler.precio}">50.0</td>
+        </tr>
+    </table>
+
+    <a href="/">Volver al inicio</a>
+</body>
+</html>
