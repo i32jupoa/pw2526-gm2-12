@@ -1,6 +1,6 @@
-package main.java.es.uco.pw.demo.controller.reserva;
+package es.uco.pw.demo.controller.reserva;
 
-import main.java.es.uco.pw.demo.model.ReservaRepository;
+import es.uco.pw.demo.model.ReservaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

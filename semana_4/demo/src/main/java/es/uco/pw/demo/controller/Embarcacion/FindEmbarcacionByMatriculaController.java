@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import es.uco.pw.demo.model.Embarcacion;
-import main.java.es.uco.pw.demo.model.EmbarcacionRepository;
+import es.uco.pw.demo.model.EmbarcacionRepository;
 
 @Controller
 public class FindEmbarcacionByMatriculaController {

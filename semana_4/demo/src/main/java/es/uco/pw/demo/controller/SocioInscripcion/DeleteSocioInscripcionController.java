@@ -1,6 +1,6 @@
-package main.java.es.uco.pw.demo.controller.socioInscripcion;
+package es.uco.pw.demo.controller.socioInscripcion;
 
-import main.java.es.uco.pw.demo.model.SocioInscripcionRepository;
+import es.uco.pw.demo.model.SocioInscripcionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
