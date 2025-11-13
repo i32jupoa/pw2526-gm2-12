@@ -20,23 +20,43 @@ public class AddAlquilerController {
     @Autowired
     private AlquilerRepository alquilerRepository;
 
+    /**
+     * Mostrar formulario para añadir un nuevo alquiler
+     */
     @GetMapping("/addAlquiler")
     public ModelAndView showAddAlquilerForm() {
         ModelAndView modelAndView = new ModelAndView("alquiler/addAlquilerForm");
-        modelAndView.addObject("alquiler", new Alquiler(0, 0, "", LocalDate.now(), LocalDate.now(), 0, 0.0));
+        // Creamos un objeto vacío con valores por defecto
+        modelAndView.addObject("alquiler", new Alquiler(
+                0,               // id
+                0,               // idInscripcion
+                "",              // matricula
+                LocalDate.now(), // fechaInicio
+                LocalDate.now(), // fechaFin
+                0,               // plazasReservadas
+                0.0              // precioTotal
+        ));
         return modelAndView;
     }
 
+    /**
+     * Procesar el formulario y añadir el alquiler
+     */
     @PostMapping("/addAlquiler")
-    public ModelAndView processAddAlquiler(@ModelAttribute("alquiler") Alquiler alquiler, SessionStatus status) {
+    public ModelAndView processAddAlquiler(@ModelAttribute("alquiler") Alquiler alquiler,
+                                           SessionStatus status) {
         ModelAndView modelAndView;
+
         boolean success = alquilerRepository.addAlquiler(alquiler);
+
         if (success) {
             modelAndView = new ModelAndView("alquiler/addAlquilerViewSuccess");
             modelAndView.addObject("alquiler", alquiler);
         } else {
-            modelAndView = new ModelAndView("alquiler/addAlquilerViewFail"); // ← corregido
+            modelAndView = new ModelAndView("alquiler/addAlquilerViewFail");
         }
+
+        // Limpiamos la sesión para no mantener el objeto alquiler
         status.setComplete();
         return modelAndView;
     }
