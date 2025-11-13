@@ -13,12 +13,13 @@ public class DeleteAlquilerController {
     @Autowired
     private AlquilerRepository alquilerRepository;
 
-    /**
-     * Elimina un alquiler por su id pasado como parámetro en la URL:
-     * /deleteAlquiler?id=123
-     */
     @GetMapping("/deleteAlquiler")
-    public ModelAndView deleteAlquiler(@RequestParam("id") int id) {
+    public ModelAndView showDeleteForm() {
+        return new ModelAndView("alquiler/deleteAlquiler");
+    }
+
+    @GetMapping("/deleteAlquiler/process")
+    public ModelAndView processDelete(@RequestParam("id") int id) {
         ModelAndView mv;
         boolean deleted = alquilerRepository.deleteAlquilerById(id);
         if (deleted) {

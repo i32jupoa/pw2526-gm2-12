@@ -5,6 +5,7 @@ import es.uco.pw.demo.model.repository.AlquilerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -15,7 +16,12 @@ public class FindAlquilerController {
     private AlquilerRepository alquilerRepository;
 
     @GetMapping("/findAlquiler")
-    public ModelAndView findAlquiler(@RequestParam("id") int id) {
+    public ModelAndView showForm() {
+        return new ModelAndView("alquiler/findAlquiler");
+    }
+
+    @PostMapping("/findAlquiler")
+    public ModelAndView processForm(@RequestParam("id") int id) {
         ModelAndView modelAndView;
         Alquiler alquiler = alquilerRepository.findAlquilerById(id);
         if (alquiler != null) {

@@ -29,7 +29,7 @@ public class AlquilerRepository {
      * Carga todas las queries desde sql.properties en resources
      */
     private void loadSQLQueries() {
-        try (InputStream is = getClass().getClassLoader().getResourceAsStream("sql.properties")) {
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream("db/sql.properties")) {
             if (is == null) {
                 throw new IOException("No se encontró el archivo sql.properties en resources.");
             }
