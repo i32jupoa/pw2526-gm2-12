@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Añadir socio</title>
+</head>
+<body>
+<h1>Añadir nuevo socio</h1>
+
+<form action="/addSocio" method="post">
+    DNI: <input type="text" name="dni"><br>
+    Nombre: <input type="text" name="nombre"><br>
+    Apellidos: <input type="text" name="apellidos"><br>
+    Fecha Nacimiento: <input type="date" name="fechaNacimiento"><br>
+    Dirección: <input type="text" name="direccion"><br>
+    Es Titular: <input type="checkbox" name="esTitular"><br>
+    Título de Patrón: <input type="checkbox" name="tieneTituloPatron"><br>
+
+    <button type="submit">Guardar</button>
+</form>
+
+<a href="/">Volver al inicio</a>
+</body>
+</html>

@@ -13,9 +13,15 @@ public class DeleteSocioController {
     @Autowired
     private SocioRepository socioRepository;
 
+    @GetMapping("/deleteSocioForm")
+    public String showDeleteForm() {
+        return "socio/deleteSocioForm";
+    }
+
     @GetMapping("/deleteSocio")
     public ModelAndView deleteSocio(@RequestParam("dni") String dni) {
-        socioRepository.setSQLQueriesFileName("src/main/resources/sql/socio_queries.sql");
+        socioRepository.setSQLQueriesFileName("src/main/resources/db/sql.properties");
+
         boolean deleted = socioRepository.deleteSocio(dni);
 
         ModelAndView mv;

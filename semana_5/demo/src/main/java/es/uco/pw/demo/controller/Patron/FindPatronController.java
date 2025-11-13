@@ -26,7 +26,7 @@ public class FindPatronController {
         }
         
         // Si hay DNI, buscar el patrón
-        patronRepository.setSQLQueriesFileName("src/main/resources/sql/patron_queries.sql");
+        patronRepository.setSQLQueriesFileName("src/main/resources/db/sql.properties");
         Patron patron = patronRepository.findPatronByDni(dni);
 
         if (patron != null) {

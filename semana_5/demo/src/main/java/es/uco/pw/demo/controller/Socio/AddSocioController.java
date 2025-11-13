@@ -4,7 +4,7 @@ import es.uco.pw.demo.model.domain.Socio;
 import es.uco.pw.demo.model.repository.SocioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDate;
@@ -15,29 +15,41 @@ public class AddSocioController {
     @Autowired
     private SocioRepository socioRepository;
 
-    @GetMapping("/addSocio")
-    public ModelAndView addSocio() {
+    @GetMapping("/addSocioForm")
+    public String mostrarFormulario() {
+        return "socio/addSocioForm";
+    }
+
+    @PostMapping("/addSocio")
+    public ModelAndView addSocio(
+            @RequestParam String dni,
+            @RequestParam String nombre,
+            @RequestParam String apellidos,
+            @RequestParam String fechaNacimiento,
+            @RequestParam String direccion,
+            @RequestParam(required = false, defaultValue = "false") boolean esTitular,
+            @RequestParam(required = false, defaultValue = "false") boolean tieneTituloPatron
+    ) {
         Socio socio = new Socio(
-                "12345678A",
-                "Juan",
-                "García López",
-                LocalDate.of(1985, 5, 15),
-                "Calle Mayor 123, Madrid",
+                dni,
+                nombre,
+                apellidos,
+                LocalDate.parse(fechaNacimiento),
+                direccion,
                 LocalDate.now(),
-                true,
-                false
+                esTitular,
+                tieneTituloPatron
         );
 
         socioRepository.setSQLQueriesFileName("src/main/resources/sql/socio_queries.sql");
         boolean success = socioRepository.addSocio(socio);
 
-        ModelAndView mv;
         if (success) {
-            mv = new ModelAndView("socio/addSocioViewSuccess");
+            ModelAndView mv = new ModelAndView("socio/addSocioViewSuccess");
             mv.addObject("socio", socio);
+            return mv;
         } else {
-            mv = new ModelAndView("socio/addSocioViewFail");
+            return new ModelAndView("socio/addSocioViewFail");
         }
-        return mv;
     }
 }

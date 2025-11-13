@@ -41,7 +41,7 @@ public class AddPatronController {
                 fechaExpedicionTitulo
         );
 
-        patronRepository.setSQLQueriesFileName("src/main/resources/sql/patron_queries.sql");
+        patronRepository.setSQLQueriesFileName("src/main/resources/db/sql.properties");
         boolean success = patronRepository.addPatron(patron);
 
         ModelAndView mv;

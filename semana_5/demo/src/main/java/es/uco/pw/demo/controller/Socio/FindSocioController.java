@@ -14,18 +14,22 @@ public class FindSocioController {
     @Autowired
     private SocioRepository socioRepository;
 
+    @GetMapping("/findSocioForm")
+    public String mostrarFormulario() {
+        return "socio/findSocioForm";
+    }
+
     @GetMapping("/findSocio")
     public ModelAndView findSocio(@RequestParam("dni") String dni) {
-        socioRepository.setSQLQueriesFileName("src/main/resources/sql/socio_queries.sql");
+        socioRepository.setSQLQueriesFileName("src/main/resources/db/sql.properties");
         Socio socio = socioRepository.findSocioByDni(dni);
 
-        ModelAndView mv;
         if (socio != null) {
-            mv = new ModelAndView("socio/findSocioViewSuccess");
+            ModelAndView mv = new ModelAndView("socio/findSocioViewSuccess");
             mv.addObject("socio", socio);
+            return mv;
         } else {
-            mv = new ModelAndView("socio/findSocioViewFail");
+            return new ModelAndView("socio/findSocioViewFail");
         }
-        return mv;
     }
 }
