@@ -1,18 +1,19 @@
-package es.uco.pw.demo.model;
+package es.uco.pw.demo.model.repository;
 
+import es.uco.pw.demo.model.domain.TipoEmbarcacion;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
 @Repository
 public class TipoEmbarcacionRepository {
@@ -38,8 +39,8 @@ public class TipoEmbarcacionRepository {
                 return jdbcTemplate.query(query, new RowMapper<TipoEmbarcacion>() {
                     @Override
                     public TipoEmbarcacion mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        String tipo = rs.getString("tipo");
-                        return TipoEmbarcacion.valueOf(tipo);
+                        String tipoStr = rs.getString("tipo");
+                        return TipoEmbarcacion.valueOf(tipoStr);
                     }
                 });
             } else {

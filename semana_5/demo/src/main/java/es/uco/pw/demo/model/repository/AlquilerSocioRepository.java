@@ -1,5 +1,6 @@
-package es.uco.pw.demo.model;
+package es.uco.pw.demo.model.repository;
 
+import es.uco.pw.demo.model.domain.AlquilerSocio;
 import jakarta.annotation.PostConstruct;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

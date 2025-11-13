@@ -1,4 +1,4 @@
-package es.uco.pw.demo.model;
+package es.uco.pw.demo.model.domain;
 
 
 import java.time.LocalDate;
