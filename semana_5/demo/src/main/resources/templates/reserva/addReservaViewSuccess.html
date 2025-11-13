@@ -9,14 +9,14 @@
     <p>La reserva se ha guardado en la base de datos con éxito.</p>
 
     <p><strong>ID:</strong> <span th:text="${reserva.id}">0</span></p>
-    <p><strong>DNI del Patrón:</strong> <span th:text="${reserva.dniPatron}">NULL</span></p>
-    <p><strong>Matrícula de la embarcación:</strong> <span th:text="${reserva.matriculaEmbarcacion}">NULL</span></p>
-    <p><strong>Fecha de reserva:</strong> <span th:text="${reserva.fechaReserva}">NULL</span></p>
-    <p><strong>Duración (días):</strong> <span th:text="${reserva.duracionDias}">0</span></p>
-    <p><strong>Descripción:</strong> <span th:text="${reserva.descripcion}">NULL</span></p>
+    <p><strong>DNI del Socio:</strong> <span th:text="${reserva.dniSocio}">NULL</span></p>
+    <p><strong>Matrícula de la embarcación:</strong> <span th:text="${reserva.matricula}">NULL</span></p>
+    <p><strong>Fecha de reserva:</strong> <span th:text="${reserva.fecha}">NULL</span></p>
+    <p><strong>Plazas Reservadas:</strong> <span th:text="${reserva.plazasReservadas}">0</span></p>
+    <p><strong>Propósito:</strong> <span th:text="${reserva.proposito}">NULL</span></p>
     <p><strong>Precio total:</strong> <span th:text="${reserva.precioTotal}">0.0</span></p>
 
-    <a href="/addReserva">Añadir otra reserva</a> |
+    <a href="/addReservaForm">Añadir otra reserva</a> |
     <a href="/">Volver al inicio</a>
 </body>
 </html>

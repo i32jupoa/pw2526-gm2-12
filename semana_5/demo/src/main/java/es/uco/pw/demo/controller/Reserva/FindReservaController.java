@@ -15,11 +15,20 @@ public class FindReservaController {
     private ReservaRepository reservaRepository;
 
     @GetMapping("/findReserva")
-    public ModelAndView findReserva(@RequestParam("id") int id) {
+    public ModelAndView findReserva(@RequestParam(value = "id", required = false) Integer id) {
+        ModelAndView mv;
+        
+        // Si no hay ID, mostrar el formulario vacío
+        if (id == null) {
+            mv = new ModelAndView("reserva/findReservaViewSuccess");
+            mv.addObject("reserva", null);
+            return mv;
+        }
+        
+        // Si hay ID, buscar la reserva
         reservaRepository.setSQLQueriesFileName("src/main/resources/sql/reserva_queries.sql");
         Reserva reserva = reservaRepository.findReservaById(id);
 
-        ModelAndView mv;
         if (reserva != null) {
             mv = new ModelAndView("reserva/findReservaViewSuccess");
             mv.addObject("reserva", reserva);
