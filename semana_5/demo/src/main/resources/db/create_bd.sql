@@ -42,7 +42,7 @@ DROP TABLE IF EXISTS `Inscripcion`;
 CREATE TABLE IF NOT EXISTS `Inscripcion` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `fechaCreacion` DATE NOT NULL,
-  `tipo` ENUM('INDIVIDUAL','FAMILIAR'),
+  `tipo` ENUM('COMPLETA','INFANTIL','ADULTO'),
   `cuotaActual` DOUBLE NOT NULL,
   `dniTitular` VARCHAR(15) NOT NULL,
   PRIMARY KEY (`id`),

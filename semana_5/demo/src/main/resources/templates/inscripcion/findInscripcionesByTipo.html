@@ -9,14 +9,16 @@
 
     <form method="GET" th:action="@{/findInscripcionesByTipo}">
         <label for="tipo">Tipo de inscripción:</label>
-        <select name="tipo">
-            <option value="INDIVIDUAL">Individual</option>
-            <option value="FAMILIAR">Familiar</option>
+        <select id="tipo" name="tipo" required>
+            <option value="">Seleccione un tipo</option>
+            <option value="COMPLETA">Completa</option>
+            <option value="INFANTIL">Infantil</option>
+            <option value="ADULTO">Adulto</option>
         </select>
         <input type="submit" value="Buscar">
     </form>
 
-    <div th:if="${inscripciones != null}">
+    <div th:if="${inscripciones != null and !inscripciones.isEmpty()}">
         <h2>Resultados:</h2>
         <table border="1">
             <tr>
@@ -36,8 +38,11 @@
         </table>
     </div>
 
-    <div th:if="${inscripciones == null or #lists.isEmpty(inscripciones)}">
+    <div th:if="${inscripciones == null or inscripciones.isEmpty()}">
         <p>No se encontraron inscripciones del tipo seleccionado.</p>
     </div>
+
+    <br>
+    <a href="/">Volver al inicio</a>
 </body>
 </html>

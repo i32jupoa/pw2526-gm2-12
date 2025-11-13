@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Añadir Inscripción</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>Añadir Nueva Inscripción</h1>
+    
+    <form action="/addInscripcion" method="get">
+        <div>
+            <label for="tipo">Tipo de Inscripción:</label>
+            <select id="tipo" name="tipo" required>
+                <option value="">Seleccione un tipo</option>
+                <option value="COMPLETA">Completa</option>
+                <option value="INFANTIL">Infantil</option>
+                <option value="ADULTO">Adulto</option>
+                <!-- Añade aquí los valores del enum TipoInscripcion -->
+            </select>
+        </div>
+        
+        <div>
+            <label for="cuotaActual">Cuota Actual (€):</label>
+            <input type="number" id="cuotaActual" name="cuotaActual" 
+                   step="0.01" min="0" required>
+        </div>
+        
+        <div>
+            <label for="dniTitular">DNI del Titular:</label>
+            <input type="text" id="dniTitular" name="dniTitular" 
+                   pattern="[0-9]{8}[A-Za-z]" 
+                   placeholder="12345678A" required>
+        </div>
+        
+        <button type="submit">Añadir Inscripción</button>
+        <a href="/">Cancelar</a>
+    </form>
+</body>
+</html>

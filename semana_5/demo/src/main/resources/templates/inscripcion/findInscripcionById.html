@@ -9,7 +9,7 @@
 
     <form method="GET" th:action="@{/findInscripcionById}">
         <label for="id">ID de inscripción:</label>
-        <input type="number" name="id" required>
+        <input type="number" id="id" name="id" required>
         <input type="submit" value="Buscar">
     </form>
 
@@ -22,8 +22,7 @@
         <p><strong>DNI Titular:</strong> <span th:text="${inscripcion.dniTitular}">NULL</span></p>
     </div>
 
-    <div th:if="${inscripcion == null}">
-        <p>No se ha encontrado ninguna inscripción con ese ID.</p>
-    </div>
+    <br>
+    <a href="/">Volver al inicio</a>
 </body>
 </html>
