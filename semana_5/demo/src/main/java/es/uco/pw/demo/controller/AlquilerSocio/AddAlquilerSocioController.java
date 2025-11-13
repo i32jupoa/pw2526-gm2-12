@@ -1,4 +1,4 @@
-package es.uco.pw.demo.controller.AlquilerSocios;
+package es.uco.pw.demo.controller.AlquilerSocio;
 
 import es.uco.pw.demo.model.AlquilerSocio;
 import es.uco.pw.demo.model.AlquilerSocioRepository;

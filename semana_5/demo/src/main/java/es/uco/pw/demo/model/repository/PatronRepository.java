@@ -1,4 +1,4 @@
-package main.java.es.uco.pw.demo.model;
+package es.uco.pw.demo.model;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

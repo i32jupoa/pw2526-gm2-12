@@ -1,4 +1,4 @@
-package es.uco.pw.demo.controller.inscripcion;
+package es.uco.pw.demo.controller.Inscripcion;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
