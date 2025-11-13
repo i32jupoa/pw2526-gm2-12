@@ -31,10 +31,10 @@ public class AddPatronController {
 
         ModelAndView mv;
         if (success) {
-            mv = new ModelAndView("addPatronViewSuccess");
+            mv = new ModelAndView("patron/addPatronViewSuccess");
             mv.addObject("patron", patron);
         } else {
-            mv = new ModelAndView("addPatronViewFail");
+            mv = new ModelAndView("patron/addPatronViewFail");
         }
         return mv;
     }

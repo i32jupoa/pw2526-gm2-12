@@ -23,11 +23,11 @@ public class DeleteAlquilerSocioController {
         ModelAndView mv;
         boolean deleted = alquilerSocioRepository.deleteAlquilerSocio(idAlquiler, dni);
         if (deleted) {
-            mv = new ModelAndView("deleteAlquilerSocioViewSuccess");
+            mv = new ModelAndView("alquilerSocios/deleteAlquilerSocioViewSuccess");
             mv.addObject("idAlquiler", idAlquiler);
             mv.addObject("dni", dni);
         } else {
-            mv = new ModelAndView("deleteAlquilerSocioViewFail");
+            mv = new ModelAndView("alquilerSocios/deleteAlquilerSocioViewFail");
             mv.addObject("idAlquiler", idAlquiler);
             mv.addObject("dni", dni);
         }

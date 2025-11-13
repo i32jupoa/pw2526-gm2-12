@@ -22,7 +22,7 @@ public class FindInscripcionByIdController {
     @GetMapping("/findInscripcionById")
     public ModelAndView findInscripcionById(@RequestParam("id") int id){
         Inscripcion inscripcion = inscripcionRepository.findInscripcionById(id);
-        ModelAndView model = new ModelAndView("findInscripcionById.html");
+        ModelAndView model = new ModelAndView("inscripcion/findInscripcionById.html");
         model.addObject("inscripcion", inscripcion);
         return model;
     }

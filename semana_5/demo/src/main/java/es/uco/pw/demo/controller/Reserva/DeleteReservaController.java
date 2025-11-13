@@ -20,10 +20,10 @@ public class DeleteReservaController {
 
         ModelAndView mv;
         if (deleted) {
-            mv = new ModelAndView("deleteReservaViewSuccess");
+            mv = new ModelAndView("reserva/deleteReservaViewSuccess");
             mv.addObject("id", id);
         } else {
-            mv = new ModelAndView("deleteReservaViewFail");
+            mv = new ModelAndView("reserva/deleteReservaViewFail");
         }
         return mv;
     }

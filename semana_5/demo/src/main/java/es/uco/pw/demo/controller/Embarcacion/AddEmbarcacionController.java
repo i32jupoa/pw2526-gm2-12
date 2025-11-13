@@ -42,9 +42,9 @@ public class AddEmbarcacionController {
 
         String nextPage;
         if (success) {
-            nextPage = "addEmbarcacionViewSuccess.html";
+            nextPage = "embarcacion/addEmbarcacionViewSuccess.html";
         } else {
-            nextPage = "addEmbarcacionViewFail.html";
+            nextPage = "embarcacion/addEmbarcacionViewFail.html";
         }
         return nextPage;
     }

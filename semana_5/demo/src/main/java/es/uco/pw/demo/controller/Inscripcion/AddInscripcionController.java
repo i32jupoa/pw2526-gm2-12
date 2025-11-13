@@ -39,9 +39,9 @@ public class AddInscripcionController {
         boolean success = inscripcionRepository.addInscripcion(inscripcion);
         String nextPage;
         if(success)
-            nextPage = "addInscripcionViewSuccess.html";
+            nextPage = "inscripcion/addInscripcionViewSuccess.html";
         else
-            nextPage = "addInscripcionViewFail.html";
+            nextPage = "inscripcion/addInscripcionViewFail.html";
         return nextPage;
     }
 }

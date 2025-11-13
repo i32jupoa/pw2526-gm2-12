@@ -23,7 +23,7 @@ public class FindEmbarcacionByMatriculaController {
     public ModelAndView findEmbarcacionByMatricula(@RequestParam("matricula") String matricula) {
         Embarcacion embarcacion = embarcacionRepository.findEmbarcacionByMatricula(matricula);
 
-        ModelAndView model = new ModelAndView("findEmbarcacionByMatricula.html");
+        ModelAndView model = new ModelAndView("embarcacion/findEmbarcacionByMatricula.html");
         model.addObject("embarcacion", embarcacion);
 
         return model;

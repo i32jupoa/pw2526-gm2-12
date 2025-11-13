@@ -32,10 +32,10 @@ public class AddReservaController {
 
         ModelAndView mv;
         if (success) {
-            mv = new ModelAndView("addReservaViewSuccess");
+            mv = new ModelAndView("reserva/addReservaViewSuccess");
             mv.addObject("reserva", reserva);
         } else {
-            mv = new ModelAndView("addReservaViewFail");
+            mv = new ModelAndView("reserva/addReservaViewFail");
         }
         return mv;
     }

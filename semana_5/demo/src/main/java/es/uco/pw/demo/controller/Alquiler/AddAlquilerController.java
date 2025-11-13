@@ -22,7 +22,7 @@ public class AddAlquilerController {
 
     @GetMapping("/addAlquiler")
     public ModelAndView showAddAlquilerForm() {
-        ModelAndView modelAndView = new ModelAndView("addAlquilerForm");
+        ModelAndView modelAndView = new ModelAndView("alquiler/addAlquilerForm");
         modelAndView.addObject("alquiler", new Alquiler(0, 0, "", LocalDate.now(), LocalDate.now(), 0, 0.0));
         return modelAndView;
     }
@@ -32,10 +32,10 @@ public class AddAlquilerController {
         ModelAndView modelAndView;
         boolean success = alquilerRepository.addAlquiler(alquiler);
         if (success) {
-            modelAndView = new ModelAndView("addAlquilerViewSuccess");
+            modelAndView = new ModelAndView("alquiler/addAlquilerViewSuccess");
             modelAndView.addObject("alquiler", alquiler);
         } else {
-            modelAndView = new ModelAndView("addAlquilerViewFail");
+            modelAndView = new ModelAndView("alquiler/addAlquilerViewFail"); // ← corregido
         }
         status.setComplete();
         return modelAndView;

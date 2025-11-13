@@ -37,7 +37,7 @@ public class UpdateReservaController {
             mv = new ModelAndView("updateReservaForm");
             mv.addObject("reserva", reserva);
         } else {
-            mv = new ModelAndView("findReservaViewFail");
+            mv = new ModelAndView("patron/findReservaViewFail");
         }
         return mv;
     }
@@ -66,10 +66,10 @@ public class UpdateReservaController {
 
         ModelAndView mv;
         if (updated) {
-            mv = new ModelAndView("updateReservaViewSuccess");
+            mv = new ModelAndView("patron/updateReservaViewSuccess");
             mv.addObject("reserva", reservaActualizada);
         } else {
-            mv = new ModelAndView("updateReservaViewFail");
+            mv = new ModelAndView("patron/updateReservaViewFail");
         }
         return mv;
     }

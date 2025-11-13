@@ -22,10 +22,10 @@ public class DeleteAlquilerController {
         ModelAndView mv;
         boolean deleted = alquilerRepository.deleteAlquilerById(id);
         if (deleted) {
-            mv = new ModelAndView("deleteAlquilerViewSuccess");
+            mv = new ModelAndView("alquiler/deleteAlquilerViewSuccess");
             mv.addObject("id", id);
         } else {
-            mv = new ModelAndView("deleteAlquilerViewFail");
+            mv = new ModelAndView("alquiler/deleteAlquilerViewFail");
             mv.addObject("id", id);
         }
         return mv;

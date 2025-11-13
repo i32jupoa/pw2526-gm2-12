@@ -33,10 +33,10 @@ public class AddSocioController {
 
         ModelAndView mv;
         if (success) {
-            mv = new ModelAndView("addSocioViewSuccess");
+            mv = new ModelAndView("socio/addSocioViewSuccess");
             mv.addObject("socio", socio);
         } else {
-            mv = new ModelAndView("addSocioViewFail");
+            mv = new ModelAndView("socio/addSocioViewFail");
         }
         return mv;
     }

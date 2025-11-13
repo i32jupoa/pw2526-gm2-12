@@ -19,10 +19,10 @@ public class FindAlquilerController {
         ModelAndView modelAndView;
         Alquiler alquiler = alquilerRepository.findAlquilerById(id);
         if (alquiler != null) {
-            modelAndView = new ModelAndView("findAlquilerViewSuccess");
+            modelAndView = new ModelAndView("alquiler/findAlquilerViewSuccess");
             modelAndView.addObject("alquiler", alquiler);
         } else {
-            modelAndView = new ModelAndView("findAlquilerViewFail");
+            modelAndView = new ModelAndView("alquiler/findAlquilerViewFail");
         }
         return modelAndView;
     }

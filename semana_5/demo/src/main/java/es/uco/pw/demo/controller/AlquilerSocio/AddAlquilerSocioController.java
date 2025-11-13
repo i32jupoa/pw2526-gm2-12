@@ -20,7 +20,7 @@ public class AddAlquilerSocioController {
 
     @GetMapping("/addAlquilerSocio")
     public ModelAndView showAddAlquilerSocioForm() {
-        ModelAndView modelAndView = new ModelAndView("addAlquilerSocioForm");
+        ModelAndView modelAndView = new ModelAndView("alquilerSocios/addAlquilerSocioForm");
         modelAndView.addObject("alquilerSocio", new AlquilerSocio(0, ""));
         return modelAndView;
     }
@@ -30,10 +30,10 @@ public class AddAlquilerSocioController {
         ModelAndView modelAndView;
         boolean success = alquilerSocioRepository.addAlquilerSocio(alquilerSocio);
         if (success) {
-            modelAndView = new ModelAndView("addAlquilerSocioViewSuccess");
+            modelAndView = new ModelAndView("alquilerSocios/addAlquilerSocioViewSuccess");
             modelAndView.addObject("alquilerSocio", alquilerSocio);
         } else {
-            modelAndView = new ModelAndView("addAlquilerSocioViewFail");
+            modelAndView = new ModelAndView("alquilerSocios/addAlquilerSocioViewFail");
         }
         status.setComplete();
         return modelAndView;

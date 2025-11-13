@@ -21,10 +21,10 @@ public class FindPatronController {
 
         ModelAndView mv;
         if (patron != null) {
-            mv = new ModelAndView("findPatronViewSuccess");
+            mv = new ModelAndView("patron/findPatronViewSuccess");
             mv.addObject("patron", patron);
         } else {
-            mv = new ModelAndView("findPatronViewFail");
+            mv = new ModelAndView("patron/findPatronViewFail");
         }
         return mv;
     }

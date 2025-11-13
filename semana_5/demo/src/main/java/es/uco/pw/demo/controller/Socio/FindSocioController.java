@@ -21,10 +21,10 @@ public class FindSocioController {
 
         ModelAndView mv;
         if (socio != null) {
-            mv = new ModelAndView("findSocioViewSuccess");
+            mv = new ModelAndView("socio/findSocioViewSuccess");
             mv.addObject("socio", socio);
         } else {
-            mv = new ModelAndView("findSocioViewFail");
+            mv = new ModelAndView("socio/findSocioViewFail");
         }
         return mv;
     }

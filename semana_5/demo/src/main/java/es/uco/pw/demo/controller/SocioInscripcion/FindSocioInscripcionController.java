@@ -21,10 +21,10 @@ public class FindSocioInscripcionController {
 
         ModelAndView mv;
         if (socioInscripcion != null) {
-            mv = new ModelAndView("findSocioInscripcionViewSuccess");
+            mv = new ModelAndView("socioInscripcion/findSocioInscripcionViewSuccess");
             mv.addObject("socioInscripcion", socioInscripcion);
         } else {
-            mv = new ModelAndView("findSocioInscripcionViewFail");
+            mv = new ModelAndView("socioInscripcion/findSocioInscripcionViewFail");
         }
         return mv;
     }

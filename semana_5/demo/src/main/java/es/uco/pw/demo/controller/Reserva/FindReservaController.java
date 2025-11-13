@@ -21,10 +21,10 @@ public class FindReservaController {
 
         ModelAndView mv;
         if (reserva != null) {
-            mv = new ModelAndView("findReservaViewSuccess");
+            mv = new ModelAndView("reserva/findReservaViewSuccess");
             mv.addObject("reserva", reserva);
         } else {
-            mv = new ModelAndView("findReservaViewFail");
+            mv = new ModelAndView("reserva/findReservaViewFail");
         }
         return mv;
     }

@@ -20,10 +20,10 @@ public class DeleteSocioInscripcionController {
 
         ModelAndView mv;
         if (deleted) {
-            mv = new ModelAndView("deleteSocioInscripcionViewSuccess");
+            mv = new ModelAndView("socioInscripcion/deleteSocioInscripcionViewSuccess");
             mv.addObject("id", id);
         } else {
-            mv = new ModelAndView("deleteSocioInscripcionViewFail");
+            mv = new ModelAndView("socioInscripcion/deleteSocioInscripcionViewFail");
         }
         return mv;
     }

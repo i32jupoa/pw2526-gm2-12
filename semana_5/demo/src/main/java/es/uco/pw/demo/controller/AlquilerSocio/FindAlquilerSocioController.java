@@ -25,11 +25,11 @@ public class FindAlquilerSocioController {
         ModelAndView mv;
         List<AlquilerSocio> results = alquilerSocioRepository.findByIdAlquiler(idAlquiler);
         if (results != null && !results.isEmpty()) {
-            mv = new ModelAndView("findAlquilerSocioByIdViewSuccess");
+            mv = new ModelAndView("alquilerSocios/findAlquilerSocioByIdViewSuccess");
             mv.addObject("alquilerSocios", results);
             mv.addObject("idAlquiler", idAlquiler);
         } else {
-            mv = new ModelAndView("findAlquilerSocioByIdViewFail");
+            mv = new ModelAndView("alquilerSocios/findAlquilerSocioByIdViewFail");
             mv.addObject("idAlquiler", idAlquiler);
         }
         return mv;
@@ -44,11 +44,11 @@ public class FindAlquilerSocioController {
         ModelAndView mv;
         List<AlquilerSocio> results = alquilerSocioRepository.findByDniSocio(dni);
         if (results != null && !results.isEmpty()) {
-            mv = new ModelAndView("findAlquilerSocioByDniViewSuccess");
+            mv = new ModelAndView("alquilerSocios/findAlquilerSocioByDniViewSuccess");
             mv.addObject("alquilerSocios", results);
             mv.addObject("dni", dni);
         } else {
-            mv = new ModelAndView("findAlquilerSocioByDniViewFail");
+            mv = new ModelAndView("alquilerSocios/findAlquilerSocioByDniViewFail");
             mv.addObject("dni", dni);
         }
         return mv;

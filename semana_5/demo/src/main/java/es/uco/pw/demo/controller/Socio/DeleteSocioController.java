@@ -20,10 +20,10 @@ public class DeleteSocioController {
 
         ModelAndView mv;
         if (deleted) {
-            mv = new ModelAndView("deleteSocioViewSuccess");
+            mv = new ModelAndView("socio/deleteSocioViewSuccess");
             mv.addObject("dni", dni);
         } else {
-            mv = new ModelAndView("deleteSocioViewFail");
+            mv = new ModelAndView("socio/deleteSocioViewFail");
         }
         return mv;
     }
