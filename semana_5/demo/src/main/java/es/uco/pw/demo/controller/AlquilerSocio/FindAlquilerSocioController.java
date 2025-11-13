@@ -16,10 +16,13 @@ public class FindAlquilerSocioController {
     @Autowired
     private AlquilerSocioRepository alquilerSocioRepository;
 
-    /**
-     * Buscar por idAlquiler:
-     * /findAlquilerSocioById?idAlquiler=10
-     */
+    // Formulario para buscar por ID de Alquiler
+    @GetMapping("/findAlquilerSocioByIdForm")
+    public ModelAndView showFindByIdForm() {
+        return new ModelAndView("alquilerSocios/findAlquilerSocioByIdForm");
+    }
+
+    // Buscar por ID de Alquiler
     @GetMapping("/findAlquilerSocioById")
     public ModelAndView findByIdAlquiler(@RequestParam("idAlquiler") int idAlquiler) {
         ModelAndView mv;
@@ -35,10 +38,13 @@ public class FindAlquilerSocioController {
         return mv;
     }
 
-    /**
-     * Buscar por dniSocio:
-     * /findAlquilerSocioByDni?dni=12345678A
-     */
+    // Formulario para buscar por DNI de Socio
+    @GetMapping("/findAlquilerSocioByDniForm")
+    public ModelAndView showFindByDniForm() {
+        return new ModelAndView("alquilerSocios/findAlquilerSocioByDniForm");
+    }
+
+    // Buscar por DNI de Socio
     @GetMapping("/findAlquilerSocioByDni")
     public ModelAndView findByDni(@RequestParam("dni") String dni) {
         ModelAndView mv;
