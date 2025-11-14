@@ -1,30 +1,30 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Buscar Embarcación por Matrícula</title>
 </head>
 <body>
-    <h1>Buscar Embarcación por Matrícula</h1>
+<h1>Buscar Embarcación por Matrícula</h1>
+<form method="GET" th:action="@{/findEmbarcacionByMatricula}">
+    <label for="matricula">Matrícula:</label>
+    <input type="text" name="matricula" required>
+    <input type="submit" value="Buscar">
+</form>
 
-    <form method="GET" th:action="@{/findEmbarcacionByMatricula}">
-        <label for="matricula">Matrícula:</label>
-        <input type="text" name="matricula" required>
-        <input type="submit" value="Buscar">
-    </form>
+<div th:if="${embarcacion != null}">
+    <h2>Resultado:</h2>
+    <p><strong>Matrícula:</strong> <span th:text="${embarcacion.matricula}">NULL</span></p>
+    <p><strong>Nombre:</strong> <span th:text="${embarcacion.nombre}">NULL</span></p>
+    <p><strong>Tipo:</strong> <span th:text="${embarcacion.tipo}">NULL</span></p>
+    <p><strong>Número de plazas:</strong> <span th:text="${embarcacion.numPlazas}">0</span></p>
+    <p><strong>Dimensiones:</strong> <span th:text="${embarcacion.dimensiones}">NULL</span></p>
+    <p><strong>DNI del Patrón:</strong> <span th:text="${embarcacion.dniPatron}">NULL</span></p>
+</div>
 
-    <div th:if="${embarcacion != null}">
-        <h2>Resultado:</h2>
-        <p><strong>Matrícula:</strong> <span th:text="${embarcacion.matricula}">NULL</span></p>
-        <p><strong>Nombre:</strong> <span th:text="${embarcacion.nombre}">NULL</span></p>
-        <p><strong>Tipo:</strong> <span th:text="${embarcacion.tipo}">NULL</span></p>
-        <p><strong>Número de plazas:</strong> <span th:text="${embarcacion.numPlazas}">0</span></p>
-        <p><strong>Dimensiones:</strong> <span th:text="${embarcacion.dimensiones}">NULL</span></p>
-        <p><strong>DNI del Patrón:</strong> <span th:text="${embarcacion.dniPatron}">NULL</span></p>
-    </div>
+<div th:if="${embarcacion == null}">
+    <p>No se encontró ninguna embarcación con esa matrícula.</p>
+</div>
 
-    <div th:if="${embarcacion == null}">
-        <p>No se encontró ninguna embarcación con esa matrícula.</p>
-    </div>
+<a href="/">Volver al inicio</a>
 </body>
 </html>

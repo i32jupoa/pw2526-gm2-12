@@ -1,13 +1,18 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Error al añadir embarcación</title>
 </head>
 <body>
-    <h1>Error al añadir la embarcación</h1>
-    <p>Hubo un problema al intentar guardar la embarcación en la base de datos.</p>
-    <a href="/addEmbarcacionForm">Volver a intentar</a> |
-    <a href="/">Volver al inicio</a>
+<h1>Error al añadir la embarcación</h1>
+
+<p>Hubo un problema al intentar guardar la embarcación en la base de datos.</p>
+
+<p th:if="${embarcacion != null}">
+    Intentaste añadir la embarcación con matrícula: <strong th:text="${embarcacion.matricula}">NULL</strong> y nombre: <strong th:text="${embarcacion.nombre}">NULL</strong>
+</p>
+
+<a th:href="@{/addEmbarcacionForm}">Volver a intentar</a> | 
+<a th:href="@{/}">Volver al inicio</a>
 </body>
 </html>
