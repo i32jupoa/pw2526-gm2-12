@@ -64,18 +64,17 @@ public class AddEmbarcacionController {
     public ModelAndView findEmbarcacionesByTipo(
             @RequestParam(value = "tipo", required = false) String tipo
     ) {
+        // Importante: sin .html
         ModelAndView model = new ModelAndView("embarcacion/findEmbarcacionByTipo");
 
         if (tipo != null && !tipo.isEmpty()) {
-            // Realizamos la búsqueda
             List<Embarcacion> embarcaciones = embarcacionRepository.findEmbarcacionesByTipo(
                     TipoEmbarcacion.valueOf(tipo.toUpperCase())
             );
             model.addObject("embarcaciones", embarcaciones);
             model.addObject("buscado", true); // flag indicando que se ha buscado
         } else {
-            // No se ha buscado aún
-            model.addObject("buscado", false);
+            model.addObject("buscado", false); // no se ha buscado aún
         }
 
         return model;
