@@ -6,7 +6,6 @@
 <body>
 <h1>Buscar Embarcaciones por Tipo</h1>
 
-<!-- Formulario -->
 <form method="GET" th:action="@{/findEmbarcacionesByTipo}">
     <label for="tipo">Tipo de embarcación:</label>
     <select name="tipo">
@@ -32,12 +31,12 @@
                 <th>DNI Patrón</th>
             </tr>
             <tr th:each="embarcacion : ${embarcaciones}">
-                <td th:text="${embarcacion.matricula}">NULL</td>
-                <td th:text="${embarcacion.nombre}">NULL</td>
-                <td th:text="${embarcacion.tipo}">NULL</td>
-                <td th:text="${embarcacion.numPlazas}">0</td>
-                <td th:text="${embarcacion.dimensiones}">NULL</td>
-                <td th:text="${embarcacion.dniPatron}">NULL</td>
+                <td th:text="${embarcacion.matricula}"></td>
+                <td th:text="${embarcacion.nombre}"></td>
+                <td th:text="${embarcacion.tipo}"></td>
+                <td th:text="${embarcacion.numPlazas}"></td>
+                <td th:text="${embarcacion.dimensiones}"></td>
+                <td th:text="${embarcacion.dniPatron}"></td>
             </tr>
         </table>
     </div>

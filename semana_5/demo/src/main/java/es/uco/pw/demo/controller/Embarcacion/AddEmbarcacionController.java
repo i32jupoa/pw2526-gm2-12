@@ -33,7 +33,6 @@ public class AddEmbarcacionController {
             @RequestParam(value = "dimensiones", required = false) String dimensiones,
             @RequestParam(value = "dniPatron", required = false) String dniPatron
     ) {
-        // Si no se pasan los parámetros, mostrar el formulario
         if (matricula == null || nombre == null || tipo == null || numPlazas == null || dimensiones == null) {
             return new ModelAndView("embarcacion/addEmbarcacionForm");
         }
@@ -64,7 +63,6 @@ public class AddEmbarcacionController {
     public ModelAndView findEmbarcacionesByTipo(
             @RequestParam(value = "tipo", required = false) String tipo
     ) {
-        // Importante: sin .html
         ModelAndView model = new ModelAndView("embarcacion/findEmbarcacionByTipo");
 
         if (tipo != null && !tipo.isEmpty()) {
@@ -72,9 +70,9 @@ public class AddEmbarcacionController {
                     TipoEmbarcacion.valueOf(tipo.toUpperCase())
             );
             model.addObject("embarcaciones", embarcaciones);
-            model.addObject("buscado", true); // flag indicando que se ha buscado
+            model.addObject("buscado", true);
         } else {
-            model.addObject("buscado", false); // no se ha buscado aún
+            model.addObject("buscado", false);
         }
 
         return model;
