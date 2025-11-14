@@ -25,9 +25,6 @@ public class AlquilerRepository {
         loadSQLQueries();
     }
 
-    /**
-     * Carga todas las queries desde sql.properties en resources
-     */
     private void loadSQLQueries() {
         try (InputStream is = getClass().getClassLoader().getResourceAsStream("db/sql.properties")) {
             if (is == null) {
@@ -77,7 +74,6 @@ public class AlquilerRepository {
         try {
             String query = sqlQueries.getProperty("insert-addAlquiler");
             int result = jdbcTemplate.update(query,
-                    alquiler.getId(),
                     alquiler.getIdInscripcion(),
                     alquiler.getMatricula(),
                     Date.valueOf(alquiler.getFechaInicio()),
@@ -90,7 +86,7 @@ public class AlquilerRepository {
             e.printStackTrace();
             return false;
         }
-    }
+    }    
 
     public boolean deleteAlquilerById(int id) {
         try {
