@@ -6,10 +6,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,15 +19,27 @@ public class SocioRepository {
 
     private JdbcTemplate jdbcTemplate;
     private Properties sqlQueries;
-    private String sqlQueriesFileName;
 
     public SocioRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     public void setSQLQueriesFileName(String sqlQueriesFileName) {
-        this.sqlQueriesFileName = sqlQueriesFileName;
-        createProperties();
+        createProperties(sqlQueriesFileName);
+    }
+
+    private void createProperties(String sqlQueriesFileName) {
+        sqlQueries = new Properties();
+        try {
+            InputStream is = getClass().getClassLoader().getResourceAsStream(sqlQueriesFileName);
+            if (is == null) {
+                throw new IOException("No se encontrÃ³ " + sqlQueriesFileName + " en classpath");
+            }
+            sqlQueries.load(is);
+        } catch (IOException e) {
+            System.err.println("Error creating properties object for SQL queries");
+            e.printStackTrace();
+        }
     }
 
     public Socio findSocioByDni(String dni) {
@@ -91,19 +101,6 @@ public class SocioRepository {
             System.err.println("Unable to delete socio with dni=" + dni);
             exception.printStackTrace();
             return false;
-        }
-    }
-
-    private void createProperties() {
-        sqlQueries = new Properties();
-        try {
-            BufferedReader reader;
-            File f = new File(sqlQueriesFileName);
-            reader = new BufferedReader(new FileReader(f));
-            sqlQueries.load(reader);
-        } catch (IOException e) {
-            System.err.println("Error creating properties object for SQL queries");
-            e.printStackTrace();
         }
     }
 }
