@@ -9,10 +9,11 @@
 <p>Hubo un problema al intentar guardar la embarcación en la base de datos.</p>
 
 <p th:if="${embarcacion != null}">
-    Intentaste añadir la embarcación con matrícula: <strong th:text="${embarcacion.matricula}">NULL</strong> y nombre: <strong th:text="${embarcacion.nombre}">NULL</strong>
+    Intentaste añadir la embarcación con matrícula: <strong th:text="${embarcacion.matricula}">NULL</strong> 
+    y nombre: <strong th:text="${embarcacion.nombre}">NULL</strong>
 </p>
 
-<a th:href="@{/addEmbarcacionForm}">Volver a intentar</a> | 
+<a th:href="@{/addEmbarcacion}">Volver a intentar</a> | 
 <a th:href="@{/}">Volver al inicio</a>
 </body>
 </html>
