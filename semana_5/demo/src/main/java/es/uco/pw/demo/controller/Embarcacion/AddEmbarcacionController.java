@@ -1,12 +1,12 @@
 package es.uco.pw.demo.controller.Embarcacion;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 import es.uco.pw.demo.model.domain.Embarcacion;
 import es.uco.pw.demo.model.domain.TipoEmbarcacion;
 import es.uco.pw.demo.model.repository.EmbarcacionRepository;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -21,17 +21,23 @@ public class AddEmbarcacionController {
         this.embarcacionRepository.setSQLQueriesFileName(sqlQueriesFileName);
     }
 
-    // ------------------ Añadir embarcación ------------------
+    /**
+     * Añadir embarcación (success/fail). Si no vienen parámetros, muestra el formulario.
+     */
     @GetMapping("/addEmbarcacion")
-    public String addEmbarcacion(
-            @RequestParam("matricula") String matricula,
-            @RequestParam("nombre") String nombre,
-            @RequestParam("tipo") String tipo,
-            @RequestParam("numPlazas") int numPlazas,
-            @RequestParam("dimensiones") String dimensiones,
-            @RequestParam(value = "dniPatron", required = false) String dniPatron,
-            Model model
+    public ModelAndView addEmbarcacion(
+            @RequestParam(value = "matricula", required = false) String matricula,
+            @RequestParam(value = "nombre", required = false) String nombre,
+            @RequestParam(value = "tipo", required = false) String tipo,
+            @RequestParam(value = "numPlazas", required = false) Integer numPlazas,
+            @RequestParam(value = "dimensiones", required = false) String dimensiones,
+            @RequestParam(value = "dniPatron", required = false) String dniPatron
     ) {
+        // Si no se pasan los parámetros, mostrar el formulario
+        if (matricula == null || nombre == null || tipo == null || numPlazas == null || dimensiones == null) {
+            return new ModelAndView("embarcacion/addEmbarcacionForm.html");
+        }
+
         Embarcacion embarcacion = new Embarcacion(
                 matricula,
                 nombre,
@@ -42,38 +48,31 @@ public class AddEmbarcacionController {
         );
 
         boolean success = embarcacionRepository.addEmbarcacion(embarcacion);
+        String view = success
+                ? "embarcacion/addEmbarcacionViewSuccess.html"
+                : "embarcacion/addEmbarcacionViewFail.html";
 
-        if (success) {
-            model.addAttribute("embarcacion", embarcacion);
-            return "embarcacion/addEmbarcacionViewSuccess";
-        } else {
-            return "embarcacion/addEmbarcacionViewFail";
-        }
+        ModelAndView model = new ModelAndView(view);
+        model.addObject("embarcacion", embarcacion);
+        return model;
     }
 
-    // ------------------ Buscar por matrícula ------------------
-    @GetMapping("/findEmbarcacionByMatricula")
-    public String findEmbarcacionByMatricula(
-            @RequestParam(value = "matricula", required = false) String matricula,
-            Model model
-    ) {
-        if (matricula != null && !matricula.isEmpty()) {
-            Embarcacion embarcacion = embarcacionRepository.findEmbarcacionByMatricula(matricula);
-            model.addAttribute("embarcacion", embarcacion);
-        }
-        return "embarcacion/findEmbarcacionByMatricula";
-    }
-
-    // ------------------ Buscar por tipo ------------------
+    /**
+     * Buscar embarcaciones por tipo. Si no viene parámetro, solo mostrar formulario.
+     */
     @GetMapping("/findEmbarcacionesByTipo")
-    public String findEmbarcacionesByTipo(
-            @RequestParam(value = "tipo", required = false) String tipo,
-            Model model
+    public ModelAndView findEmbarcacionesByTipo(
+            @RequestParam(value = "tipo", required = false) String tipo
     ) {
+        ModelAndView model = new ModelAndView("embarcacion/findEmbarcacionByTipo.html");
+
         if (tipo != null && !tipo.isEmpty()) {
-            List<Embarcacion> embarcaciones = embarcacionRepository.findEmbarcacionesByTipo(TipoEmbarcacion.valueOf(tipo.toUpperCase()));
-            model.addAttribute("embarcaciones", embarcaciones);
+            List<Embarcacion> embarcaciones = embarcacionRepository.findEmbarcacionesByTipo(
+                    TipoEmbarcacion.valueOf(tipo.toUpperCase())
+            );
+            model.addObject("embarcaciones", embarcaciones);
         }
-        return "embarcacion/findEmbarcacionesByTipo";
+
+        return model;
     }
 }

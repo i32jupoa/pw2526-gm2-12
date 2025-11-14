@@ -1,11 +1,10 @@
-package es.uco.pw.demo.model.repository;
+package es.uco.pw.demo.model;
 
-import es.uco.pw.demo.model.domain.TipoEmbarcacion;
-import es.uco.pw.demo.model.domain.Embarcacion;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -20,31 +19,38 @@ public class EmbarcacionRepository {
 
     private JdbcTemplate jdbcTemplate;
     private Properties sqlQueries;
+    private String sqlQueriesFileName;
 
     public EmbarcacionRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     public void setSQLQueriesFileName(String sqlQueriesFileName) {
-        sqlQueries = new Properties();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(new File(sqlQueriesFileName)));
-            sqlQueries.load(reader);
-        } catch (IOException e) {
-            System.err.println("Error cargando archivo de consultas SQL");
-            e.printStackTrace();
-        }
+        this.sqlQueriesFileName = sqlQueriesFileName;
+        createProperties();
     }
 
     public List<Embarcacion> findAllEmbarcaciones() {
         try {
             String query = sqlQueries.getProperty("select-findAllEmbarcaciones");
             if (query != null) {
-                return jdbcTemplate.query(query, new EmbarcacionMapper());
+                return jdbcTemplate.query(query, new RowMapper<Embarcacion>() {
+                    public Embarcacion mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        return new Embarcacion(
+                                rs.getString("matricula"),
+                                rs.getString("nombre"),
+                                TipoEmbarcacion.valueOf(rs.getString("tipo")),
+                                rs.getInt("numPlazas"),
+                                rs.getString("dimensiones"),
+                                rs.getString("dniPatron")
+                        );
+                    }
+                });
             } else {
                 return null;
             }
         } catch (DataAccessException e) {
+            System.err.println("Unable to find embarcaciones");
             e.printStackTrace();
             return null;
         }
@@ -54,11 +60,23 @@ public class EmbarcacionRepository {
         try {
             String query = sqlQueries.getProperty("select-findEmbarcacionByMatricula");
             if (query != null) {
-                return jdbcTemplate.queryForObject(query, new Object[]{matricula}, new EmbarcacionMapper());
+                return jdbcTemplate.queryForObject(query, new Object[]{matricula}, new RowMapper<Embarcacion>() {
+                    public Embarcacion mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        return new Embarcacion(
+                                rs.getString("matricula"),
+                                rs.getString("nombre"),
+                                TipoEmbarcacion.valueOf(rs.getString("tipo")),
+                                rs.getInt("numPlazas"),
+                                rs.getString("dimensiones"),
+                                rs.getString("dniPatron")
+                        );
+                    }
+                });
             } else {
                 return null;
             }
         } catch (DataAccessException e) {
+            System.err.println("Unable to find embarcacion with matricula=" + matricula);
             e.printStackTrace();
             return null;
         }
@@ -68,11 +86,23 @@ public class EmbarcacionRepository {
         try {
             String query = sqlQueries.getProperty("select-findEmbarcacionesByTipo");
             if (query != null) {
-                return jdbcTemplate.query(query, new Object[]{tipo.name()}, new EmbarcacionMapper());
+                return jdbcTemplate.query(query, new RowMapper<Embarcacion>() {
+                    public Embarcacion mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        return new Embarcacion(
+                                rs.getString("matricula"),
+                                rs.getString("nombre"),
+                                TipoEmbarcacion.valueOf(rs.getString("tipo")),
+                                rs.getInt("numPlazas"),
+                                rs.getString("dimensiones"),
+                                rs.getString("dniPatron")
+                        );
+                    }
+                }, tipo.name());
             } else {
                 return null;
             }
         } catch (DataAccessException e) {
+            System.err.println("Unable to find embarcaciones of tipo=" + tipo);
             e.printStackTrace();
             return null;
         }
@@ -94,6 +124,7 @@ public class EmbarcacionRepository {
                 return false;
             }
         } catch (DataAccessException e) {
+            System.err.println("Unable to insert embarcacion into the database");
             e.printStackTrace();
             return false;
         }
@@ -109,21 +140,22 @@ public class EmbarcacionRepository {
                 return false;
             }
         } catch (DataAccessException e) {
+            System.err.println("Unable to delete embarcacion with matricula=" + matricula);
             e.printStackTrace();
             return false;
         }
     }
 
-    private static class EmbarcacionMapper implements RowMapper<Embarcacion> {
-        public Embarcacion mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Embarcacion(
-                    rs.getString("matricula"),
-                    rs.getString("nombre"),
-                    TipoEmbarcacion.valueOf(rs.getString("tipo")),
-                    rs.getInt("numPlazas"),
-                    rs.getString("dimensiones"),
-                    rs.getString("dniPatron")
-            );
+    private void createProperties() {
+        sqlQueries = new Properties();
+        try {
+            BufferedReader reader;
+            File f = new File(sqlQueriesFileName);
+            reader = new BufferedReader(new FileReader(f));
+            sqlQueries.load(reader);
+        } catch (IOException e) {
+            System.err.println("Error creating properties object for SQL queries");
+            e.printStackTrace();
         }
     }
 }

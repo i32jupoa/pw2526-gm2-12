@@ -7,8 +7,8 @@
 <h1>Buscar Embarcación por Matrícula</h1>
 <form method="GET" th:action="@{/findEmbarcacionByMatricula}">
     <label for="matricula">Matrícula:</label>
-    <input type="text" id="matricula" name="matricula" required/>
-    <input type="submit" value="Buscar"/>
+    <input type="text" name="matricula" required>
+    <input type="submit" value="Buscar">
 </form>
 
 <div th:if="${embarcacion != null}">
@@ -21,8 +21,10 @@
     <p><strong>DNI del Patrón:</strong> <span th:text="${embarcacion.dniPatron}">NULL</span></p>
 </div>
 
-<div th:if="${embarcacion == null and #request.getParameter('matricula') != null}">
+<div th:if="${embarcacion == null}">
     <p>No se encontró ninguna embarcación con esa matrícula.</p>
 </div>
+
+<a href="/">Volver al inicio</a>
 </body>
 </html>
