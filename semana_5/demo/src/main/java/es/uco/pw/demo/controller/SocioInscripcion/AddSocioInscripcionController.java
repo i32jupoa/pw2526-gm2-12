@@ -5,6 +5,7 @@ import es.uco.pw.demo.model.repository.SocioInscripcionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -14,11 +15,21 @@ public class AddSocioInscripcionController {
     private SocioInscripcionRepository socioInscripcionRepository;
 
     @GetMapping("/addSocioInscripcion")
-    public ModelAndView addSocioInscripcion() {
+    public ModelAndView addSocioInscripcion(
+            @RequestParam(required = false) Integer id,
+            @RequestParam(required = false) Integer idInscripcion,
+            @RequestParam(required = false) String dniSocio
+    ) {
+        // Si no hay parámetros, mostrar el formulario
+        if (id == null) {
+            return new ModelAndView("socioInscripcion/addSocioInscripcionForm");
+        }
+        
+        // Si hay parámetros, procesar la relación
         SocioInscripcion socioInscripcion = new SocioInscripcion(
-                1,
-                100,
-                "12345678A"
+                id,
+                idInscripcion,
+                dniSocio
         );
 
         socioInscripcionRepository.setSQLQueriesFileName("src/main/resources/sql/socio_inscripcion_queries.sql");

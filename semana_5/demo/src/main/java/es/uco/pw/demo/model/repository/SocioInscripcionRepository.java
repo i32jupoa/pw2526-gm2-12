@@ -81,9 +81,9 @@ public class SocioInscripcionRepository {
     }
 
 
-    public List<SocioInscripcion> findByIdInscripcion(int idInscripcion) {
+    public List<SocioInscripcion> findByDniSocio(String dniSocio) {
         try {
-            String query = sqlQueries.getProperty("select-findByIdInscripcion");
+            String query = sqlQueries.getProperty("select-findByDniSocio");
             if (query != null) {
                 return jdbcTemplate.query(query, new RowMapper<SocioInscripcion>() {
                     @Override
@@ -94,12 +94,12 @@ public class SocioInscripcionRepository {
                             rs.getString("dniSocio")
                         );
                     }
-                }, idInscripcion);
+                }, dniSocio);
             } else {
                 return null;
             }
         } catch (DataAccessException e) {
-            System.err.println("Unable to find SocioInscripcion with idInscripcion=" + idInscripcion);
+            System.err.println("Unable to find SocioInscripcion with dniSocio=" + dniSocio);
             e.printStackTrace();
             return null;
         }
