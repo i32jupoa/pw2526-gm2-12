@@ -15,7 +15,7 @@ public class DeleteSocioInscripcionController {
 
     @GetMapping("/deleteSocioInscripcion")
     public ModelAndView deleteSocioInscripcion(@RequestParam("id") int id) {
-        socioInscripcionRepository.setSQLQueriesFileName("src/main/resources/sql/socio_inscripcion_queries.sql");
+        socioInscripcionRepository.setSQLQueriesFileName("db/sql.properties");
         boolean deleted = socioInscripcionRepository.deleteSocioInscripcion(id);
 
         ModelAndView mv;

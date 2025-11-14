@@ -32,7 +32,7 @@ public class AddSocioInscripcionController {
                 dniSocio
         );
 
-        socioInscripcionRepository.setSQLQueriesFileName("src/main/resources/sql/socio_inscripcion_queries.sql");
+        socioInscripcionRepository.setSQLQueriesFileName("db/sql.properties");
         boolean success = socioInscripcionRepository.addSocioInscripcion(socioInscripcion);
 
         ModelAndView mv;

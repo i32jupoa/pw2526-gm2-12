@@ -29,7 +29,7 @@ public class FindSocioInscripcionController {
         }
         
         // Si hay ID, buscar la relación socio-inscripción
-        socioInscripcionRepository.setSQLQueriesFileName("/db/sql.properties");
+        socioInscripcionRepository.setSQLQueriesFileName("db/sql.properties");
         SocioInscripcion socioInscripcion = socioInscripcionRepository.findById(id);
 
         mv = new ModelAndView("socioInscripcion/findSocioInscripcionById");

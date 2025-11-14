@@ -55,10 +55,9 @@ public class SocioInscripcionRepository {
         }
     }
 
-
     public SocioInscripcion findById(int id) {
         try {
-            String query = sqlQueries.getProperty("select-findByIdSocioInscripcion");
+            String query = sqlQueries.getProperty("select-findSocioInscripcionByIdInscripcion");
             if (query != null) {
                 return jdbcTemplate.queryForObject(query, new RowMapper<SocioInscripcion>() {
                     @Override
@@ -80,10 +79,9 @@ public class SocioInscripcionRepository {
         }
     }
 
-
     public List<SocioInscripcion> findByDniSocio(String dniSocio) {
         try {
-            String query = sqlQueries.getProperty("select-findByDniSocio");
+            String query = sqlQueries.getProperty("select-findSocioInscripcionByDni");
             if (query != null) {
                 return jdbcTemplate.query(query, new RowMapper<SocioInscripcion>() {
                     @Override
@@ -105,7 +103,6 @@ public class SocioInscripcionRepository {
         }
     }
 
-
     public boolean addSocioInscripcion(SocioInscripcion socioInscripcion) {
         try {
             String query = sqlQueries.getProperty("insert-addSocioInscripcion");
@@ -126,10 +123,9 @@ public class SocioInscripcionRepository {
         }
     }
 
-
     public boolean deleteSocioInscripcion(int id) {
         try {
-            String query = sqlQueries.getProperty("delete-socioInscripcion");
+            String query = sqlQueries.getProperty("delete-deleteSocioInscripcion");
             if (query != null) {
                 int result = jdbcTemplate.update(query, id);
                 return result > 0;
@@ -142,7 +138,6 @@ public class SocioInscripcionRepository {
             return false;
         }
     }
-
 
     private void createProperties() {
         sqlQueries = new Properties();
