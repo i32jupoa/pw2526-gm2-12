@@ -13,6 +13,13 @@ public class DeleteReservaController {
     @Autowired
     private ReservaRepository reservaRepository;
 
+    // --- NUEVO: mostrar el formulario de eliminación ---
+    @GetMapping("/deleteReservaForm")
+    public String mostrarFormularioEliminar() {
+        return "deleteReservaForm";
+    }
+
+    // --- YA EXISTENTE: ejecutar la eliminación ---
     @GetMapping("/deleteReserva")
     public ModelAndView deleteReserva(@RequestParam("id") int id) {
         reservaRepository.setSQLQueriesFileName("src/main/resources/db/sql.properties");
