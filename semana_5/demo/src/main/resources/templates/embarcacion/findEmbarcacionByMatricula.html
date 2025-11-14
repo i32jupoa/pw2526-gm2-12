@@ -5,26 +5,39 @@
 </head>
 <body>
 <h1>Buscar Embarcación por Matrícula</h1>
+
 <form method="GET" th:action="@{/findEmbarcacionByMatricula}">
     <label for="matricula">Matrícula:</label>
-    <input type="text" name="matricula" required>
-    <input type="submit" value="Buscar">
+    <input type="text" id="matricula" name="matricula" required/>
+    <input type="submit" value="Buscar"/>
 </form>
 
 <div th:if="${embarcacion != null}">
     <h2>Resultado:</h2>
-    <p><strong>Matrícula:</strong> <span th:text="${embarcacion.matricula}">NULL</span></p>
-    <p><strong>Nombre:</strong> <span th:text="${embarcacion.nombre}">NULL</span></p>
-    <p><strong>Tipo:</strong> <span th:text="${embarcacion.tipo}">NULL</span></p>
-    <p><strong>Número de plazas:</strong> <span th:text="${embarcacion.numPlazas}">0</span></p>
-    <p><strong>Dimensiones:</strong> <span th:text="${embarcacion.dimensiones}">NULL</span></p>
-    <p><strong>DNI del Patrón:</strong> <span th:text="${embarcacion.dniPatron}">NULL</span></p>
+    <table border="1">
+        <tr>
+            <th>Matrícula</th>
+            <th>Nombre</th>
+            <th>Tipo</th>
+            <th>Número de plazas</th>
+            <th>Dimensiones</th>
+            <th>DNI Patrón</th>
+        </tr>
+        <tr>
+            <td th:text="${embarcacion.matricula}">MATRICULA</td>
+            <td th:text="${embarcacion.nombre}">NOMBRE</td>
+            <td th:text="${embarcacion.tipo}">TIPO</td>
+            <td th:text="${embarcacion.numPlazas}">0</td>
+            <td th:text="${embarcacion.dimensiones}">DIMENSIONES</td>
+            <td th:text="${embarcacion.dniPatron}">DNI</td>
+        </tr>
+    </table>
 </div>
 
 <div th:if="${embarcacion == null}">
     <p>No se encontró ninguna embarcación con esa matrícula.</p>
 </div>
 
-<a href="/">Volver al inicio</a>
+<a th:href="@{/}">Volver al inicio</a>
 </body>
 </html>

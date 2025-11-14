@@ -1,16 +1,14 @@
 package es.uco.pw.demo.model.domain;
 
-
 public class Embarcacion {
     private String matricula;
     private String nombre;
     private TipoEmbarcacion tipo;
     private int numPlazas;
     private String dimensiones;
-    private String dniPatron; // opcional
+    private String dniPatron;
 
-    public Embarcacion(String matricula, String nombre, TipoEmbarcacion tipo, int numPlazas,
-                       String dimensiones, String dniPatron) {
+    public Embarcacion(String matricula, String nombre, TipoEmbarcacion tipo, int numPlazas, String dimensiones, String dniPatron) {
         this.matricula = matricula;
         this.nombre = nombre;
         this.tipo = tipo;
