@@ -10,7 +10,7 @@ import es.uco.pw.demo.model.repository.EmbarcacionRepository;
 @Controller
 public class FindEmbarcacionByMatriculaController {
 
-    private EmbarcacionRepository embarcacionRepository;
+    private final EmbarcacionRepository embarcacionRepository;
 
     public FindEmbarcacionByMatriculaController(EmbarcacionRepository embarcacionRepository) {
         this.embarcacionRepository = embarcacionRepository;
@@ -22,14 +22,17 @@ public class FindEmbarcacionByMatriculaController {
     public ModelAndView findEmbarcacionByMatricula(
             @RequestParam(value = "matricula", required = false) String matricula
     ) {
-        // Si no hay matrícula, mostrar el formulario
-        if (matricula == null) {
-            return new ModelAndView("embarcacion/findEmbarcacionByMatricula.html");
+        ModelAndView model = new ModelAndView("embarcacion/findEmbarcacionByMatricula.html");
+
+        // Solo buscar si hay parámetro
+        if (matricula != null && !matricula.isEmpty()) {
+            Embarcacion embarcacion = embarcacionRepository.findEmbarcacionByMatricula(matricula);
+            model.addObject("embarcacion", embarcacion);
+            model.addObject("buscado", true); // Indicador para el HTML
+        } else {
+            model.addObject("buscado", false);
         }
 
-        Embarcacion embarcacion = embarcacionRepository.findEmbarcacionByMatricula(matricula);
-        ModelAndView model = new ModelAndView("embarcacion/findEmbarcacionByMatricula.html");
-        model.addObject("embarcacion", embarcacion);
         return model;
     }
 }
