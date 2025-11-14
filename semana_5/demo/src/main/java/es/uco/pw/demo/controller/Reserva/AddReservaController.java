@@ -45,7 +45,7 @@ public class AddReservaController {
                 precioTotal
         );
 
-        reservaRepository.setSQLQueriesFileName("src/main/resources/db/sql.properties");
+        reservaRepository.setSQLQueriesFileName("db/sql.properties");
         boolean success = reservaRepository.addReserva(reserva);
 
         ModelAndView mv;

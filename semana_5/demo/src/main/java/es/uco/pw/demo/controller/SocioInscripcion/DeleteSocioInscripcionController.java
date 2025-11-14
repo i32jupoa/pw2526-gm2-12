@@ -14,14 +14,18 @@ public class DeleteSocioInscripcionController {
     private SocioInscripcionRepository socioInscripcionRepository;
 
     @GetMapping("/deleteSocioInscripcion")
-    public ModelAndView deleteSocioInscripcion(@RequestParam("id") int id) {
+    public ModelAndView deleteSocioInscripcion(
+            @RequestParam("id") int id,
+            @RequestParam("dniSocio") String dniSocio) {
+
         socioInscripcionRepository.setSQLQueriesFileName("db/sql.properties");
-        boolean deleted = socioInscripcionRepository.deleteSocioInscripcion(id);
+        boolean deleted = socioInscripcionRepository.deleteSocioInscripcion(id, dniSocio);
 
         ModelAndView mv;
         if (deleted) {
             mv = new ModelAndView("socioInscripcion/deleteSocioInscripcionViewSuccess");
             mv.addObject("id", id);
+            mv.addObject("dniSocio", dniSocio);
         } else {
             mv = new ModelAndView("socioInscripcion/deleteSocioInscripcionViewFail");
         }

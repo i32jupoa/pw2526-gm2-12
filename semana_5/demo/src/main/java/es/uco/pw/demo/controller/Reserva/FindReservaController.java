@@ -26,7 +26,7 @@ public class FindReservaController {
         }
         
         // Si hay ID, buscar la reserva
-        reservaRepository.setSQLQueriesFileName("src/main/resources/db/sql.properties");
+        reservaRepository.setSQLQueriesFileName("db/sql.properties");
         Reserva reserva = reservaRepository.findReservaById(id);
 
         if (reserva != null) {

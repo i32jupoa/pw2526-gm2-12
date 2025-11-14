@@ -27,7 +27,7 @@ public class AlquilerSocioRepository {
     @PostConstruct
     private void loadSqlQueries() {
         sqlQueries = new Properties();
-        try (InputStream inputStream = getClass().getResourceAsStream("/db/sql.properties")) {
+        try (InputStream inputStream = getClass().getResourceAsStream("db/sql.properties")) {
             if (inputStream != null) {
                 sqlQueries.load(inputStream);
             } else {
