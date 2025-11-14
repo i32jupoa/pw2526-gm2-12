@@ -6,9 +6,10 @@
 <body>
 <h1>Buscar Embarcaciones por Tipo</h1>
 
+<!-- Formulario de selección de tipo -->
 <form method="GET" th:action="@{/findEmbarcacionesByTipo}">
     <label for="tipo">Tipo de embarcación:</label>
-    <select name="tipo">
+    <select name="tipo" id="tipo" required>
         <option value="VELERO">Velero</option>
         <option value="YATE">Yate</option>
         <option value="PESQUERO">Pesquero</option>
@@ -17,7 +18,8 @@
     <input type="submit" value="Buscar">
 </form>
 
-<div th:if="${embarcaciones != null}">
+<!-- Resultados si hay embarcaciones -->
+<div th:if="${embarcaciones != null and !#lists.isEmpty(embarcaciones)}">
     <h2>Resultados:</h2>
     <table border="1">
         <tr>
@@ -39,6 +41,7 @@
     </table>
 </div>
 
+<!-- Mensaje si no hay resultados -->
 <div th:if="${embarcaciones == null or #lists.isEmpty(embarcaciones)}">
     <p>No se encontraron embarcaciones del tipo seleccionado.</p>
 </div>
