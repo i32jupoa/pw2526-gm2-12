@@ -17,30 +17,32 @@
     <input type="submit" value="Buscar">
 </form>
 
-<div th:if="${embarcaciones != null}">
-    <h2>Resultados:</h2>
-    <table border="1">
-        <tr>
-            <th>Matrícula</th>
-            <th>Nombre</th>
-            <th>Tipo</th>
-            <th>Número de plazas</th>
-            <th>Dimensiones</th>
-            <th>DNI Patrón</th>
-        </tr>
-        <tr th:each="embarcacion : ${embarcaciones}">
-            <td th:text="${embarcacion.matricula}">NULL</td>
-            <td th:text="${embarcacion.nombre}">NULL</td>
-            <td th:text="${embarcacion.tipo}">NULL</td>
-            <td th:text="${embarcacion.numPlazas}">0</td>
-            <td th:text="${embarcacion.dimensiones}">NULL</td>
-            <td th:text="${embarcacion.dniPatron}">NULL</td>
-        </tr>
-    </table>
-</div>
+<div th:if="${buscado}">
+    <div th:if="${embarcaciones != null and !#lists.isEmpty(embarcaciones)}">
+        <h2>Resultados:</h2>
+        <table border="1">
+            <tr>
+                <th>Matrícula</th>
+                <th>Nombre</th>
+                <th>Tipo</th>
+                <th>Número de plazas</th>
+                <th>Dimensiones</th>
+                <th>DNI Patrón</th>
+            </tr>
+            <tr th:each="embarcacion : ${embarcaciones}">
+                <td th:text="${embarcacion.matricula}">NULL</td>
+                <td th:text="${embarcacion.nombre}">NULL</td>
+                <td th:text="${embarcacion.tipo}">NULL</td>
+                <td th:text="${embarcacion.numPlazas}">0</td>
+                <td th:text="${embarcacion.dimensiones}">NULL</td>
+                <td th:text="${embarcacion.dniPatron}">NULL</td>
+            </tr>
+        </table>
+    </div>
 
-<div th:if="${embarcaciones == null or #lists.isEmpty(embarcaciones)}">
-    <p>No se encontraron embarcaciones del tipo seleccionado.</p>
+    <div th:if="${embarcaciones == null or #lists.isEmpty(embarcaciones)}">
+        <p>No se encontraron embarcaciones del tipo seleccionado.</p>
+    </div>
 </div>
 
 <a th:href="@{/}">Volver al inicio</a>

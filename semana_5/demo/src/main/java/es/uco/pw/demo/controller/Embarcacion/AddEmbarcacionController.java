@@ -21,9 +21,7 @@ public class AddEmbarcacionController {
         this.embarcacionRepository.setSQLQueriesFileName(sqlQueriesFileName);
     }
 
-    /**
-     * Añadir embarcación (success/fail). Si no vienen parámetros, muestra el formulario.
-     */
+    // Añadir embarcación
     @GetMapping("/addEmbarcacion")
     public ModelAndView addEmbarcacion(
             @RequestParam(value = "matricula", required = false) String matricula,
@@ -33,7 +31,6 @@ public class AddEmbarcacionController {
             @RequestParam(value = "dimensiones", required = false) String dimensiones,
             @RequestParam(value = "dniPatron", required = false) String dniPatron
     ) {
-        // Si no se pasan los parámetros, mostrar el formulario
         if (matricula == null || nombre == null || tipo == null || numPlazas == null || dimensiones == null) {
             return new ModelAndView("embarcacion/addEmbarcacionForm.html");
         }
@@ -57,9 +54,7 @@ public class AddEmbarcacionController {
         return model;
     }
 
-    /**
-     * Buscar embarcaciones por tipo. Si no viene parámetro, solo mostrar formulario.
-     */
+    // Buscar embarcaciones por tipo
     @GetMapping("/findEmbarcacionesByTipo")
     public ModelAndView findEmbarcacionesByTipo(
             @RequestParam(value = "tipo", required = false) String tipo
@@ -71,6 +66,9 @@ public class AddEmbarcacionController {
                     TipoEmbarcacion.valueOf(tipo.toUpperCase())
             );
             model.addObject("embarcaciones", embarcaciones);
+            model.addObject("buscado", true);
+        } else {
+            model.addObject("buscado", false);
         }
 
         return model;
