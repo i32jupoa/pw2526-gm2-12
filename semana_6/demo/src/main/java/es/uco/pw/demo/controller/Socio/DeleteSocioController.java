@@ -1,6 +1,6 @@
 package es.uco.pw.demo.controller.Socio;
 
-import es.uco.pw.demo.model.SocioRepository;
+import es.uco.pw.demo.model.repository.SocioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,17 +13,23 @@ public class DeleteSocioController {
     @Autowired
     private SocioRepository socioRepository;
 
+    @GetMapping("/deleteSocioForm")
+    public String showDeleteForm() {
+        return "socio/deleteSocioForm";
+    }
+
     @GetMapping("/deleteSocio")
     public ModelAndView deleteSocio(@RequestParam("dni") String dni) {
-        socioRepository.setSQLQueriesFileName("src/main/resources/sql/socio_queries.sql");
+        socioRepository.setSQLQueriesFileName("src/main/resources/db/sql.properties");
+
         boolean deleted = socioRepository.deleteSocio(dni);
 
         ModelAndView mv;
         if (deleted) {
-            mv = new ModelAndView("deleteSocioViewSuccess");
+            mv = new ModelAndView("socio/deleteSocioViewSuccess");
             mv.addObject("dni", dni);
         } else {
-            mv = new ModelAndView("deleteSocioViewFail");
+            mv = new ModelAndView("socio/deleteSocioViewFail");
         }
         return mv;
     }

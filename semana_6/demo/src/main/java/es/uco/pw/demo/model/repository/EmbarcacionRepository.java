@@ -1,5 +1,7 @@
-package es.uco.pw.demo.model;
+package es.uco.pw.demo.model.repository;
 
+import es.uco.pw.demo.model.domain.TipoEmbarcacion;
+import es.uco.pw.demo.model.domain.Embarcacion;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -17,7 +19,7 @@ import java.util.Properties;
 @Repository
 public class EmbarcacionRepository {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
     private Properties sqlQueries;
     private String sqlQueriesFileName;
 
@@ -30,22 +32,14 @@ public class EmbarcacionRepository {
         createProperties();
     }
 
+    // ============================================================
+    // FIND ALL
+    // ============================================================
     public List<Embarcacion> findAllEmbarcaciones() {
         try {
             String query = sqlQueries.getProperty("select-findAllEmbarcaciones");
             if (query != null) {
-                return jdbcTemplate.query(query, new RowMapper<Embarcacion>() {
-                    public Embarcacion mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        return new Embarcacion(
-                                rs.getString("matricula"),
-                                rs.getString("nombre"),
-                                TipoEmbarcacion.valueOf(rs.getString("tipo")),
-                                rs.getInt("numPlazas"),
-                                rs.getString("dimensiones"),
-                                rs.getString("dniPatron")
-                        );
-                    }
-                });
+                return jdbcTemplate.query(query, embarcacionMapper);
             } else {
                 return null;
             }
@@ -56,22 +50,14 @@ public class EmbarcacionRepository {
         }
     }
 
+    // ============================================================
+    // FIND BY MATRICULA
+    // ============================================================
     public Embarcacion findEmbarcacionByMatricula(String matricula) {
         try {
             String query = sqlQueries.getProperty("select-findEmbarcacionByMatricula");
             if (query != null) {
-                return jdbcTemplate.queryForObject(query, new Object[]{matricula}, new RowMapper<Embarcacion>() {
-                    public Embarcacion mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        return new Embarcacion(
-                                rs.getString("matricula"),
-                                rs.getString("nombre"),
-                                TipoEmbarcacion.valueOf(rs.getString("tipo")),
-                                rs.getInt("numPlazas"),
-                                rs.getString("dimensiones"),
-                                rs.getString("dniPatron")
-                        );
-                    }
-                });
+                return jdbcTemplate.queryForObject(query, new Object[]{matricula}, embarcacionMapper);
             } else {
                 return null;
             }
@@ -82,22 +68,14 @@ public class EmbarcacionRepository {
         }
     }
 
-    public List<Embarcacion> findEmbarcacionesByTipo(TipoEmbarcacion tipo) {
+    // ============================================================
+    // FIND BY TIPO
+    // ============================================================
+    public List<Embarcacion> findEmbarcacionByTipo(TipoEmbarcacion tipo) {
         try {
-            String query = sqlQueries.getProperty("select-findEmbarcacionesByTipo");
+            String query = sqlQueries.getProperty("select-findEmbarcacionByTipo"); // clave consistente
             if (query != null) {
-                return jdbcTemplate.query(query, new RowMapper<Embarcacion>() {
-                    public Embarcacion mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        return new Embarcacion(
-                                rs.getString("matricula"),
-                                rs.getString("nombre"),
-                                TipoEmbarcacion.valueOf(rs.getString("tipo")),
-                                rs.getInt("numPlazas"),
-                                rs.getString("dimensiones"),
-                                rs.getString("dniPatron")
-                        );
-                    }
-                }, tipo.name());
+                return jdbcTemplate.query(query, new Object[]{tipo.name()}, embarcacionMapper);
             } else {
                 return null;
             }
@@ -108,6 +86,9 @@ public class EmbarcacionRepository {
         }
     }
 
+    // ============================================================
+    // INSERT
+    // ============================================================
     public boolean addEmbarcacion(Embarcacion embarcacion) {
         try {
             String query = sqlQueries.getProperty("insert-addEmbarcacion");
@@ -118,7 +99,8 @@ public class EmbarcacionRepository {
                         embarcacion.getTipo().name(),
                         embarcacion.getNumPlazas(),
                         embarcacion.getDimensiones(),
-                        embarcacion.getDniPatron());
+                        embarcacion.getDniPatron()
+                );
                 return result > 0;
             } else {
                 return false;
@@ -130,9 +112,12 @@ public class EmbarcacionRepository {
         }
     }
 
+    // ============================================================
+    // DELETE BY MATRICULA
+    // ============================================================
     public boolean deleteEmbarcacionByMatricula(String matricula) {
         try {
-            String query = sqlQueries.getProperty("delete-embarcacionByMatricula");
+            String query = sqlQueries.getProperty("delete-deleteEmbarcacionByMatricula");
             if (query != null) {
                 int result = jdbcTemplate.update(query, matricula);
                 return result > 0;
@@ -146,12 +131,28 @@ public class EmbarcacionRepository {
         }
     }
 
+    // ============================================================
+    // UTILIDADES
+    // ============================================================
+    private final RowMapper<Embarcacion> embarcacionMapper = new RowMapper<Embarcacion>() {
+        @Override
+        public Embarcacion mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new Embarcacion(
+                    rs.getString("matricula"),
+                    rs.getString("nombre"),
+                    TipoEmbarcacion.valueOf(rs.getString("tipo")),
+                    rs.getInt("numPlazas"),
+                    rs.getString("dimensiones"),
+                    rs.getString("dniPatron")
+            );
+        }
+    };
+
     private void createProperties() {
         sqlQueries = new Properties();
         try {
-            BufferedReader reader;
             File f = new File(sqlQueriesFileName);
-            reader = new BufferedReader(new FileReader(f));
+            BufferedReader reader = new BufferedReader(new FileReader(f));
             sqlQueries.load(reader);
         } catch (IOException e) {
             System.err.println("Error creating properties object for SQL queries");

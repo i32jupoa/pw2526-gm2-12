@@ -1,7 +1,7 @@
 package es.uco.pw.demo.controller.Reserva;
 
-import es.uco.pw.demo.model.Reserva;
-import es.uco.pw.demo.model.ReservaRepository;
+import es.uco.pw.demo.model.domain.Reserva;
+import es.uco.pw.demo.model.repository.ReservaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,16 +15,25 @@ public class FindReservaController {
     private ReservaRepository reservaRepository;
 
     @GetMapping("/findReserva")
-    public ModelAndView findReserva(@RequestParam("id") int id) {
-        reservaRepository.setSQLQueriesFileName("src/main/resources/sql/reserva_queries.sql");
+    public ModelAndView findReserva(@RequestParam(value = "id", required = false) Integer id) {
+        ModelAndView mv;
+        
+        // Si no hay ID, mostrar el formulario vacío
+        if (id == null) {
+            mv = new ModelAndView("reserva/findReservaViewSuccess");
+            mv.addObject("reserva", null);
+            return mv;
+        }
+        
+        // Si hay ID, buscar la reserva
+        reservaRepository.setSQLQueriesFileName("src/main/resources/db/sql.properties");
         Reserva reserva = reservaRepository.findReservaById(id);
 
-        ModelAndView mv;
         if (reserva != null) {
-            mv = new ModelAndView("findReservaViewSuccess");
+            mv = new ModelAndView("reserva/findReservaViewSuccess");
             mv.addObject("reserva", reserva);
         } else {
-            mv = new ModelAndView("findReservaViewFail");
+            mv = new ModelAndView("reserva/findReservaViewFail");
         }
         return mv;
     }

@@ -1,7 +1,7 @@
 package es.uco.pw.demo.controller.Socio;
 
-import es.uco.pw.demo.model.Socio;
-import es.uco.pw.demo.model.SocioRepository;
+import es.uco.pw.demo.model.domain.Socio;
+import es.uco.pw.demo.model.repository.SocioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,18 +14,22 @@ public class FindSocioController {
     @Autowired
     private SocioRepository socioRepository;
 
+    @GetMapping("/findSocioForm")
+    public String mostrarFormulario() {
+        return "socio/findSocioForm";
+    }
+
     @GetMapping("/findSocio")
     public ModelAndView findSocio(@RequestParam("dni") String dni) {
-        socioRepository.setSQLQueriesFileName("src/main/resources/sql/socio_queries.sql");
+        socioRepository.setSQLQueriesFileName("src/main/resources/db/sql.properties");
         Socio socio = socioRepository.findSocioByDni(dni);
 
-        ModelAndView mv;
         if (socio != null) {
-            mv = new ModelAndView("findSocioViewSuccess");
+            ModelAndView mv = new ModelAndView("socio/findSocioViewSuccess");
             mv.addObject("socio", socio);
+            return mv;
         } else {
-            mv = new ModelAndView("findSocioViewFail");
+            return new ModelAndView("socio/findSocioViewFail");
         }
-        return mv;
     }
 }

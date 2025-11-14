@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Relaciones encontradas por DNI</title>
+</head>
+<body>
+<h1>Relaciones encontradas por DNI del socio</h1>
+
+<p><strong>DNI:</strong> <span th:text="${dni}">NULL</span></p>
+
+<table border="1">
+    <tr>
+        <th>ID Alquiler</th>
+        <th>DNI Socio</th>
+    </tr>
+    <tr th:each="alquilerSocio : ${alquilerSocios}">
+        <td th:text="${alquilerSocio.idAlquiler}">0</td>
+        <td th:text="${alquilerSocio.dniSocio}">NULL</td>
+    </tr>
+</table>
+
+<a href="/">Volver al inicio</a>
+</body>
+</html>

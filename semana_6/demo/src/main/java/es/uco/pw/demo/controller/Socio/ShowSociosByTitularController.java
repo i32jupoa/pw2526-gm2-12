@@ -3,8 +3,8 @@ package es.uco.pw.demo.controller.Socio;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
-import es.uco.pw.demo.model.Socio;
-import es.uco.pw.demo.model.SocioRepository;
+import es.uco.pw.demo.model.domain.Socio;
+import es.uco.pw.demo.model.repository.SocioRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller

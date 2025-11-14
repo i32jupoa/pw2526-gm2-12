@@ -1,7 +1,7 @@
 package es.uco.pw.demo.controller.AlquilerSocio;
 
-import es.uco.pw.demo.model.AlquilerSocio;
-import es.uco.pw.demo.model.AlquilerSocioRepository;
+import es.uco.pw.demo.model.domain.AlquilerSocio;
+import es.uco.pw.demo.model.repository.AlquilerSocioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,39 +16,45 @@ public class FindAlquilerSocioController {
     @Autowired
     private AlquilerSocioRepository alquilerSocioRepository;
 
-    /**
-     * Buscar por idAlquiler:
-     * /findAlquilerSocioById?idAlquiler=10
-     */
+    // Formulario para buscar por ID de Alquiler
+    @GetMapping("/findAlquilerSocioByIdForm")
+    public ModelAndView showFindByIdForm() {
+        return new ModelAndView("alquilerSocios/findAlquilerSocioByIdForm");
+    }
+
+    // Buscar por ID de Alquiler
     @GetMapping("/findAlquilerSocioById")
     public ModelAndView findByIdAlquiler(@RequestParam("idAlquiler") int idAlquiler) {
         ModelAndView mv;
         List<AlquilerSocio> results = alquilerSocioRepository.findByIdAlquiler(idAlquiler);
         if (results != null && !results.isEmpty()) {
-            mv = new ModelAndView("findAlquilerSocioByIdViewSuccess");
-            mv.addObject("alquilerSocio", results);
+            mv = new ModelAndView("alquilerSocios/findAlquilerSocioByIdViewSuccess");
+            mv.addObject("alquilerSocios", results);
             mv.addObject("idAlquiler", idAlquiler);
         } else {
-            mv = new ModelAndView("findAlquilerSocioByIdViewFail");
+            mv = new ModelAndView("alquilerSocios/findAlquilerSocioByIdViewFail");
             mv.addObject("idAlquiler", idAlquiler);
         }
         return mv;
     }
 
-    /**
-     * Buscar por dniSocio:
-     * /findAlquilerSocioByDni?dni=12345678A
-     */
+    // Formulario para buscar por DNI de Socio
+    @GetMapping("/findAlquilerSocioByDniForm")
+    public ModelAndView showFindByDniForm() {
+        return new ModelAndView("alquilerSocios/findAlquilerSocioByDniForm");
+    }
+
+    // Buscar por DNI de Socio
     @GetMapping("/findAlquilerSocioByDni")
     public ModelAndView findByDni(@RequestParam("dni") String dni) {
         ModelAndView mv;
         List<AlquilerSocio> results = alquilerSocioRepository.findByDniSocio(dni);
         if (results != null && !results.isEmpty()) {
-            mv = new ModelAndView("findAlquilerSocioByDniViewSuccess");
-            mv.addObject("alquilerSocio", results);
+            mv = new ModelAndView("alquilerSocios/findAlquilerSocioByDniViewSuccess");
+            mv.addObject("alquilerSocios", results);
             mv.addObject("dni", dni);
         } else {
-            mv = new ModelAndView("findAlquilerSocioByDniViewFail");
+            mv = new ModelAndView("alquilerSocios/findAlquilerSocioByDniViewFail");
             mv.addObject("dni", dni);
         }
         return mv;

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Buscar Embarcación por Matrícula</title>
+</head>
+<body>
+<h1>Buscar Embarcación por Matrícula</h1>
+
+<form method="GET" th:action="@{/findEmbarcacionByMatricula}">
+    <label for="matricula">Matrícula:</label>
+    <input type="text" name="matricula" required>
+    <input type="submit" value="Buscar">
+</form>
+
+<!-- Mostrar resultados solo si se ha buscado -->
+<div th:if="${buscado}">
+    <div th:if="${embarcacion != null}">
+        <h2>Resultado:</h2>
+        <p><strong>Matrícula:</strong> <span th:text="${embarcacion.matricula}"></span></p>
+        <p><strong>Nombre:</strong> <span th:text="${embarcacion.nombre}"></span></p>
+        <p><strong>Tipo:</strong> <span th:text="${embarcacion.tipo}"></span></p>
+        <p><strong>Número de plazas:</strong> <span th:text="${embarcacion.numPlazas}"></span></p>
+        <p><strong>Dimensiones:</strong> <span th:text="${embarcacion.dimensiones}"></span></p>
+        <p><strong>DNI del Patrón:</strong> <span th:text="${embarcacion.dniPatron}"></span></p>
+    </div>
+
+    <div th:if="${embarcacion == null}">
+        <p>No se encontró ninguna embarcación con esa matrícula.</p>
+    </div>
+</div>
+
+<a href="/">Volver al inicio</a>
+</body>
+</html>

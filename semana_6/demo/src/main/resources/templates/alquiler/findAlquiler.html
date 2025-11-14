@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Buscar Alquiler</title>
+</head>
+<body>
+<h1>Buscar Alquiler por ID</h1>
+
+<form action="#" th:action="@{/findAlquiler}" method="post">
+    <label for="id">ID del Alquiler:</label>
+    <input type="number" id="id" name="id" required/>
+    <button type="submit">Buscar</button>
+</form>
+
+<a href="/">Volver al inicio</a>
+</body>
+</html>

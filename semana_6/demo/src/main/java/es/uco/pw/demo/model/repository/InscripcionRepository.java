@@ -1,5 +1,7 @@
-package es.uco.pw.demo.model;
+package es.uco.pw.demo.model.repository;
 
+import es.uco.pw.demo.model.domain.TipoInscripcion;
+import es.uco.pw.demo.model.domain.Inscripcion;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

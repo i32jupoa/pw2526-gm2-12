@@ -7,9 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import es.uco.pw.demo.model.Inscripcion;
-import es.uco.pw.demo.model.TipoInscripcion;
-import es.uco.pw.demo.model.InscripcionRepository;
+import es.uco.pw.demo.model.domain.Inscripcion;
+import es.uco.pw.demo.model.domain.TipoInscripcion;
+import es.uco.pw.demo.model.repository.InscripcionRepository;
 
 @Controller
 public class ShowInscripcionesByTipoController {

@@ -3,8 +3,8 @@ package es.uco.pw.demo.controller.SocioInscripcion;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
-import es.uco.pw.demo.model.SocioInscripcion;
-import es.uco.pw.demo.model.SocioInscripcionRepository;
+import es.uco.pw.demo.model.domain.SocioInscripcion;
+import es.uco.pw.demo.model.repository.SocioInscripcionRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 

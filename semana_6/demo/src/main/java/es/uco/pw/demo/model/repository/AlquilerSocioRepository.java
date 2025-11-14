@@ -1,14 +1,14 @@
-package es.uco.pw.demo.model;
+package es.uco.pw.demo.model.repository;
 
+import es.uco.pw.demo.model.domain.AlquilerSocio;
+import jakarta.annotation.PostConstruct;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -17,30 +17,38 @@ import java.util.Properties;
 @Repository
 public class AlquilerSocioRepository {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
     private Properties sqlQueries;
-    private String sqlQueriesFileName;
 
     public AlquilerSocioRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void setSQLQueriesFileName(String sqlQueriesFileName) {
-        this.sqlQueriesFileName = sqlQueriesFileName;
-        createProperties();
+    @PostConstruct
+    private void loadSqlQueries() {
+        sqlQueries = new Properties();
+        try (InputStream inputStream = getClass().getResourceAsStream("/db/sql.properties")) {
+            if (inputStream != null) {
+                sqlQueries.load(inputStream);
+            } else {
+                System.err.println("sqlQueries.properties not found in /db/");
+            }
+        } catch (IOException e) {
+            System.err.println("Error loading SQL properties for AlquilerSocioRepository");
+            e.printStackTrace();
+        }
     }
 
-
-    public List<AlquilerSocio> findAllAlquilerSocio() {
+    public List<AlquilerSocio> findAllAlquilerSocios() {
         try {
-            String query = sqlQueries.getProperty("select-findAllAlquilerSocio");
+            String query = sqlQueries.getProperty("select-findAllAlquilerSocios");
             if (query != null) {
                 return jdbcTemplate.query(query, new RowMapper<AlquilerSocio>() {
                     @Override
                     public AlquilerSocio mapRow(ResultSet rs, int rowNum) throws SQLException {
                         return new AlquilerSocio(
-                            rs.getInt("idAlquiler"),
-                            rs.getString("dniSocio")
+                                rs.getInt("idAlquiler"),
+                                rs.getString("dniSocio")
                         );
                     }
                 });
@@ -48,13 +56,11 @@ public class AlquilerSocioRepository {
                 return null;
             }
         } catch (DataAccessException e) {
-            System.err.println("Unable to retrieve AlquilerSocio records from the database");
             e.printStackTrace();
             return null;
         }
     }
 
-   
     public List<AlquilerSocio> findByIdAlquiler(int idAlquiler) {
         try {
             String query = sqlQueries.getProperty("select-findByIdAlquiler");
@@ -63,8 +69,8 @@ public class AlquilerSocioRepository {
                     @Override
                     public AlquilerSocio mapRow(ResultSet rs, int rowNum) throws SQLException {
                         return new AlquilerSocio(
-                            rs.getInt("idAlquiler"),
-                            rs.getString("dniSocio")
+                                rs.getInt("idAlquiler"),
+                                rs.getString("dniSocio")
                         );
                     }
                 }, idAlquiler);
@@ -72,13 +78,11 @@ public class AlquilerSocioRepository {
                 return null;
             }
         } catch (DataAccessException e) {
-            System.err.println("Unable to find AlquilerSocio for idAlquiler = " + idAlquiler);
             e.printStackTrace();
             return null;
         }
     }
 
- 
     public List<AlquilerSocio> findByDniSocio(String dniSocio) {
         try {
             String query = sqlQueries.getProperty("select-findByDniSocio");
@@ -87,8 +91,8 @@ public class AlquilerSocioRepository {
                     @Override
                     public AlquilerSocio mapRow(ResultSet rs, int rowNum) throws SQLException {
                         return new AlquilerSocio(
-                            rs.getInt("idAlquiler"),
-                            rs.getString("dniSocio")
+                                rs.getInt("idAlquiler"),
+                                rs.getString("dniSocio")
                         );
                     }
                 }, dniSocio);
@@ -96,33 +100,29 @@ public class AlquilerSocioRepository {
                 return null;
             }
         } catch (DataAccessException e) {
-            System.err.println("Unable to find AlquilerSocio for dniSocio = " + dniSocio);
             e.printStackTrace();
             return null;
         }
     }
 
- 
     public boolean addAlquilerSocio(AlquilerSocio alquilerSocio) {
         try {
             String query = sqlQueries.getProperty("insert-addAlquilerSocio");
             if (query != null) {
                 int result = jdbcTemplate.update(query,
-                    alquilerSocio.getIdAlquiler(),
-                    alquilerSocio.getDniSocio()
+                        alquilerSocio.getIdAlquiler(),
+                        alquilerSocio.getDniSocio()
                 );
                 return result > 0;
             } else {
                 return false;
             }
         } catch (DataAccessException e) {
-            System.err.println("Unable to insert AlquilerSocio record");
             e.printStackTrace();
             return false;
         }
     }
 
-  
     public boolean deleteAlquilerSocio(int idAlquiler, String dniSocio) {
         try {
             String query = sqlQueries.getProperty("delete-alquilerSocio");
@@ -133,23 +133,8 @@ public class AlquilerSocioRepository {
                 return false;
             }
         } catch (DataAccessException e) {
-            System.err.println("Unable to delete AlquilerSocio with idAlquiler=" + idAlquiler + " and dniSocio=" + dniSocio);
             e.printStackTrace();
             return false;
-        }
-    }
-
-
-    private void createProperties() {
-        sqlQueries = new Properties();
-        try {
-            BufferedReader reader;
-            File f = new File(sqlQueriesFileName);
-            reader = new BufferedReader(new FileReader(f));
-            sqlQueries.load(reader);
-        } catch (IOException e) {
-            System.err.println("Error loading SQL properties for AlquilerSocioRepository");
-            e.printStackTrace();
         }
     }
 }

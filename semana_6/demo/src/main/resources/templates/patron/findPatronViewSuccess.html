@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Buscar Patrón</title>
+</head>
+<body>
+    <h1>Buscar Patrón</h1>
+
+    <form method="GET" th:action="@{/findPatron}">
+        <label for="dni">DNI:</label>
+        <input type="text" name="dni" required>
+        <input type="submit" value="Buscar">
+    </form>
+
+    <div th:if="${patron != null}">
+        <h2>Resultado:</h2>
+        <p><strong>DNI:</strong> <span th:text="${patron.dni}">NULL</span></p>
+        <p><strong>Nombre:</strong> <span th:text="${patron.nombre}">NULL</span></p>
+        <p><strong>Apellidos:</strong> <span th:text="${patron.apellidos}">NULL</span></p>
+        <p><strong>Fecha de nacimiento:</strong> <span th:text="${patron.fechaNacimiento}">NULL</span></p>
+        <p><strong>Fecha de expedicion del título:</strong> <span th:text="${patron.fechaExpedicionTitulo}">NULL</span></p>
+    </div>
+
+    <div th:if="${patron == null}">
+        <p>No se encontró ningún patrón con ese DNI.</p>
+    </div>
+
+    <a href="/">Volver al inicio</a>
+</body>
+</html>

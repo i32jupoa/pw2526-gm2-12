@@ -3,12 +3,13 @@ package es.uco.pw.demo.controller.Inscripcion;
 import java.time.LocalDate;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import es.uco.pw.demo.model.Inscripcion;
-import es.uco.pw.demo.model.InscripcionRepository;
-import es.uco.pw.demo.model.TipoInscripcion;
+import es.uco.pw.demo.model.domain.Inscripcion;
+import es.uco.pw.demo.model.repository.InscripcionRepository;
+import es.uco.pw.demo.model.domain.TipoInscripcion;
 
 @Controller
 public class AddInscripcionController {
@@ -21,15 +22,23 @@ public class AddInscripcionController {
         this.inscripcionRepository.setSQLQueriesFileName(sqlQueriesFileName);
     }
 
+    // Mostrar el formulario
+    @GetMapping("/addInscripcionForm")
+    public String showAddInscripcionForm() {
+        return "inscripcion/addInscripcionForm";
+    }
+
+    // Procesar el formulario
     @GetMapping("/addInscripcion")
     public String addInscripcion(
         @RequestParam("tipo") String tipo,
         @RequestParam("cuotaActual") double cuotaActual,
-        @RequestParam("dniTitular") String dniTitular
+        @RequestParam("dniTitular") String dniTitular,
+        Model model
     ) {
         LocalDate fechaCreacion = LocalDate.now();
         Inscripcion inscripcion = new Inscripcion(
-            0, // el ID se genera automáticamente si la tabla está en AUTO_INCREMENT
+            0,
             fechaCreacion,
             TipoInscripcion.valueOf(tipo.toUpperCase()),
             cuotaActual,
@@ -38,10 +47,12 @@ public class AddInscripcionController {
 
         boolean success = inscripcionRepository.addInscripcion(inscripcion);
         String nextPage;
-        if(success)
-            nextPage = "addInscripcionViewSuccess.html";
-        else
-            nextPage = "addInscripcionViewFail.html";
+        if(success) {
+            model.addAttribute("inscripcion", inscripcion);
+            nextPage = "inscripcion/addInscripcionViewSuccess";
+        } else {
+            nextPage = "inscripcion/addInscripcionViewFail";
+        }
         return nextPage;
     }
 }

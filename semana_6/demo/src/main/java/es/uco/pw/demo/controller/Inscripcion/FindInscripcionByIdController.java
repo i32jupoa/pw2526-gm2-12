@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import es.uco.pw.demo.model.Inscripcion;
-import es.uco.pw.demo.model.InscripcionRepository;
+import es.uco.pw.demo.model.domain.Inscripcion;
+import es.uco.pw.demo.model.repository.InscripcionRepository;
 
 @Controller
 public class FindInscripcionByIdController {
@@ -19,10 +19,17 @@ public class FindInscripcionByIdController {
         this.inscripcionRepository.setSQLQueriesFileName(sqlQueriesFileName);
     }
 
+    // Mostrar el formulario (sin parámetros)
+    @GetMapping("/findInscripcionByIdForm")
+    public String showFindInscripcionForm() {
+        return "inscripcion/findInscripcionById";
+    }
+
+    // Procesar la búsqueda (con parámetro id)
     @GetMapping("/findInscripcionById")
     public ModelAndView findInscripcionById(@RequestParam("id") int id){
         Inscripcion inscripcion = inscripcionRepository.findInscripcionById(id);
-        ModelAndView model = new ModelAndView("findInscripcionById.html");
+        ModelAndView model = new ModelAndView("inscripcion/findInscripcionById");
         model.addObject("inscripcion", inscripcion);
         return model;
     }

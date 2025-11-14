@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Socios por Titularidad</title>
+</head>
+<body>
+
+<h1>Buscar Socios por Titularidad</h1>
+
+<form method="GET" th:action="@{/showSociosByTitular}">
+    <label for="titular">¿Es titular?:</label>
+    <select name="titular" id="titular">
+        <option value="">-- Seleccione --</option>
+        <option value="true">Sí</option>
+        <option value="false">No</option>
+    </select>
+    <input type="submit" value="Buscar">
+</form>
+
+<br/>
+
+<!-- Mostrar resultados solo si se ha realizado una búsqueda -->
+<div th:if="${buscado}">
+
+    <!-- Si hay resultados -->
+    <div th:if="${socios != null and !#lists.isEmpty(socios)}">
+        <h2>Resultados encontrados:</h2>
+
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>DNI</th>
+                    <th>Nombre</th>
+                    <th>Apellidos</th>
+                    <th>Fecha de Nacimiento</th>
+                    <th>Dirección</th>
+                    <th>Fecha Inscripción</th>
+                    <th>Es Titular</th>
+                    <th>Tiene Título Patrón</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="socio : ${socios}">
+                    <td th:text="${socio.dni}"></td>
+                    <td th:text="${socio.nombre}"></td>
+                    <td th:text="${socio.apellidos}"></td>
+                    <td th:text="${socio.fechaNacimiento}"></td>
+                    <td th:text="${socio.direccion}"></td>
+                    <td th:text="${socio.fechaInscripcion}"></td>
+                    <td th:text="${socio.esTitular}"></td>
+                    <td th:text="${socio.tieneTituloPatron}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Si no hay resultados -->
+    <div th:if="${socios == null or #lists.isEmpty(socios)}">
+        <p><strong>No se encontraron socios con los criterios seleccionados.</strong></p>
+    </div>
+
+</div>
+
+<br/>
+<a th:href="@{/}">Volver al inicio</a>
+
+</body>
+</html>

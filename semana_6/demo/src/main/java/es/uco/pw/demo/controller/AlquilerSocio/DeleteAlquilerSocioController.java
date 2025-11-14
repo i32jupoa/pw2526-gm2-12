@@ -1,6 +1,6 @@
 package es.uco.pw.demo.controller.AlquilerSocio;
 
-import es.uco.pw.demo.model.AlquilerSocioRepository;
+import es.uco.pw.demo.model.repository.AlquilerSocioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,8 +14,17 @@ public class DeleteAlquilerSocioController {
     private AlquilerSocioRepository alquilerSocioRepository;
 
     /**
-     * Elimina un registro de la tabla AlquilerSocio mediante idAlquiler y dniSocio:
-     * /deleteAlquilerSocio?idAlquiler=10&dni=12345678A
+     * Muestra el formulario para eliminar una relación Alquiler-Socio.
+     * URL: /deleteAlquilerSocioForm
+     */
+    @GetMapping("/deleteAlquilerSocioForm")
+    public ModelAndView showDeleteForm() {
+        return new ModelAndView("alquilerSocios/deleteAlquilerSocioForm");
+    }
+
+    /**
+     * Elimina un registro de la tabla AlquilerSocio mediante idAlquiler y dniSocio.
+     * URL de ejemplo: /deleteAlquilerSocio?idAlquiler=10&dni=12345678A
      */
     @GetMapping("/deleteAlquilerSocio")
     public ModelAndView deleteAlquilerSocio(@RequestParam("idAlquiler") int idAlquiler,
@@ -23,11 +32,11 @@ public class DeleteAlquilerSocioController {
         ModelAndView mv;
         boolean deleted = alquilerSocioRepository.deleteAlquilerSocio(idAlquiler, dni);
         if (deleted) {
-            mv = new ModelAndView("deleteAlquilerSocioViewSuccess");
+            mv = new ModelAndView("alquilerSocios/deleteAlquilerSocioViewSuccess");
             mv.addObject("idAlquiler", idAlquiler);
             mv.addObject("dni", dni);
         } else {
-            mv = new ModelAndView("deleteAlquilerSocioViewFail");
+            mv = new ModelAndView("alquilerSocios/deleteAlquilerSocioViewFail");
             mv.addObject("idAlquiler", idAlquiler);
             mv.addObject("dni", dni);
         }

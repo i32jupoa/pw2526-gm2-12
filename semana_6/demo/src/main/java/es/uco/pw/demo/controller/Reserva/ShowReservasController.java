@@ -1,7 +1,7 @@
 package es.uco.pw.demo.controller.Reserva;
 
-import es.uco.pw.demo.model.Reserva;
-import es.uco.pw.demo.model.ReservaRepository;
+import es.uco.pw.demo.model.domain.Reserva;
+import es.uco.pw.demo.model.repository.ReservaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

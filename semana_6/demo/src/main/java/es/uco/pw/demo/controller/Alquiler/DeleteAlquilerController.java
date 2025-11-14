@@ -1,6 +1,6 @@
 package es.uco.pw.demo.controller.Alquiler;
 
-import es.uco.pw.demo.model.AlquilerRepository;
+import es.uco.pw.demo.model.repository.AlquilerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,19 +13,20 @@ public class DeleteAlquilerController {
     @Autowired
     private AlquilerRepository alquilerRepository;
 
-    /**
-     * Elimina un alquiler por su id pasado como parámetro en la URL:
-     * /deleteAlquiler?id=123
-     */
     @GetMapping("/deleteAlquiler")
-    public ModelAndView deleteAlquiler(@RequestParam("id") int id) {
+    public ModelAndView showDeleteForm() {
+        return new ModelAndView("alquiler/deleteAlquiler");
+    }
+
+    @GetMapping("/deleteAlquiler/process")
+    public ModelAndView processDelete(@RequestParam("id") int id) {
         ModelAndView mv;
         boolean deleted = alquilerRepository.deleteAlquilerById(id);
         if (deleted) {
-            mv = new ModelAndView("deleteAlquilerViewSuccess");
+            mv = new ModelAndView("alquiler/deleteAlquilerViewSuccess");
             mv.addObject("id", id);
         } else {
-            mv = new ModelAndView("deleteAlquilerViewFail");
+            mv = new ModelAndView("alquiler/deleteAlquilerViewFail");
             mv.addObject("id", id);
         }
         return mv;
