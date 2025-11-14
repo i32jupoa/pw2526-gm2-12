@@ -1,51 +1,66 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Buscar Embarcaciones por Tipo</title>
+    <title>Buscar Embarcación por Tipo</title>
 </head>
 <body>
-<h1>Buscar Embarcaciones por Tipo</h1>
 
-<form method="GET" th:action="@{/findEmbarcacionesByTipo}">
+<h1>Buscar Embarcación por Tipo</h1>
+
+<form method="GET" th:action="@{/findEmbarcacionByTipo}">
     <label for="tipo">Tipo de embarcación:</label>
-    <select name="tipo">
+    <select name="tipo" id="tipo">
+        <option value="">-- Seleccione un tipo --</option>
         <option value="VELERO">Velero</option>
         <option value="YATE">Yate</option>
-        <option value="PESQUERO">Pesquero</option>
+        <option value="CATAMARAN">Catamaran</option>
         <option value="LANCHA">Lancha</option>
     </select>
     <input type="submit" value="Buscar">
 </form>
 
-<!-- Mostrar resultados solo si se ha buscado -->
+<br/>
+
+<!-- Mostrar resultados solo si se ha realizado una búsqueda -->
 <div th:if="${buscado}">
+
+    <!-- Si hay resultados -->
     <div th:if="${embarcaciones != null and !#lists.isEmpty(embarcaciones)}">
-        <h2>Resultados:</h2>
+        <h2>Resultados encontrados:</h2>
+
         <table border="1">
-            <tr>
-                <th>Matrícula</th>
-                <th>Nombre</th>
-                <th>Tipo</th>
-                <th>Número de plazas</th>
-                <th>Dimensiones</th>
-                <th>DNI Patrón</th>
-            </tr>
-            <tr th:each="embarcacion : ${embarcaciones}">
-                <td th:text="${embarcacion.matricula}"></td>
-                <td th:text="${embarcacion.nombre}"></td>
-                <td th:text="${embarcacion.tipo}"></td>
-                <td th:text="${embarcacion.numPlazas}"></td>
-                <td th:text="${embarcacion.dimensiones}"></td>
-                <td th:text="${embarcacion.dniPatron}"></td>
-            </tr>
+            <thead>
+                <tr>
+                    <th>Matrícula</th>
+                    <th>Nombre</th>
+                    <th>Tipo</th>
+                    <th>Plazas</th>
+                    <th>Dimensiones</th>
+                    <th>DNI Patrón</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="emb : ${embarcaciones}">
+                    <td th:text="${emb.matricula}"></td>
+                    <td th:text="${emb.nombre}"></td>
+                    <td th:text="${emb.tipo}"></td>
+                    <td th:text="${emb.numPlazas}"></td>
+                    <td th:text="${emb.dimensiones}"></td>
+                    <td th:text="${emb.dniPatron}"></td>
+                </tr>
+            </tbody>
         </table>
     </div>
 
+    <!-- Si no hay resultados -->
     <div th:if="${embarcaciones == null or #lists.isEmpty(embarcaciones)}">
-        <p>No se encontraron embarcaciones del tipo seleccionado.</p>
+        <p><strong>No se encontraron embarcaciones del tipo seleccionado.</strong></p>
     </div>
+
 </div>
 
+<br/>
 <a th:href="@{/}">Volver al inicio</a>
+
 </body>
 </html>

@@ -1,14 +1,12 @@
 package es.uco.pw.demo.controller.Embarcacion;
 
+import es.uco.pw.demo.model.domain.Embarcacion;
+import es.uco.pw.demo.model.domain.TipoEmbarcacion;
+import es.uco.pw.demo.model.repository.EmbarcacionRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import es.uco.pw.demo.model.domain.Embarcacion;
-import es.uco.pw.demo.model.domain.TipoEmbarcacion;
-import es.uco.pw.demo.model.repository.EmbarcacionRepository;
-
-import java.util.List;
 
 @Controller
 public class AddEmbarcacionController {
@@ -56,25 +54,5 @@ public class AddEmbarcacionController {
         return model;
     }
 
-    /**
-     * Buscar embarcaciones por tipo. Si no viene parámetro, solo mostrar formulario.
-     */
-    @GetMapping("/findEmbarcacionesByTipo")
-    public ModelAndView findEmbarcacionesByTipo(
-            @RequestParam(value = "tipo", required = false) String tipo
-    ) {
-        ModelAndView model = new ModelAndView("embarcacion/findEmbarcacionByTipo");
-
-        if (tipo != null && !tipo.isEmpty()) {
-            List<Embarcacion> embarcaciones = embarcacionRepository.findEmbarcacionesByTipo(
-                    TipoEmbarcacion.valueOf(tipo.toUpperCase())
-            );
-            model.addObject("embarcaciones", embarcaciones);
-            model.addObject("buscado", true);
-        } else {
-            model.addObject("buscado", false);
-        }
-
-        return model;
-    }
+    // ⚠ Eliminamos el método duplicado de búsqueda
 }
