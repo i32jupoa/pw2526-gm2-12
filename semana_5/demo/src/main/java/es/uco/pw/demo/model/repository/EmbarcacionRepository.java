@@ -1,10 +1,11 @@
-package es.uco.pw.demo.model;
+package es.uco.pw.demo.model.repository;
 
+import es.uco.pw.demo.model.domain.TipoEmbarcacion;
+import es.uco.pw.demo.model.domain.Embarcacion;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -16,7 +17,6 @@ import java.util.Properties;
 
 @Repository
 public class EmbarcacionRepository {
-
     private JdbcTemplate jdbcTemplate;
     private Properties sqlQueries;
     private String sqlQueriesFileName;
@@ -37,18 +37,16 @@ public class EmbarcacionRepository {
                 return jdbcTemplate.query(query, new RowMapper<Embarcacion>() {
                     public Embarcacion mapRow(ResultSet rs, int rowNum) throws SQLException {
                         return new Embarcacion(
-                                rs.getString("matricula"),
-                                rs.getString("nombre"),
-                                TipoEmbarcacion.valueOf(rs.getString("tipo")),
-                                rs.getInt("numPlazas"),
-                                rs.getString("dimensiones"),
-                                rs.getString("dniPatron")
+                            rs.getString("matricula"),
+                            rs.getString("nombre"),
+                            TipoEmbarcacion.valueOf(rs.getString("tipo")),
+                            rs.getInt("numPlazas"),
+                            rs.getString("dimensiones"),
+                            rs.getString("dniPatron")
                         );
                     }
                 });
-            } else {
-                return null;
-            }
+            } else { return null; }
         } catch (DataAccessException e) {
             System.err.println("Unable to find embarcaciones");
             e.printStackTrace();
@@ -63,18 +61,16 @@ public class EmbarcacionRepository {
                 return jdbcTemplate.queryForObject(query, new Object[]{matricula}, new RowMapper<Embarcacion>() {
                     public Embarcacion mapRow(ResultSet rs, int rowNum) throws SQLException {
                         return new Embarcacion(
-                                rs.getString("matricula"),
-                                rs.getString("nombre"),
-                                TipoEmbarcacion.valueOf(rs.getString("tipo")),
-                                rs.getInt("numPlazas"),
-                                rs.getString("dimensiones"),
-                                rs.getString("dniPatron")
+                            rs.getString("matricula"),
+                            rs.getString("nombre"),
+                            TipoEmbarcacion.valueOf(rs.getString("tipo")),
+                            rs.getInt("numPlazas"),
+                            rs.getString("dimensiones"),
+                            rs.getString("dniPatron")
                         );
                     }
                 });
-            } else {
-                return null;
-            }
+            } else { return null; }
         } catch (DataAccessException e) {
             System.err.println("Unable to find embarcacion with matricula=" + matricula);
             e.printStackTrace();
@@ -89,18 +85,16 @@ public class EmbarcacionRepository {
                 return jdbcTemplate.query(query, new RowMapper<Embarcacion>() {
                     public Embarcacion mapRow(ResultSet rs, int rowNum) throws SQLException {
                         return new Embarcacion(
-                                rs.getString("matricula"),
-                                rs.getString("nombre"),
-                                TipoEmbarcacion.valueOf(rs.getString("tipo")),
-                                rs.getInt("numPlazas"),
-                                rs.getString("dimensiones"),
-                                rs.getString("dniPatron")
+                            rs.getString("matricula"),
+                            rs.getString("nombre"),
+                            TipoEmbarcacion.valueOf(rs.getString("tipo")),
+                            rs.getInt("numPlazas"),
+                            rs.getString("dimensiones"),
+                            rs.getString("dniPatron")
                         );
                     }
                 }, tipo.name());
-            } else {
-                return null;
-            }
+            } else { return null; }
         } catch (DataAccessException e) {
             System.err.println("Unable to find embarcaciones of tipo=" + tipo);
             e.printStackTrace();
@@ -113,16 +107,15 @@ public class EmbarcacionRepository {
             String query = sqlQueries.getProperty("insert-addEmbarcacion");
             if (query != null) {
                 int result = jdbcTemplate.update(query,
-                        embarcacion.getMatricula(),
-                        embarcacion.getNombre(),
-                        embarcacion.getTipo().name(),
-                        embarcacion.getNumPlazas(),
-                        embarcacion.getDimensiones(),
-                        embarcacion.getDniPatron());
+                    embarcacion.getMatricula(),
+                    embarcacion.getNombre(),
+                    embarcacion.getTipo().name(),
+                    embarcacion.getNumPlazas(),
+                    embarcacion.getDimensiones(),
+                    embarcacion.getDniPatron()
+                );
                 return result > 0;
-            } else {
-                return false;
-            }
+            } else { return false; }
         } catch (DataAccessException e) {
             System.err.println("Unable to insert embarcacion into the database");
             e.printStackTrace();
@@ -136,9 +129,7 @@ public class EmbarcacionRepository {
             if (query != null) {
                 int result = jdbcTemplate.update(query, matricula);
                 return result > 0;
-            } else {
-                return false;
-            }
+            } else { return false; }
         } catch (DataAccessException e) {
             System.err.println("Unable to delete embarcacion with matricula=" + matricula);
             e.printStackTrace();

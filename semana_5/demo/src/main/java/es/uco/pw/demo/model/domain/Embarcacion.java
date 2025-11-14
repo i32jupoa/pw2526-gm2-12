@@ -1,5 +1,4 @@
-package es.uco.pw.demo.model;
-
+package es.uco.pw.demo.model.domain;
 
 public class Embarcacion {
     private String matricula;
@@ -9,8 +8,7 @@ public class Embarcacion {
     private String dimensiones;
     private String dniPatron; // opcional
 
-    public Embarcacion(String matricula, String nombre, TipoEmbarcacion tipo, int numPlazas,
-                       String dimensiones, String dniPatron) {
+    public Embarcacion(String matricula, String nombre, TipoEmbarcacion tipo, int numPlazas, String dimensiones, String dniPatron) {
         this.matricula = matricula;
         this.nombre = nombre;
         this.tipo = tipo;
