@@ -21,7 +21,9 @@ public class AddEmbarcacionController {
         this.embarcacionRepository.setSQLQueriesFileName(sqlQueriesFileName);
     }
 
-    // Añadir embarcación
+    /**
+     * Añadir embarcación (success/fail). Si no vienen parámetros, muestra el formulario.
+     */
     @GetMapping("/addEmbarcacion")
     public ModelAndView addEmbarcacion(
             @RequestParam(value = "matricula", required = false) String matricula,
@@ -31,8 +33,9 @@ public class AddEmbarcacionController {
             @RequestParam(value = "dimensiones", required = false) String dimensiones,
             @RequestParam(value = "dniPatron", required = false) String dniPatron
     ) {
+        // Si no se pasan los parámetros, mostrar el formulario
         if (matricula == null || nombre == null || tipo == null || numPlazas == null || dimensiones == null) {
-            return new ModelAndView("embarcacion/addEmbarcacionForm.html");
+            return new ModelAndView("embarcacion/addEmbarcacionForm");
         }
 
         Embarcacion embarcacion = new Embarcacion(
@@ -46,28 +49,32 @@ public class AddEmbarcacionController {
 
         boolean success = embarcacionRepository.addEmbarcacion(embarcacion);
         String view = success
-                ? "embarcacion/addEmbarcacionViewSuccess.html"
-                : "embarcacion/addEmbarcacionViewFail.html";
+                ? "embarcacion/addEmbarcacionViewSuccess"
+                : "embarcacion/addEmbarcacionViewFail";
 
         ModelAndView model = new ModelAndView(view);
         model.addObject("embarcacion", embarcacion);
         return model;
     }
 
-    // Buscar embarcaciones por tipo
+    /**
+     * Buscar embarcaciones por tipo. Si no viene parámetro, solo mostrar formulario.
+     */
     @GetMapping("/findEmbarcacionesByTipo")
     public ModelAndView findEmbarcacionesByTipo(
             @RequestParam(value = "tipo", required = false) String tipo
     ) {
-        ModelAndView model = new ModelAndView("embarcacion/findEmbarcacionByTipo.html");
+        ModelAndView model = new ModelAndView("embarcacion/findEmbarcacionByTipo");
 
         if (tipo != null && !tipo.isEmpty()) {
+            // Realizamos la búsqueda
             List<Embarcacion> embarcaciones = embarcacionRepository.findEmbarcacionesByTipo(
                     TipoEmbarcacion.valueOf(tipo.toUpperCase())
             );
             model.addObject("embarcaciones", embarcaciones);
-            model.addObject("buscado", true);
+            model.addObject("buscado", true); // flag indicando que se ha buscado
         } else {
+            // No se ha buscado aún
             model.addObject("buscado", false);
         }
 
