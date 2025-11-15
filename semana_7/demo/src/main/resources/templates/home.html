@@ -1,88 +1,106 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
+
 <head>
+    <meta charset="UTF-8">
     <title>Gestión del Club Náutico</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-<body>
-    <h1>Bienvenido al Sistema de Gestión del Club Náutico</h1>
-    <h2>Menú principal</h2>
 
-    <!-- ===================================== -->
-    <h3>Alquileres</h3>
-    <ol>
-        <li><a href="/addAlquiler">Añadir un alquiler</a></li>
-        <li><a href="/findAlquiler">Buscar alquiler por ID</a></li>
-        <li><a href="/deleteAlquiler">Eliminar un alquiler</a></li>
-        <li><a href="/showAlquileres">Mostrar todos los alquileres</a></li>
-    </ol>
+<body class="home">
 
-    <!-- ===================================== -->
-    <h3>Alquiler - Socios</h3>
-    <ol>
-        <li><a href="/addAlquilerSocio">Añadir relación Alquiler-Socio</a></li>
-        <li><a href="/findAlquilerSocioByIdForm">Buscar relaciones por ID de Alquiler</a></li>
-        <li><a href="/findAlquilerSocioByDniForm">Buscar relaciones por DNI de Socio</a></li>
-        <li><a href="/deleteAlquilerSocioForm">Eliminar relación Alquiler-Socio</a></li>
-        <li><a href="/showAlquilerSocio">Mostrar todas las relaciones entre Alquiler-Socio</a></li>
-    </ol>
+<header class="header">
+    <h1>Gestión del Club Náutico</h1>
+    <h2>Menú Principal</h2>
+</header>
 
-    <!-- ===================================== -->
-    <h3>Embarcaciones</h3>
-    <ol>
-        <li><a href="/addEmbarcacion">Añadir una embarcación</a></li>
-        <li><a href="/findEmbarcacionByMatricula">Buscar embarcación por matrícula</a></li>
-        <li><a href="/findEmbarcacionByTipo">Buscar embarcaciones por tipo</a></li>
-        <li><a href="/showTiposEmbarcacion">Mostrar todos los tipos de embarcacion</a></li>
-    </ol>
+<div class="menu-container">
 
-    <!-- ===================================== -->
-    <h3>Inscripciones</h3>
-    <ol>
-        <li><a href="/addInscripcionForm">Añadir inscripción</a></li>
-        <li><a href="/findInscripcionByIdForm">Buscar inscripción por ID</a></li>
-        <li><a href="/showInscripcionesByTipo">Mostrar todas las inscripciones</a></li>
-    </ol>
+    <section class="menu-section">
+        <h3>Alquileres</h3>
+        <ul>
+            <li><a href="/addAlquiler">Añadir un alquiler</a></li>
+            <li><a href="/findAlquiler">Buscar alquiler por ID</a></li>
+            <li><a href="/deleteAlquiler">Eliminar un alquiler</a></li>
+            <li><a href="/showAlquileres">Mostrar todos los alquileres</a></li>
+        </ul>
+    </section>
 
-    <!-- ===================================== -->
-    <h3>Patrones</h3>
-    <ol>
-        <li><a href="/addPatronForm">Añadir patrón</a></li>
-        <li><a href="/findPatronForm">Buscar patrón por ID</a></li>
-    </ol>
+    <section class="menu-section">
+        <h3>Alquiler - Socios</h3>
+        <ul>
+            <li><a href="/addAlquilerSocio">Añadir relación Alquiler-Socio</a></li>
+            <li><a href="/findAlquilerSocioByIdForm">Buscar por ID de Alquiler</a></li>
+            <li><a href="/findAlquilerSocioByDniForm">Buscar por DNI de Socio</a></li>
+            <li><a href="/deleteAlquilerSocioForm">Eliminar relación</a></li>
+            <li><a href="/showAlquilerSocio">Mostrar todas</a></li>
+        </ul>
+    </section>
 
-    <!-- ===================================== -->
-    <h3>Reservas</h3>
-    <ol>
-        <li><a href="/addReservaForm">Añadir una reserva</a></li>
-        <li><a href="/findReserva">Buscar reserva por ID</a></li>
-        <li><a href="/deleteReservaForm">Eliminar reserva</a></li>
-        <li><a href="/showReservas">Mostrar reservas</a></li>
-    </ol>
+    <section class="menu-section">
+        <h3>Embarcaciones</h3>
+        <ul>
+            <li><a href="/addEmbarcacion">Añadir embarcación</a></li>
+            <li><a href="/findEmbarcacionByMatricula">Buscar por matrícula</a></li>
+            <li><a href="/findEmbarcacionByTipo">Buscar por tipo</a></li>
+            <li><a href="/showTiposEmbarcacion">Mostrar tipos</a></li>
+        </ul>
+    </section>
 
-    <!-- ===================================== -->
-    <h3>Socios</h3>
-    <ol>
-        <li><a href="/addSocioForm">Añadir socio</a></li>
-        <li><a href="/findSocioForm">Buscar socio por DNI</a></li>
-        <li><a href="/deleteSocioForm">Eliminar socio</a></li>
-        <li><a href="/showSocio">Mostrar todos los socios</a></li>
-    </ol>
+    <section class="menu-section">
+        <h3>Inscripciones</h3>
+        <ul>
+            <li><a href="/addInscripcionForm">Añadir inscripción</a></li>
+            <li><a href="/findInscripcionByIdForm">Buscar por ID</a></li>
+            <li><a href="/showInscripcionesByTipo">Mostrar todas</a></li>
+        </ul>
+    </section>
 
-    <!-- ===================================== -->
-    <h3>Socio - Inscripción</h3>
-    <ol>
-        <li><a href="/addSocioInscripcion">Añadir relación Socio-Inscripción</a></li>
-        <li><a href="/findSocioInscripcionById">Buscar relación por ID de inscripción</a></li>
-        <li><a href="/findSocioInscripcionByDni">Buscar relación por DNI de socio</a></li>
-        <li><a href="/deleteSocioInscripcionForm">Eliminar relación Socio-Inscripción</a></li>
-        <li><a href="/showSocioInscripcion">Mostrar todas las relaciones Socio-Inscripción</a></li>
-    </ol>
+    <section class="menu-section">
+        <h3>Patrones</h3>
+        <ul>
+            <li><a href="/addPatronForm">Añadir patrón</a></li>
+            <li><a href="/findPatronForm">Buscar por ID</a></li>
+        </ul>
+    </section>
 
-    <hr/>
+    <section class="menu-section">
+        <h3>Reservas</h3>
+        <ul>
+            <li><a href="/addReservaForm">Añadir una reserva</a></li>
+            <li><a href="/findReserva">Buscar reserva</a></li>
+            <li><a href="/deleteReservaForm">Eliminar reserva</a></li>
+            <li><a href="/showReservas">Mostrar reservas</a></li>
+        </ul>
+    </section>
 
-    <img th:src="@{/images/UCO.png}" alt="Logo UCO" style="width:200px; margin-top:20px;"/>
+    <section class="menu-section">
+        <h3>Socios</h3>
+        <ul>
+            <li><a href="/addSocioForm">Añadir socio</a></li>
+            <li><a href="/findSocioForm">Buscar por DNI</a></li>
+            <li><a href="/deleteSocioForm">Eliminar socio</a></li>
+            <li><a href="/showSocio">Mostrar todos</a></li>
+        </ul>
+    </section>
+
+    <section class="menu-section">
+        <h3>Socio - Inscripción</h3>
+        <ul>
+            <li><a href="/addSocioInscripcion">Añadir relación</a></li>
+            <li><a href="/findSocioInscripcionById">Buscar por ID de inscripción</a></li>
+            <li><a href="/findSocioInscripcionByDni">Buscar por DNI de socio</a></li>
+            <li><a href="/deleteSocioInscripcionForm">Eliminar relación</a></li>
+            <li><a href="/showSocioInscripcion">Mostrar todas</a></li>
+        </ul>
+    </section>
+
+</div>
+
+<footer class="footer">
+    <img th:src="@{/images/UCO.png}" alt="Logo UCO"/>
+</footer>
 
 </body>
 </html>
