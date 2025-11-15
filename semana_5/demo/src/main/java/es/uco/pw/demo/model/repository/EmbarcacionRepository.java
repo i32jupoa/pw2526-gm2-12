@@ -32,9 +32,6 @@ public class EmbarcacionRepository {
         createProperties();
     }
 
-    // ============================================================
-    // FIND ALL
-    // ============================================================
     public List<Embarcacion> findAllEmbarcaciones() {
         try {
             String query = sqlQueries.getProperty("select-findAllEmbarcaciones");
@@ -50,9 +47,6 @@ public class EmbarcacionRepository {
         }
     }
 
-    // ============================================================
-    // FIND BY MATRICULA
-    // ============================================================
     public Embarcacion findEmbarcacionByMatricula(String matricula) {
         try {
             String query = sqlQueries.getProperty("select-findEmbarcacionByMatricula");
@@ -68,9 +62,6 @@ public class EmbarcacionRepository {
         }
     }
 
-    // ============================================================
-    // FIND BY TIPO
-    // ============================================================
     public List<Embarcacion> findEmbarcacionByTipo(TipoEmbarcacion tipo) {
         try {
             String query = sqlQueries.getProperty("select-findEmbarcacionByTipo"); // clave consistente
@@ -86,9 +77,6 @@ public class EmbarcacionRepository {
         }
     }
 
-    // ============================================================
-    // INSERT
-    // ============================================================
     public boolean addEmbarcacion(Embarcacion embarcacion) {
         try {
             String query = sqlQueries.getProperty("insert-addEmbarcacion");
@@ -112,9 +100,6 @@ public class EmbarcacionRepository {
         }
     }
 
-    // ============================================================
-    // DELETE BY MATRICULA
-    // ============================================================
     public boolean deleteEmbarcacionByMatricula(String matricula) {
         try {
             String query = sqlQueries.getProperty("delete-deleteEmbarcacionByMatricula");
@@ -131,9 +116,6 @@ public class EmbarcacionRepository {
         }
     }
 
-    // ============================================================
-    // UTILIDADES
-    // ============================================================
     private final RowMapper<Embarcacion> embarcacionMapper = new RowMapper<Embarcacion>() {
         @Override
         public Embarcacion mapRow(ResultSet rs, int rowNum) throws SQLException {
