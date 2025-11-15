@@ -103,4 +103,28 @@ public class SocioRepository {
             return false;
         }
     }
+
+    public List<Socio> findAllSocios() {
+    try {
+        String query = sqlQueries.getProperty("select-findAllSocios");
+        return jdbcTemplate.query(query, new RowMapper<Socio>() {
+            public Socio mapRow(ResultSet rs, int rowNumber) throws SQLException {
+                return new Socio(
+                    rs.getString("dni"),
+                    rs.getString("nombre"),
+                    rs.getString("apellidos"),
+                    rs.getDate("fechaNacimiento").toLocalDate(),
+                    rs.getString("direccion"),
+                    rs.getDate("fechaInscripcion").toLocalDate(),
+                    rs.getBoolean("esTitular"),
+                    rs.getBoolean("tieneTituloPatron")
+                );
+            }
+        });
+    } catch (DataAccessException exception) {
+        System.err.println("Unable to find all socios");
+        exception.printStackTrace();
+        return null;
+    }
+}
 }
