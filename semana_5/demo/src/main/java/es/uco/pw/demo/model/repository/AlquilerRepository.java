@@ -4,11 +4,14 @@ import es.uco.pw.demo.model.domain.Alquiler;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -73,20 +76,28 @@ public class AlquilerRepository {
     public boolean addAlquiler(Alquiler alquiler) {
         try {
             String query = sqlQueries.getProperty("insert-addAlquiler");
-            int result = jdbcTemplate.update(query,
-                    alquiler.getIdInscripcion(),
-                    alquiler.getMatricula(),
-                    Date.valueOf(alquiler.getFechaInicio()),
-                    Date.valueOf(alquiler.getFechaFin()),
-                    alquiler.getPlazasReservadas(),
-                    alquiler.getPrecioTotal());
-            return result > 0;
+            KeyHolder keyHolder = new GeneratedKeyHolder();
+
+            jdbcTemplate.update(connection -> {
+                PreparedStatement ps = connection.prepareStatement(query, new String[]{"id"});
+                ps.setInt(1, alquiler.getIdInscripcion());
+                ps.setString(2, alquiler.getMatricula());
+                ps.setDate(3, Date.valueOf(alquiler.getFechaInicio()));
+                ps.setDate(4, Date.valueOf(alquiler.getFechaFin()));
+                ps.setInt(5, alquiler.getPlazasReservadas());
+                ps.setDouble(6, alquiler.getPrecioTotal());
+                return ps;
+            }, keyHolder);
+
+            // Asignamos el ID generado al objeto alquiler
+            alquiler.setId(keyHolder.getKey().intValue());
+            return true;
         } catch (DataAccessException e) {
             System.err.println("Unable to insert alquiler into the database");
             e.printStackTrace();
             return false;
         }
-    }    
+    }
 
     public boolean deleteAlquilerById(int id) {
         try {

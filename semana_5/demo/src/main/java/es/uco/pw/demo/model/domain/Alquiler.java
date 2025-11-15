@@ -23,6 +23,17 @@ public class Alquiler {
         this.precioTotal = precioTotal;
     }
 
+    // Constructor para creación de nuevo alquiler (sin id)
+    public Alquiler(int idInscripcion, String matricula, LocalDate fechaInicio,
+                LocalDate fechaFin, int plazasReservadas, double precioTotal) {
+    this.idInscripcion = idInscripcion;
+    this.matricula = matricula;
+    this.fechaInicio = fechaInicio;
+    this.fechaFin = fechaFin;
+    this.plazasReservadas = plazasReservadas;
+    this.precioTotal = precioTotal;
+}
+
     public int getId() { return id; }
     public int getIdInscripcion() { return idInscripcion; }
     public String getMatricula() { return matricula; }

@@ -1,17 +1,4 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Añadir Alquiler</title>
-</head>
-<body>
-<h1>Añadir un nuevo alquiler</h1>
-
 <form th:action="@{/addAlquiler}" th:object="${alquiler}" method="post">
-    <p>
-        <label>ID Alquiler:</label>
-        <input type="number" th:field="*{id}" required/>
-    </p>
     <p>
         <label>ID Inscripción:</label>
         <input type="number" th:field="*{idInscripcion}" required/>
@@ -38,7 +25,3 @@
     </p>
     <input type="submit" value="Guardar Alquiler"/>
 </form>
-
-<a href="/">Volver al inicio</a>
-</body>
-</html>
