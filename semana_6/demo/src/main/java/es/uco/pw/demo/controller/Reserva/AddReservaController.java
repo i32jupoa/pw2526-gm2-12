@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -24,9 +25,8 @@ public class AddReservaController {
     }
 
     // Procesar el formulario
-    @GetMapping("/addReserva")
+    @PostMapping("/addReserva")
     public ModelAndView addReserva(
-            @RequestParam int id,
             @RequestParam String dniSocio,
             @RequestParam String matricula,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha,
@@ -34,27 +34,38 @@ public class AddReservaController {
             @RequestParam String proposito,
             @RequestParam double precioTotal
     ) {
-        // Crear la reserva con los datos del formulario
-        Reserva reserva = new Reserva(
-                id,
-                dniSocio,
-                matricula,
-                fecha,
-                plazasReservadas,
-                proposito,
-                precioTotal
-        );
-
-        reservaRepository.setSQLQueriesFileName("src/main/resources/db/sql.properties");
-        boolean success = reservaRepository.addReserva(reserva);
-
         ModelAndView mv;
-        if (success) {
-            mv = new ModelAndView("reserva/addReservaViewSuccess");
-            mv.addObject("reserva", reserva);
-        } else {
+
+        try {
+            // Crear la reserva con ID temporal (0)
+            Reserva reserva = new Reserva(
+                    0,
+                    dniSocio,
+                    matricula,
+                    fecha,
+                    plazasReservadas,
+                    proposito,
+                    precioTotal
+            );
+
+            // Cargar archivo de queries SQL desde classpath
+            reservaRepository.setSQLQueriesFileName("db/sql.properties");
+
+            // Intentar añadir la reserva y obtener ID generado
+            boolean success = reservaRepository.addReserva(reserva);
+
+            if (success) {
+                mv = new ModelAndView("reserva/addReservaViewSuccess");
+                mv.addObject("reserva", reserva);
+            } else {
+                mv = new ModelAndView("reserva/addReservaViewFail");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
             mv = new ModelAndView("reserva/addReservaViewFail");
+            mv.addObject("errorMessage", e.getMessage());
         }
+
         return mv;
     }
 }

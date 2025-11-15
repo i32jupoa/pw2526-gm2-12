@@ -27,11 +27,11 @@ public class AlquilerSocioRepository {
     @PostConstruct
     private void loadSqlQueries() {
         sqlQueries = new Properties();
-        try (InputStream inputStream = getClass().getResourceAsStream("/db/sql.properties")) {
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("db/sql.properties")) {
             if (inputStream != null) {
                 sqlQueries.load(inputStream);
             } else {
-                System.err.println("sqlQueries.properties not found in /db/");
+                System.err.println("sql.properties not found in /db/");
             }
         } catch (IOException e) {
             System.err.println("Error loading SQL properties for AlquilerSocioRepository");
@@ -39,6 +39,7 @@ public class AlquilerSocioRepository {
         }
     }
 
+    // Consultas
     public List<AlquilerSocio> findAllAlquilerSocios() {
         try {
             String query = sqlQueries.getProperty("select-findAllAlquilerSocios");
@@ -47,6 +48,7 @@ public class AlquilerSocioRepository {
                     @Override
                     public AlquilerSocio mapRow(ResultSet rs, int rowNum) throws SQLException {
                         return new AlquilerSocio(
+                                rs.getInt("idAlquiler"),
                                 rs.getInt("idAlquiler"),
                                 rs.getString("dniSocio")
                         );
@@ -63,12 +65,13 @@ public class AlquilerSocioRepository {
 
     public List<AlquilerSocio> findByIdAlquiler(int idAlquiler) {
         try {
-            String query = sqlQueries.getProperty("select-findByIdAlquiler");
+            String query = sqlQueries.getProperty("select-findAlquilerSocioByIdAlquiler");
             if (query != null) {
                 return jdbcTemplate.query(query, new RowMapper<AlquilerSocio>() {
                     @Override
                     public AlquilerSocio mapRow(ResultSet rs, int rowNum) throws SQLException {
                         return new AlquilerSocio(
+                                rs.getInt("idAlquiler"),
                                 rs.getInt("idAlquiler"),
                                 rs.getString("dniSocio")
                         );
@@ -85,12 +88,13 @@ public class AlquilerSocioRepository {
 
     public List<AlquilerSocio> findByDniSocio(String dniSocio) {
         try {
-            String query = sqlQueries.getProperty("select-findByDniSocio");
+            String query = sqlQueries.getProperty("select-findAlquilerSocioByDni");
             if (query != null) {
                 return jdbcTemplate.query(query, new RowMapper<AlquilerSocio>() {
                     @Override
                     public AlquilerSocio mapRow(ResultSet rs, int rowNum) throws SQLException {
                         return new AlquilerSocio(
+                                rs.getInt("idAlquiler"),
                                 rs.getInt("idAlquiler"),
                                 rs.getString("dniSocio")
                         );
@@ -105,15 +109,16 @@ public class AlquilerSocioRepository {
         }
     }
 
+    // Inserción y eliminación
     public boolean addAlquilerSocio(AlquilerSocio alquilerSocio) {
         try {
             String query = sqlQueries.getProperty("insert-addAlquilerSocio");
             if (query != null) {
-                int result = jdbcTemplate.update(query,
+                jdbcTemplate.update(query,
                         alquilerSocio.getIdAlquiler(),
                         alquilerSocio.getDniSocio()
                 );
-                return result > 0;
+                return true;
             } else {
                 return false;
             }
@@ -125,7 +130,7 @@ public class AlquilerSocioRepository {
 
     public boolean deleteAlquilerSocio(int idAlquiler, String dniSocio) {
         try {
-            String query = sqlQueries.getProperty("delete-alquilerSocio");
+            String query = sqlQueries.getProperty("delete-deleteAlquilerSocio");
             if (query != null) {
                 int result = jdbcTemplate.update(query, idAlquiler, dniSocio);
                 return result > 0;

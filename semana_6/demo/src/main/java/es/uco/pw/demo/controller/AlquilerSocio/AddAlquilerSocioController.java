@@ -18,24 +18,35 @@ public class AddAlquilerSocioController {
     @Autowired
     private AlquilerSocioRepository alquilerSocioRepository;
 
+    // Mostrar el formulario para añadir Alquiler-Socio
     @GetMapping("/addAlquilerSocio")
     public ModelAndView showAddAlquilerSocioForm() {
         ModelAndView modelAndView = new ModelAndView("alquilerSocios/addAlquilerSocioForm");
+        // Se crea el objeto sin id, porque lo genera la DB
         modelAndView.addObject("alquilerSocio", new AlquilerSocio(0, ""));
         return modelAndView;
     }
 
+    // Procesar el formulario de añadir Alquiler-Socio
     @PostMapping("/addAlquilerSocio")
     public ModelAndView processAddAlquilerSocio(@ModelAttribute("alquilerSocio") AlquilerSocio alquilerSocio, SessionStatus status) {
         ModelAndView modelAndView;
-        boolean success = alquilerSocioRepository.addAlquilerSocio(alquilerSocio);
+        // Usamos el constructor sin id, la DB generará automáticamente el id
+        AlquilerSocio nuevoAlquilerSocio = new AlquilerSocio(
+                alquilerSocio.getIdAlquiler(),
+                alquilerSocio.getDniSocio()
+        );
+
+        boolean success = alquilerSocioRepository.addAlquilerSocio(nuevoAlquilerSocio);
+
         if (success) {
             modelAndView = new ModelAndView("alquilerSocios/addAlquilerSocioViewSuccess");
-            modelAndView.addObject("alquilerSocio", alquilerSocio);
+            modelAndView.addObject("alquilerSocio", nuevoAlquilerSocio);
         } else {
             modelAndView = new ModelAndView("alquilerSocios/addAlquilerSocioViewFail");
         }
-        status.setComplete();
+
+        status.setComplete(); // Limpiar el objeto de la sesión
         return modelAndView;
     }
 }

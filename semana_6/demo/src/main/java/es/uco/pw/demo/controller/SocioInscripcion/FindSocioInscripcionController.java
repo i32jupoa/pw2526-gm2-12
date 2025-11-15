@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import java.util.List;
 
 @Controller
 public class FindSocioInscripcionController {
@@ -14,18 +15,42 @@ public class FindSocioInscripcionController {
     @Autowired
     private SocioInscripcionRepository socioInscripcionRepository;
 
-    @GetMapping("/findSocioInscripcion")
-    public ModelAndView findSocioInscripcion(@RequestParam("id") int id) {
-        socioInscripcionRepository.setSQLQueriesFileName("src/main/resources/sql/socio_inscripcion_queries.sql");
-        SocioInscripcion socioInscripcion = socioInscripcionRepository.findById(id);
+    @GetMapping("/findSocioInscripcionById")
+public ModelAndView findSocioInscripcionById(@RequestParam(value = "id", required = false) Integer id) {
+    ModelAndView mv = new ModelAndView("socioInscripcion/findSocioInscripcionById");
 
-        ModelAndView mv;
-        if (socioInscripcion != null) {
-            mv = new ModelAndView("socioInscripcion/findSocioInscripcionViewSuccess");
-            mv.addObject("socioInscripcion", socioInscripcion);
-        } else {
-            mv = new ModelAndView("socioInscripcion/findSocioInscripcionViewFail");
+    if (id == null) {
+        mv.addObject("socioInscripciones", null);
+        mv.addObject("busquedaRealizada", false);
+        return mv;
+    }
+
+    // Llamar al método que ya maneja la conexión
+    List<SocioInscripcion> socioInscripciones = socioInscripcionRepository.findByIdInscripcionPublic(id);
+
+    mv.addObject("socioInscripciones", socioInscripciones);
+    mv.addObject("busquedaRealizada", true);
+
+    return mv;
+}
+
+
+    @GetMapping("/findSocioInscripcionByDni")
+    public ModelAndView findSocioInscripcionByDni(@RequestParam(value = "dniSocio", required = false) String dniSocio) {
+        ModelAndView mv = new ModelAndView("socioInscripcion/findSocioInscripcionesByDni");
+
+        if (dniSocio == null || dniSocio.isEmpty()) {
+            mv.addObject("socioInscripciones", null);
+            mv.addObject("busquedaRealizada", false);
+            return mv;
         }
+
+        socioInscripcionRepository.setSQLQueriesFileName("db/sql.properties");
+        List<SocioInscripcion> socioInscripciones = socioInscripcionRepository.findByDniSocio(dniSocio);
+
+        mv.addObject("socioInscripciones", socioInscripciones);
+        mv.addObject("busquedaRealizada", true);
+
         return mv;
     }
 }

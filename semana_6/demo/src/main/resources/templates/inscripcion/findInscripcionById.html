@@ -22,6 +22,10 @@
         <p><strong>DNI Titular:</strong> <span th:text="${inscripcion.dniTitular}">NULL</span></p>
     </div>
 
+    <div th:if="${inscripcion == null}">
+        <p style="color: red;" th:text="${error}">No se encontró ninguna inscripción con ese ID.</p>
+    </div>
+
     <br>
     <a href="/">Volver al inicio</a>
 </body>

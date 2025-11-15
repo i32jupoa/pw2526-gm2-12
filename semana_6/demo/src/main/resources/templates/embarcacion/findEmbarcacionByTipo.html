@@ -21,10 +21,8 @@
 
 <br/>
 
-<!-- Mostrar resultados solo si se ha realizado una búsqueda -->
 <div th:if="${buscado}">
 
-    <!-- Si hay resultados -->
     <div th:if="${embarcaciones != null and !#lists.isEmpty(embarcaciones)}">
         <h2>Resultados encontrados:</h2>
 
@@ -46,13 +44,12 @@
                     <td th:text="${emb.tipo}"></td>
                     <td th:text="${emb.numPlazas}"></td>
                     <td th:text="${emb.dimensiones}"></td>
-                    <td th:text="${emb.dniPatron}"></td>
+                    <td th:text="${emb.dniPatron != null ? emb.dniPatron : 'No hay patrón registrado'}"></td>
                 </tr>
             </tbody>
         </table>
     </div>
 
-    <!-- Si no hay resultados -->
     <div th:if="${embarcaciones == null or #lists.isEmpty(embarcaciones)}">
         <p><strong>No se encontraron embarcaciones del tipo seleccionado.</strong></p>
     </div>

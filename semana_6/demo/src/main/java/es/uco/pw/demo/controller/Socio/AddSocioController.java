@@ -41,7 +41,7 @@ public class AddSocioController {
                 tieneTituloPatron
         );
 
-        socioRepository.setSQLQueriesFileName("src/main/resources/sql/socio_queries.sql");
+        socioRepository.setSQLQueriesFileName("db/sql.properties");
         boolean success = socioRepository.addSocio(socio);
 
         if (success) {

@@ -4,22 +4,24 @@ import es.uco.pw.demo.model.domain.Reserva;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Properties;
 
 @Repository
 public class ReservaRepository {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
     private Properties sqlQueries;
     private String sqlQueriesFileName;
 
@@ -53,7 +55,6 @@ public class ReservaRepository {
                 return null;
             }
         } catch (DataAccessException e) {
-            System.err.println("Unable to find reservas");
             e.printStackTrace();
             return null;
         }
@@ -80,7 +81,6 @@ public class ReservaRepository {
                 return null;
             }
         } catch (DataAccessException e) {
-            System.err.println("Unable to find reserva with id=" + id);
             e.printStackTrace();
             return null;
         }
@@ -107,7 +107,6 @@ public class ReservaRepository {
                 return null;
             }
         } catch (DataAccessException e) {
-            System.err.println("Unable to find reservas with dniSocio=" + dniSocio);
             e.printStackTrace();
             return null;
         }
@@ -134,30 +133,39 @@ public class ReservaRepository {
                 return null;
             }
         } catch (DataAccessException e) {
-            System.err.println("Unable to find reservas with matricula=" + matricula);
             e.printStackTrace();
             return null;
         }
     }
 
+    // ---------------- addReserva con ID generado por BD ----------------
     public boolean addReserva(Reserva reserva) {
         try {
             String query = sqlQueries.getProperty("insert-addReserva");
             if (query != null) {
-                int result = jdbcTemplate.update(query,
-                        reserva.getId(),
-                        reserva.getDniSocio(),
-                        reserva.getMatricula(),
-                        Date.valueOf(reserva.getFecha()),
-                        reserva.getPlazasReservadas(),
-                        reserva.getProposito(),
-                        reserva.getPrecioTotal());
-                return result > 0;
+                KeyHolder keyHolder = new GeneratedKeyHolder();
+
+                jdbcTemplate.update(connection -> {
+                    PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+                    ps.setString(1, reserva.getDniSocio());
+                    ps.setString(2, reserva.getMatricula());
+                    ps.setDate(3, Date.valueOf(reserva.getFecha()));
+                    ps.setInt(4, reserva.getPlazasReservadas());
+                    ps.setString(5, reserva.getProposito());
+                    ps.setDouble(6, reserva.getPrecioTotal());
+                    return ps;
+                }, keyHolder);
+
+                Number generatedId = keyHolder.getKey();
+                if (generatedId != null) {
+                    reserva.setId(generatedId.intValue()); // asigna el ID generado
+                }
+                return true;
             } else {
+                System.err.println("SQL query for addReserva is null");
                 return false;
             }
         } catch (DataAccessException e) {
-            System.err.println("Unable to insert reserva into the database");
             e.printStackTrace();
             return false;
         }
@@ -165,7 +173,7 @@ public class ReservaRepository {
 
     public boolean deleteReservaById(int id) {
         try {
-            String query = sqlQueries.getProperty("delete-reservaById");
+            String query = sqlQueries.getProperty("delete-deleteReservaById");
             if (query != null) {
                 int result = jdbcTemplate.update(query, id);
                 return result > 0;
@@ -173,7 +181,6 @@ public class ReservaRepository {
                 return false;
             }
         } catch (DataAccessException e) {
-            System.err.println("Unable to delete reserva with id=" + id);
             e.printStackTrace();
             return false;
         }
@@ -182,12 +189,14 @@ public class ReservaRepository {
     private void createProperties() {
         sqlQueries = new Properties();
         try {
-            BufferedReader reader;
-            File f = new File(sqlQueriesFileName);
-            reader = new BufferedReader(new FileReader(f));
-            sqlQueries.load(reader);
-        } catch (IOException e) {
-            System.err.println("Error creating properties object for SQL queries");
+            ClassLoader loader = Thread.currentThread().getContextClassLoader();
+            try (BufferedReader reader = new BufferedReader(
+                    new java.io.InputStreamReader(loader.getResourceAsStream(sqlQueriesFileName))
+            )) {
+                sqlQueries.load(reader);
+            }
+        } catch (IOException | NullPointerException e) {
+            System.err.println("Error loading SQL properties file: " + sqlQueriesFileName);
             e.printStackTrace();
         }
     }

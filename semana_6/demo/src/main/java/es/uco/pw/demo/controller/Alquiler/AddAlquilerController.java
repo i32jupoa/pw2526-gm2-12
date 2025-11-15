@@ -26,10 +26,9 @@ public class AddAlquilerController {
     @GetMapping("/addAlquiler")
     public ModelAndView showAddAlquilerForm() {
         ModelAndView modelAndView = new ModelAndView("alquiler/addAlquilerForm");
-        // Creamos un objeto vacío con valores por defecto
+        // Creamos un objeto vacío sin id
         modelAndView.addObject("alquiler", new Alquiler(
-                0,               // id
-                0,               // idInscripcion
+                0,               // idInscripcion por defecto
                 "",              // matricula
                 LocalDate.now(), // fechaInicio
                 LocalDate.now(), // fechaFin
@@ -47,7 +46,7 @@ public class AddAlquilerController {
                                            SessionStatus status) {
         ModelAndView modelAndView;
 
-        boolean success = alquilerRepository.addAlquiler(alquiler);
+        boolean success = alquilerRepository.addAlquiler(alquiler); // id se asigna automáticamente
 
         if (success) {
             modelAndView = new ModelAndView("alquiler/addAlquilerViewSuccess");
@@ -56,7 +55,6 @@ public class AddAlquilerController {
             modelAndView = new ModelAndView("alquiler/addAlquilerViewFail");
         }
 
-        // Limpiamos la sesión para no mantener el objeto alquiler
         status.setComplete();
         return modelAndView;
     }

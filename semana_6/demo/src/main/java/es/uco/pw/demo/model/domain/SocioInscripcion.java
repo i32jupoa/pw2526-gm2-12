@@ -11,6 +11,11 @@ public class SocioInscripcion {
         this.dniSocio = dniSocio;
     }
 
+    public SocioInscripcion(int idInscripcion, String dniSocio) {
+        this.idInscripcion = idInscripcion;
+        this.dniSocio = dniSocio;
+    }
+
     public int getId() { return id; }
     public int getIdInscripcion() { return idInscripcion; }
     public String getDniSocio() { return dniSocio; }

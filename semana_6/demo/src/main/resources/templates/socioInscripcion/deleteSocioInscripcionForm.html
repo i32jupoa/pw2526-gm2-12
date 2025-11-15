@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Eliminar Socio-Inscripción</title>
+</head>
+<body>
+<h1>Eliminar relación Socio-Inscripción</h1>
+
+<form action="/deleteSocioInscripcion" method="get">
+    <label for="idInscripcion">ID Inscripción:</label>
+    <input type="number" id="idInscripcion" name="idInscripcion" required><br><br>
+
+    <label for="dniSocio">DNI del Socio:</label>
+    <input type="text" id="dniSocio" name="dniSocio" required><br><br>
+
+    <button type="submit">Eliminar</button>
+</form>
+
+<br>
+<a href="/">Volver al inicio</a>
+</body>
+</html>

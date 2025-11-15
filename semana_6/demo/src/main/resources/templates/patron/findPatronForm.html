@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Buscar Patrón</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>Buscar Patrón por DNI</h1>
+
+    <form method="GET" th:action="@{/findPatron}">
+        <label for="dni">DNI:</label>
+        <input type="text" id="dni" name="dni" 
+               pattern="[0-9]{8}[A-Za-z]" 
+               placeholder="12345678A" required>
+        <input type="submit" value="Buscar">
+    </form>
+
+    <br>
+    <a href="/">Volver al inicio</a>
+</body>
+</html>
