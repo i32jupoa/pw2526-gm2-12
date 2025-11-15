@@ -1,29 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>Listado de Patrones</title>
+  <meta charset="UTF-8">
 </head>
 <body>
   <h1>Listado de Patrones</h1>
-  {% if patrons %}
-  <table border="1">
-    <tr>
-      <th>ID</th>
-      <th>Nombre</th>
-      <th>Email</th>
-      <th>Teléfono</th>
-    </tr>
-    {% for patron in patrons %}
-    <tr>
-      <td>{{ patron.id }}</td>
-      <td>{{ patron.nombre }}</td>
-      <td>{{ patron.email }}</td>
-      <td>{{ patron.telefono }}</td>
-    </tr>
-    {% endfor %}
-  </table>
-  {% else %}
-  <p>No hay patrones registrados.</p>
-  {% endif %}
+
+  <div th:if="${patrons != null and #lists.isNotEmpty(patrons)}">
+    <table border="1">
+      <tr>
+        <th>DNI</th>
+        <th>Nombre</th>
+        <th>Apellidos</th>
+        <th>Fecha de Nacimiento</th>
+        <th>Fecha Expedición Título</th>
+      </tr>
+      <tr th:each="patron : ${patrons}">
+        <td th:text="${patron.dni}">DNI</td>
+        <td th:text="${patron.nombre}">Nombre</td>
+        <td th:text="${patron.apellidos}">Apellidos</td>
+        <td th:text="${patron.fechaNacimiento}">Fecha Nac.</td>
+        <td th:text="${patron.fechaExpedicionTitulo}">Fecha Título</td>
+      </tr>
+    </table>
+  </div>
+
+  <div th:if="${patrons == null or #lists.isEmpty(patrons)}">
+    <p>No hay patrones registrados.</p>
+  </div>
+
+  <br>
+  <a href="/">Volver al inicio</a>
 </body>
 </html>

@@ -5,8 +5,9 @@ import es.uco.pw.demo.model.repository.PatronRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
 
 @Controller
 public class ShowPatronController {
@@ -14,21 +15,15 @@ public class ShowPatronController {
     @Autowired
     private PatronRepository patronRepository;
 
-    @GetMapping("/showPatron")
-    public ModelAndView showPatron(@RequestParam("dni") String dni) {
-        patronRepository.setSQLQueriesFileName("src/main/resources/sql/patron_queries.sql");
+    @GetMapping("/showPatrones")
+    public ModelAndView showAllPatrones() {
+        // Aseguramos que se carguen las consultas SQL
+        patronRepository.setSQLQueriesFileName("db/sql.properties");
 
-        Patron patron = patronRepository.findPatronByDni(dni);
+        List<Patron> patrons = patronRepository.findAllPatrones();
 
-        ModelAndView mv;
-        if (patron != null) {
-            mv = new ModelAndView("showPatronView");
-            mv.addObject("patron", patron);
-        } else {
-            // Reutilizamos la vista de fallo de búsqueda por si existe; si prefieres otra vista, dímelo.
-            mv = new ModelAndView("findPatronViewFail");
-            mv.addObject("dni", dni);
-        }
+        ModelAndView mv = new ModelAndView("showPatronView");
+        mv.addObject("patrons", patrons);
         return mv;
     }
 }
