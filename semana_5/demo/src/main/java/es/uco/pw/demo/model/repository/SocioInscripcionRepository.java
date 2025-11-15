@@ -91,15 +91,23 @@ public class SocioInscripcionRepository {
     private void add(SocioInscripcion socioInscripcion, Connection conn) throws DataAccessException {
         try {
             String sql = sqlQueries.getProperty("insert-addSocioInscripcion");
-            PreparedStatement ps = conn.prepareStatement(sql);
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, socioInscripcion.getIdInscripcion());
             ps.setString(2, socioInscripcion.getDniSocio());
             ps.executeUpdate();
+    
+            ResultSet generatedKeys = ps.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                socioInscripcion.setId(generatedKeys.getInt(1));
+            }
+    
+            generatedKeys.close();
             ps.close();
         } catch (Exception e) {
             throw new DataAccessException("Error en add()", e) {};
         }
     }
+    
 
     private int delete(int idInscripcion, String dniSocio, Connection conn) throws DataAccessException {
         try {
