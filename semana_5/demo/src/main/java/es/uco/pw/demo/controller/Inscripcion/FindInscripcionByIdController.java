@@ -19,7 +19,7 @@ public class FindInscripcionByIdController {
         this.inscripcionRepository.setSQLQueriesFileName(sqlQueriesFileName);
     }
 
-    // Mostrar el formulario (sin parámetros)
+    // Mostrar el formulario vacío
     @GetMapping("/findInscripcionByIdForm")
     public String showFindInscripcionForm() {
         return "inscripcion/findInscripcionById";
@@ -29,8 +29,16 @@ public class FindInscripcionByIdController {
     @GetMapping("/findInscripcionById")
     public ModelAndView findInscripcionById(@RequestParam("id") int id){
         Inscripcion inscripcion = inscripcionRepository.findInscripcionById(id);
-        ModelAndView model = new ModelAndView("inscripcion/findInscripcionById");
-        model.addObject("inscripcion", inscripcion);
+
+        ModelAndView model;
+        if (inscripcion != null) {
+            model = new ModelAndView("inscripcion/findInscripcionById");
+            model.addObject("inscripcion", inscripcion);
+        } else {
+            model = new ModelAndView("inscripcion/findInscripcionById");
+            model.addObject("inscripcion", null);
+            model.addObject("error", "No se encontró ninguna inscripción con ese ID.");
+        }
         return model;
     }
 }
