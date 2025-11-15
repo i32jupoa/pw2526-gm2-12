@@ -13,33 +13,20 @@ public class DeleteAlquilerSocioController {
     @Autowired
     private AlquilerSocioRepository alquilerSocioRepository;
 
-    /**
-     * Muestra el formulario para eliminar una relación Alquiler-Socio.
-     * URL: /deleteAlquilerSocioForm
-     */
     @GetMapping("/deleteAlquilerSocioForm")
     public ModelAndView showDeleteForm() {
         return new ModelAndView("alquilerSocios/deleteAlquilerSocioForm");
     }
 
-    /**
-     * Elimina un registro de la tabla AlquilerSocio mediante idAlquiler y dniSocio.
-     * URL de ejemplo: /deleteAlquilerSocio?idAlquiler=10&dni=12345678A
-     */
     @GetMapping("/deleteAlquilerSocio")
     public ModelAndView deleteAlquilerSocio(@RequestParam("idAlquiler") int idAlquiler,
                                             @RequestParam("dni") String dni) {
-        ModelAndView mv;
         boolean deleted = alquilerSocioRepository.deleteAlquilerSocio(idAlquiler, dni);
-        if (deleted) {
-            mv = new ModelAndView("alquilerSocios/deleteAlquilerSocioViewSuccess");
-            mv.addObject("idAlquiler", idAlquiler);
-            mv.addObject("dni", dni);
-        } else {
-            mv = new ModelAndView("alquilerSocios/deleteAlquilerSocioViewFail");
-            mv.addObject("idAlquiler", idAlquiler);
-            mv.addObject("dni", dni);
-        }
+        ModelAndView mv = deleted
+                ? new ModelAndView("alquilerSocios/deleteAlquilerSocioViewSuccess")
+                : new ModelAndView("alquilerSocios/deleteAlquilerSocioViewFail");
+        mv.addObject("idAlquiler", idAlquiler);
+        mv.addObject("dni", dni);
         return mv;
     }
 }

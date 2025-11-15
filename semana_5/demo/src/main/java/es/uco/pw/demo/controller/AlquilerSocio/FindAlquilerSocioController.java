@@ -16,47 +16,35 @@ public class FindAlquilerSocioController {
     @Autowired
     private AlquilerSocioRepository alquilerSocioRepository;
 
-    // Formulario para buscar por ID de Alquiler
     @GetMapping("/findAlquilerSocioByIdForm")
     public ModelAndView showFindByIdForm() {
         return new ModelAndView("alquilerSocios/findAlquilerSocioByIdForm");
     }
 
-    // Buscar por ID de Alquiler
     @GetMapping("/findAlquilerSocioById")
     public ModelAndView findByIdAlquiler(@RequestParam("idAlquiler") int idAlquiler) {
-        ModelAndView mv;
         List<AlquilerSocio> results = alquilerSocioRepository.findByIdAlquiler(idAlquiler);
-        if (results != null && !results.isEmpty()) {
-            mv = new ModelAndView("alquilerSocios/findAlquilerSocioByIdViewSuccess");
-            mv.addObject("alquilerSocios", results);
-            mv.addObject("idAlquiler", idAlquiler);
-        } else {
-            mv = new ModelAndView("alquilerSocios/findAlquilerSocioByIdViewFail");
-            mv.addObject("idAlquiler", idAlquiler);
-        }
+        ModelAndView mv = results != null && !results.isEmpty()
+                ? new ModelAndView("alquilerSocios/findAlquilerSocioByIdViewSuccess")
+                : new ModelAndView("alquilerSocios/findAlquilerSocioByIdViewFail");
+        mv.addObject("alquilerSocios", results);
+        mv.addObject("idAlquiler", idAlquiler);
         return mv;
     }
 
-    // Formulario para buscar por DNI de Socio
     @GetMapping("/findAlquilerSocioByDniForm")
     public ModelAndView showFindByDniForm() {
         return new ModelAndView("alquilerSocios/findAlquilerSocioByDniForm");
     }
 
-    // Buscar por DNI de Socio
     @GetMapping("/findAlquilerSocioByDni")
     public ModelAndView findByDni(@RequestParam("dni") String dni) {
-        ModelAndView mv;
         List<AlquilerSocio> results = alquilerSocioRepository.findByDniSocio(dni);
-        if (results != null && !results.isEmpty()) {
-            mv = new ModelAndView("alquilerSocios/findAlquilerSocioByDniViewSuccess");
-            mv.addObject("alquilerSocios", results);
-            mv.addObject("dni", dni);
-        } else {
-            mv = new ModelAndView("alquilerSocios/findAlquilerSocioByDniViewFail");
-            mv.addObject("dni", dni);
-        }
+        ModelAndView mv = results != null && !results.isEmpty()
+                ? new ModelAndView("alquilerSocios/findAlquilerSocioByDniViewSuccess")
+                : new ModelAndView("alquilerSocios/findAlquilerSocioByDniViewFail");
+        mv.addObject("alquilerSocios", results);
+        mv.addObject("dni", dni);
         return mv;
     }
 }
