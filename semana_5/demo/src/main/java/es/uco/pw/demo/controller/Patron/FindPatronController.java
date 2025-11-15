@@ -14,21 +14,19 @@ public class FindPatronController {
     @Autowired
     private PatronRepository patronRepository;
 
+    // Mostrar el formulario
+    @GetMapping("/findPatronForm")
+    public ModelAndView showFindPatronForm() {
+        return new ModelAndView("patron/findPatronForm");
+    }
+
+    // Procesar la búsqueda
     @GetMapping("/findPatron")
-    public ModelAndView findPatron(@RequestParam(value = "dni", required = false) String dni) {
-        ModelAndView mv;
-        
-        // Si no hay DNI, mostrar el formulario vacío
-        if (dni == null || dni.isEmpty()) {
-            mv = new ModelAndView("patron/findPatronViewSuccess");
-            mv.addObject("patron", null);
-            return mv;
-        }
-        
-        // Si hay DNI, buscar el patrón
+    public ModelAndView findPatron(@RequestParam("dni") String dni) {
         patronRepository.setSQLQueriesFileName("src/main/resources/db/sql.properties");
         Patron patron = patronRepository.findPatronByDni(dni);
-
+        
+        ModelAndView mv;
         if (patron != null) {
             mv = new ModelAndView("patron/findPatronViewSuccess");
             mv.addObject("patron", patron);
