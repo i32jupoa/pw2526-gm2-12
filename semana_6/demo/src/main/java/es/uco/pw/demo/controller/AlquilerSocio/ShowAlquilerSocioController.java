@@ -17,9 +17,11 @@ public class ShowAlquilerSocioController {
 
     @GetMapping("/showAlquilerSocio")
     public ModelAndView showAlquilerSocio() {
-        List<AlquilerSocio> alquilerSocio = alquilerSocioRepository.findAll();
-        ModelAndView mv = new ModelAndView("showAlquilerSocioView");
-        mv.addObject("alquilerSocio", alquilerSocio);
+        // Llamamos al método correcto del repositorio
+        List<AlquilerSocio> alquilerSocios = alquilerSocioRepository.findAllAlquilerSocios();
+
+        ModelAndView mv = new ModelAndView("alquilerSocios/showAlquilerSocioView");
+        mv.addObject("alquilerSocios", alquilerSocios);
         return mv;
     }
 }

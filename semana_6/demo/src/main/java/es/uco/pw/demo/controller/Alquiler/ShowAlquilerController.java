@@ -17,8 +17,10 @@ public class ShowAlquilerController {
 
     @GetMapping("/showAlquileres")
     public ModelAndView showAlquileres() {
-        List<Alquiler> alquileres = alquilerRepository.findAll();
-        ModelAndView mv = new ModelAndView("showAlquileresView");
+        // Usamos el método correcto del repositorio
+        List<Alquiler> alquileres = alquilerRepository.findAllAlquileres();
+
+        ModelAndView mv = new ModelAndView("alquiler/showAlquileresView");
         mv.addObject("alquileres", alquileres);
         return mv;
     }
