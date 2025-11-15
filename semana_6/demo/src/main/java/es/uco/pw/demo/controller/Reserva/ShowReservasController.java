@@ -22,7 +22,7 @@ public class ShowReservasController {
 
         List<Reserva> reservas = reservaRepository.findAllReservas();
 
-        ModelAndView mv = new ModelAndView("showReservasView");
+        ModelAndView mv = new ModelAndView("reserva/showReservaView");
         mv.addObject("reservas", reservas);
         return mv;
     }

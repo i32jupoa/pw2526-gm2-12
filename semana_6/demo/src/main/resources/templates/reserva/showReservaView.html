@@ -7,7 +7,8 @@
 <body>
   <h1>Listado de Reservas</h1>
 
-  <div th:if="${reservas != null and #lists.isNotEmpty(reservas)}">
+  <!-- Mostrar tabla si hay reservas -->
+  <div th:if="${reservas != null and !reservas.isEmpty()}">
     <table border="1">
       <tr>
         <th>ID</th>
@@ -30,7 +31,8 @@
     </table>
   </div>
 
-  <div th:if="${reservas == null or #lists.isEmpty(reservas)}">
+  <!-- Mostrar mensaje si NO hay reservas -->
+  <div th:if="${reservas == null or reservas.isEmpty()}">
     <p>No hay reservas registradas.</p>
   </div>
 
