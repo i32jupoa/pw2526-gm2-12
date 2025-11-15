@@ -168,4 +168,35 @@ public class SocioInscripcionRepository {
         return results.isEmpty() ? null : results.get(0);
     }
 
+    // Método privado
+    private List<SocioInscripcion> findAll(Connection conn) throws DataAccessException {
+        List<SocioInscripcion> results = new ArrayList<>();
+        try {
+            String sql = sqlQueries.getProperty("select-findAllSocioInscripciones");
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                int idInscripcion = rs.getInt("idInscripcion");
+                String dniSocio = rs.getString("dniSocio");
+                results.add(new SocioInscripcion(id, idInscripcion, dniSocio));
+            }
+            rs.close();
+            stmt.close();
+        } catch (Exception e) {
+            throw new DataAccessException("Error en findAll", e) {};
+        }
+        return results;
+    }
+
+    // Método público
+    public List<SocioInscripcion> findAllSocioInscripciones() {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            return findAll(conn);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
 }
