@@ -13,18 +13,23 @@ public class DeleteSocioInscripcionController {
     @Autowired
     private SocioInscripcionRepository socioInscripcionRepository;
 
+    @GetMapping("/deleteSocioInscripcionForm")
+    public String showForm() {
+        return "socioInscripcion/deleteSocioInscripcionForm";
+    }
+
     @GetMapping("/deleteSocioInscripcion")
     public ModelAndView deleteSocioInscripcion(
-            @RequestParam("id") int id,
+            @RequestParam("idInscripcion") int idInscripcion,
             @RequestParam("dniSocio") String dniSocio) {
 
         socioInscripcionRepository.setSQLQueriesFileName("db/sql.properties");
-        boolean deleted = socioInscripcionRepository.deleteSocioInscripcion(id, dniSocio);
+        boolean deleted = socioInscripcionRepository.deleteSocioInscripcion(idInscripcion, dniSocio);
 
         ModelAndView mv;
         if (deleted) {
             mv = new ModelAndView("socioInscripcion/deleteSocioInscripcionViewSuccess");
-            mv.addObject("id", id);
+            mv.addObject("idInscripcion", idInscripcion);
             mv.addObject("dniSocio", dniSocio);
         } else {
             mv = new ModelAndView("socioInscripcion/deleteSocioInscripcionViewFail");

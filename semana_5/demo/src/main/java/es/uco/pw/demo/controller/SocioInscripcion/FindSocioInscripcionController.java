@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
 import java.util.List;
 
 @Controller
@@ -16,47 +15,42 @@ public class FindSocioInscripcionController {
     @Autowired
     private SocioInscripcionRepository socioInscripcionRepository;
 
-    // Buscar por ID
     @GetMapping("/findSocioInscripcionById")
-    public ModelAndView findSocioInscripcionById(@RequestParam(value = "id", required = false) Integer id) {
-        ModelAndView mv;
-        
-        // Si no hay ID, mostrar el formulario vacío
-        if (id == null) {
-            mv = new ModelAndView("socioInscripcion/findSocioInscripcionById");
-            mv.addObject("socioInscripcion", null);
-            return mv;
-        }
-        
-        // Si hay ID, buscar la relación socio-inscripción
-        socioInscripcionRepository.setSQLQueriesFileName("db/sql.properties");
-        SocioInscripcion socioInscripcion = socioInscripcionRepository.findById(id);
+public ModelAndView findSocioInscripcionById(@RequestParam(value = "id", required = false) Integer id) {
+    ModelAndView mv = new ModelAndView("socioInscripcion/findSocioInscripcionById");
 
-        mv = new ModelAndView("socioInscripcion/findSocioInscripcionById");
-        mv.addObject("socioInscripcion", socioInscripcion);
-        
+    if (id == null) {
+        mv.addObject("socioInscripciones", null);
+        mv.addObject("busquedaRealizada", false);
         return mv;
     }
 
-    // Buscar por DNI del Socio
+    // Llamar al método que ya maneja la conexión
+    List<SocioInscripcion> socioInscripciones = socioInscripcionRepository.findByIdInscripcionPublic(id);
+
+    mv.addObject("socioInscripciones", socioInscripciones);
+    mv.addObject("busquedaRealizada", true);
+
+    return mv;
+}
+
+
     @GetMapping("/findSocioInscripcionByDni")
     public ModelAndView findSocioInscripcionByDni(@RequestParam(value = "dniSocio", required = false) String dniSocio) {
-        ModelAndView mv;
-        
-        // Si no hay DNI, mostrar el formulario vacío
+        ModelAndView mv = new ModelAndView("socioInscripcion/findSocioInscripcionesByDni");
+
         if (dniSocio == null || dniSocio.isEmpty()) {
-            mv = new ModelAndView("socioInscripcion/findSocioInscripcionesByDni");
             mv.addObject("socioInscripciones", null);
+            mv.addObject("busquedaRealizada", false);
             return mv;
         }
-        
-        // Si hay DNI, buscar las inscripciones del socio
-        socioInscripcionRepository.setSQLQueriesFileName("/db/sql.properties");
+
+        socioInscripcionRepository.setSQLQueriesFileName("db/sql.properties");
         List<SocioInscripcion> socioInscripciones = socioInscripcionRepository.findByDniSocio(dniSocio);
 
-        mv = new ModelAndView("socioInscripcion/findSocioInscripcionesByDni");
         mv.addObject("socioInscripciones", socioInscripciones);
-        
+        mv.addObject("busquedaRealizada", true);
+
         return mv;
     }
 }
