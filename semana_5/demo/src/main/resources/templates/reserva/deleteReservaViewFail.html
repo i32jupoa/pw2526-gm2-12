@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Reserva eliminada</title>
+    <title>Error al eliminar reserva</title>
 </head>
 <body>
-<h1>Reserva eliminada correctamente</h1>
-<p>La reserva con ID <strong th:text="${id}">0</strong> se ha eliminado de la base de datos.</p>
-<a href="/deleteReservaForm">Borrar otra reserva</a> | <a href="/">Volver al inicio</a>
+    <h1>No se pudo eliminar la reserva</h1>
+    <p>La reserva con ID <strong th:text="${id}">0</strong> no existe o no pudo ser eliminada.</p>
+    <a href="/deleteReservaForm">Intentar de nuevo</a> |
+    <a href="/">Volver al inicio</a>
 </body>
 </html>
