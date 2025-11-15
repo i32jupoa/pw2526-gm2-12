@@ -18,6 +18,7 @@ public class ShowInscripcionesByTipoController {
 
     public ShowInscripcionesByTipoController(InscripcionRepository inscripcionRepository) {
         this.inscripcionRepository = inscripcionRepository;
+
         String sqlQueriesFileName = "./src/main/resources/db/sql.properties";
         this.inscripcionRepository.setSQLQueriesFileName(sqlQueriesFileName);
     }
@@ -25,13 +26,13 @@ public class ShowInscripcionesByTipoController {
     @GetMapping("/showInscripcionesByTipo")
     public ModelAndView showInscripcionesByTipo() {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("showInscripcionesByTipoView.html");
-
-        List<Inscripcion> todas = inscripcionRepository.findAllInscripciones();
+        modelAndView.setViewName("inscripcion/showInscripcionesByTipoView.html");
 
         List<ResumenTipo> resumenTipos = new ArrayList<>();
+
         for (TipoInscripcion tipo : TipoInscripcion.values()) {
-            int cantidad = (int) todas.stream().filter(i -> i.getTipo() == tipo).count();
+            List<Inscripcion> inscripciones = this.inscripcionRepository.findInscripcionesByTipo(tipo);
+            int cantidad = (inscripciones != null) ? inscripciones.size() : 0;
             resumenTipos.add(new ResumenTipo(tipo.name(), cantidad));
         }
 
@@ -48,12 +49,7 @@ public class ShowInscripcionesByTipoController {
             this.cantidad = cantidad;
         }
 
-        public String getTipo() {
-            return tipo;
-        }
-
-        public int getCantidad() {
-            return cantidad;
-        }
+        public String getTipo() { return tipo; }
+        public int getCantidad() { return cantidad; }
     }
 }

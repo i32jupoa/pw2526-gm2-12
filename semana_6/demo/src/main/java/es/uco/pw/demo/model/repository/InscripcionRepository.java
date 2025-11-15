@@ -124,4 +124,22 @@ public class InscripcionRepository {
             e.printStackTrace();
         }
     }
+
+    public List<Inscripcion> findInscripcionesByTipo(TipoInscripcion tipo) {
+        try {
+            String query = sqlQueries.getProperty("select-findInscripcionesByTipo");
+            return jdbcTemplate.query(query, (rs, rowNum) -> new Inscripcion(
+                    rs.getInt("id"),
+                    rs.getDate("fechaCreacion").toLocalDate(),
+                    TipoInscripcion.valueOf(rs.getString("tipo")),
+                    rs.getDouble("cuotaActual"),
+                    rs.getString("dniTitular")
+            ), tipo.name());
+        } catch (DataAccessException e) {
+            System.err.println("Error buscando inscripciones por tipo: " + tipo);
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
 }
