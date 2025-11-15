@@ -20,11 +20,9 @@ public class ShowSocioInscripcionController {
     
     @GetMapping("/showSocioInscripcion")
     public ModelAndView showSocioInscripcion() {
-        ModelAndView modelAndView = new ModelAndView("socioinscripcion/showSocioInscripcionView");
+        ModelAndView modelAndView = new ModelAndView("socioInscripcion/showSocioInscripcionView");
         
-        // Obtener todas las relaciones
         List<SocioInscripcion> allRelaciones = this.socioInscripcionRepository.findAllSocioInscripciones();
-        
         modelAndView.addObject("relaciones", allRelaciones);
         
         return modelAndView;

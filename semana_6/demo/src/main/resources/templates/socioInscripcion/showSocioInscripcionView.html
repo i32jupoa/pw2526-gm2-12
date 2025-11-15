@@ -1,76 +1,42 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Buscar Socios por Inscripción</title>
-    <style>
-        table {
-            border-collapse: collapse;
-            width: 70%;
-            margin: 20px auto;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: center;
-        }
-        th {
-            background-color: #9C27B0;
-            color: white;
-        }
-        .form-container {
-            text-align: center;
-            margin: 20px;
-        }
-        input[type="number"], input[type="submit"] {
-            padding: 10px;
-            font-size: 16px;
-            margin: 5px;
-        }
-    </style>
+    <title>Listado de Relaciones Socio-Inscripción</title>
+    <meta charset="UTF-8">
 </head>
 <body>
-    <h1 style="text-align: center;">Buscar Socios por ID de Inscripción</h1>
-    
-    <div class="form-container">
-        <form method="GET" th:action="@{/searchSocioInscripcionByInscripcion}">
-            <label for="idInscripcion">ID de Inscripción:</label>
-            <input type="number" name="idInscripcion" id="idInscripcion" min="1" required>
-            <input type="submit" value="Buscar">
-        </form>
-    </div>
-    
-    <div th:if="${listOfSocioInscripciones != null}">
-        <h2 style="text-align: center;">
-            Socios asociados a la Inscripción ID: <span th:text="${idInscripcion}">0</span>
-        </h2>
-        
-        <div th:if="${!listOfSocioInscripciones.isEmpty()}">
-            <table>
-                <tr>
-                    <th>ID Relación</th>
-                    <th>ID Inscripción</th>
-                    <th>DNI Socio</th>
-                </tr>
-                <tr th:each="socioInscripcion : ${listOfSocioInscripciones}">
-                    <td th:text="${socioInscripcion.id}">0</td>
-                    <td th:text="${socioInscripcion.idInscripcion}">0</td>
-                    <td th:text="${socioInscripcion.dniSocio}">DNI</td>
-                </tr>
-            </table>
-            <p style="text-align: center;">
-                <strong>Total de socios encontrados:</strong> 
-                <span th:text="${#lists.size(listOfSocioInscripciones)}">0</span>
-            </p>
-        </div>
-        
-        <div th:if="${listOfSocioInscripciones.isEmpty()}" style="text-align: center;">
-            <p>No se encontraron socios asociados a esta inscripción.</p>
-        </div>
-    </div>
-    
-    <div style="text-align: center; margin-top: 20px;">
-        <a href="/">Volver al inicio</a>
-    </div>
+
+<h1>Listado de Relaciones Socio-Inscripción</h1>
+
+<!-- Si hay relaciones -->
+<div th:if="${relaciones != null and !relaciones.isEmpty()}">
+    <h2>Total de relaciones: <span th:text="${relaciones.size()}">0</span></h2>
+
+    <table border="1" cellpadding="5" cellspacing="0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>ID Inscripción</th>
+                <th>DNI Socio</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="relacion : ${relaciones}">
+                <td th:text="${relacion.id}">1</td>
+                <td th:text="${relacion.idInscripcion}">1</td>
+                <td th:text="${relacion.dniSocio}">12345678A</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Si no hay relaciones -->
+<div th:if="${relaciones == null or relaciones.isEmpty()}">
+    <p><strong>No hay relaciones Socio-Inscripción registradas en la base de datos.</strong></p>
+</div>
+
+<br/>
+<a th:href="@{/}">Volver al inicio</a>
+
 </body>
 </html>

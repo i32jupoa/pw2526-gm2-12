@@ -19,9 +19,9 @@ public class ShowSocioController {
         this.socioRepository.setSQLQueriesFileName(sqlQueriesFileName);
     }
     
-    @GetMapping("/showSocios")
-    public ModelAndView showSocios() {
-        ModelAndView modelAndView = new ModelAndView("socio/showSociosView");
+    @GetMapping("/showSocio")
+    public ModelAndView showSocio() {
+        ModelAndView modelAndView = new ModelAndView("socio/showSocioView");
         
         // Obtener todos los socios
         List<Socio> allSocios = this.socioRepository.findAllSocios();
