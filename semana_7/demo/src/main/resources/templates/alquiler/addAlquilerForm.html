@@ -1,0 +1,27 @@
+<form th:action="@{/addAlquiler}" th:object="${alquiler}" method="post">
+    <p>
+        <label>ID Inscripción:</label>
+        <input type="number" th:field="*{idInscripcion}" required/>
+    </p>
+    <p>
+        <label>Matrícula:</label>
+        <input type="text" th:field="*{matricula}" required/>
+    </p>
+    <p>
+        <label>Fecha de inicio:</label>
+        <input type="date" th:field="*{fechaInicio}" required/>
+    </p>
+    <p>
+        <label>Fecha de fin:</label>
+        <input type="date" th:field="*{fechaFin}" required/>
+    </p>
+    <p>
+        <label>Plazas reservadas:</label>
+        <input type="number" th:field="*{plazasReservadas}" required/>
+    </p>
+    <p>
+        <label>Precio total:</label>
+        <input type="number" step="0.01" th:field="*{precioTotal}" required/>
+    </p>
+    <input type="submit" value="Guardar Alquiler"/>
+</form>

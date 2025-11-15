@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Error al añadir reserva</title>
+</head>
+<body>
+    <h1>Error al añadir la reserva</h1>
+    <p>Hubo un problema al intentar guardar la reserva en la base de datos.</p>
+
+    <!-- Mensaje de error opcional -->
+    <p th:if="${errorMessage}"><strong>Detalles del error:</strong> <span th:text="${errorMessage}"></span></p>
+
+    <a href="/addReservaForm">Volver a intentar</a> |
+    <a href="/">Volver al inicio</a>
+</body>
+</html>

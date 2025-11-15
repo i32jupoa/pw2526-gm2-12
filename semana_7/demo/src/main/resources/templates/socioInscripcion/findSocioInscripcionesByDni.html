@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Buscar Inscripciones por DNI de Socio</title>
+</head>
+<body>
+    <h1>Buscar Inscripciones asociadas a un Socio</h1>
+
+    <form method="GET" th:action="@{/findSocioInscripcionByDni}">
+        <label for="dniSocio">DNI del Socio:</label>
+        <input type="text" name="dniSocio" 
+               pattern="[0-9]{8}[A-Za-z]" 
+               placeholder="12345678A" required>
+        <input type="submit" value="Buscar">
+    </form>
+
+    <div th:if="${socioInscripciones != null and !socioInscripciones.isEmpty()}">
+        <h2>Resultados:</h2>
+        <table border="1">
+            <tr>
+                <th>ID</th>
+                <th>ID Inscripción</th>
+                <th>DNI Socio</th>
+            </tr>
+            <tr th:each="socioInscripcion : ${socioInscripciones}">
+                <td th:text="${socioInscripcion.id}">0</td>
+                <td th:text="${socioInscripcion.idInscripcion}">NULL</td>
+                <td th:text="${socioInscripcion.dniSocio}">NULL</td>
+            </tr>
+        </table>
+    </div>
+
+    <div th:if="${socioInscripciones != null and socioInscripciones.isEmpty()}">
+        <p>No se encontraron inscripciones asociadas a ese DNI.</p>
+    </div>
+
+    <a href="/">Volver al inicio</a>
+</body>
+</html>

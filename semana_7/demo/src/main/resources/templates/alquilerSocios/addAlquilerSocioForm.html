@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Añadir Alquiler-Socio</title>
+</head>
+<body>
+<h1>Añadir relación Alquiler-Socio</h1>
+
+<form th:action="@{/addAlquilerSocio}" th:object="${alquilerSocio}" method="post">
+    <p>
+        <label>ID Alquiler:</label>
+        <input type="number" th:field="*{idAlquiler}" required/>
+    </p>
+    <p>
+        <label>DNI Socio:</label>
+        <input type="text" th:field="*{dniSocio}" required/>
+    </p>
+    <input type="submit" value="Guardar relación"/>
+</form>
+
+<a href="/">Volver al inicio</a>
+</body>
+</html>

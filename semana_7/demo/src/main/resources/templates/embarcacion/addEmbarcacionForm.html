@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Añadir Embarcación</title>
+</head>
+<body>
+<h1>Añadir Embarcación</h1>
+
+<form method="GET" th:action="@{/addEmbarcacion}">
+    <label for="matricula">Matrícula:</label>
+    <input type="text" name="matricula" required><br><br>
+
+    <label for="nombre">Nombre:</label>
+    <input type="text" name="nombre" required><br><br>
+
+    <label for="tipo">Tipo:</label>
+    <select name="tipo" required>
+        <option value="VELERO">Velero</option>
+        <option value="YATE">Yate</option>
+        <option value="CATAMARAN">Catamaran</option>
+        <option value="LANCHA">Lancha</option>
+    </select><br><br>
+
+    <label for="numPlazas">Número de plazas:</label>
+    <input type="number" name="numPlazas" required><br><br>
+
+    <label for="dimensiones">Dimensiones:</label>
+    <input type="text" name="dimensiones" required><br><br>
+
+    <label for="dniPatron">DNI del Patrón:</label>
+    <input type="text" name="dniPatron"><br><br>
+
+    <input type="submit" value="Añadir">
+</form>
+
+<a th:href="@{/}">Volver al inicio</a>
+</body>
+</html>

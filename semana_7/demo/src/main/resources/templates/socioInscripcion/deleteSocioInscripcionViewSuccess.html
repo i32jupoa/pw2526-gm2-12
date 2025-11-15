@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Socio-Inscripción eliminada</title>
+</head>
+<body>
+    <h1>Eliminación exitosa</h1>
+
+    <p>
+        La inscripción con ID
+        <strong th:text="${idInscripcion}">0</strong>
+        del socio con DNI
+        <strong th:text="${dniSocio}">DNI</strong>
+        ha sido eliminada correctamente.
+    </p>
+
+    <a href="/deleteSocioInscripcionForm">Eliminar otra relación</a> |
+    <a href="/">Volver al inicio</a>
+</body>
+</html>

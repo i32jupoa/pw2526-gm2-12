@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Eliminar Socio</title>
+</head>
+<body>
+    <h1>Eliminar Socio</h1>
+    <form action="/deleteSocio" method="get">
+        <label for="dni">DNI del socio:</label>
+        <input type="text" id="dni" name="dni" required>
+        <button type="submit">Eliminar</button>
+    </form>
+    <a href="/">Volver al inicio</a>
+</body>
+</html>

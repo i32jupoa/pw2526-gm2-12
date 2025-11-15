@@ -1,0 +1,130 @@
+package es.uco.pw.demo.model.repository;
+
+import es.uco.pw.demo.model.domain.Socio;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Properties;
+
+@Repository
+public class SocioRepository {
+
+    private JdbcTemplate jdbcTemplate;
+    private Properties sqlQueries;
+
+    public SocioRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public void setSQLQueriesFileName(String sqlQueriesFileName) {
+        createProperties(sqlQueriesFileName);
+    }
+
+    private void createProperties(String sqlQueriesFileName) {
+        sqlQueries = new Properties();
+        try {
+            InputStream is = getClass().getClassLoader().getResourceAsStream(sqlQueriesFileName);
+            if (is == null) {
+                throw new IOException("No se encontrÃ³ " + sqlQueriesFileName + " en classpath");
+            }
+            sqlQueries.load(is);
+        } catch (IOException e) {
+            System.err.println("Error creating properties object for SQL queries");
+            e.printStackTrace();
+        }
+    }
+
+    public Socio findSocioByDni(String dni) {
+        try {
+            String query = sqlQueries.getProperty("select-findSocioByDni");
+            List<Socio> result = jdbcTemplate.query(query, new RowMapper<Socio>() {
+                public Socio mapRow(ResultSet rs, int rowNumber) throws SQLException {
+                    return new Socio(
+                            rs.getString("dni"),
+                            rs.getString("nombre"),
+                            rs.getString("apellidos"),
+                            Date.valueOf(rs.getString("fechaNacimiento")).toLocalDate(),
+                            rs.getString("direccion"),
+                            Date.valueOf(rs.getString("fechaInscripcion")).toLocalDate(),
+                            rs.getBoolean("esTitular"),
+                            rs.getBoolean("tieneTituloPatron"));
+                }
+            }, dni);
+            return result.isEmpty() ? null : result.get(0);
+        } catch (DataAccessException exception) {
+            System.err.println("Unable to find socio with dni=" + dni);
+            exception.printStackTrace();
+            return null;
+        }
+    }
+
+    public boolean addSocio(Socio socio) {
+        try {
+            String query = sqlQueries.getProperty("insert-addSocio");
+            if (query != null) {
+                int result = jdbcTemplate.update(query,
+                        socio.getDni(),
+                        socio.getNombre(),
+                        socio.getApellidos(),
+                        socio.getFechaNacimiento().toString(),
+                        socio.getDireccion(),
+                        socio.getFechaInscripcion().toString(),
+                        socio.isEsTitular(),
+                        socio.isTieneTituloPatron());
+                return result > 0;
+            } else
+                return false;
+        } catch (DataAccessException exception) {
+            System.err.println("Unable to insert socio in the database");
+            exception.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteSocio(String dni) {
+        try {
+            String query = sqlQueries.getProperty("delete-deleteSocioByDni");
+            if (query != null) {
+                int result = jdbcTemplate.update(query, dni);
+                return result > 0;
+            } else
+                return false;
+        } catch (DataAccessException exception) {
+            System.err.println("Unable to delete socio with dni=" + dni);
+            exception.printStackTrace();
+            return false;
+        }
+    }
+
+    public List<Socio> findAllSocios() {
+    try {
+        String query = sqlQueries.getProperty("select-findAllSocios");
+        return jdbcTemplate.query(query, new RowMapper<Socio>() {
+            public Socio mapRow(ResultSet rs, int rowNumber) throws SQLException {
+                return new Socio(
+                    rs.getString("dni"),
+                    rs.getString("nombre"),
+                    rs.getString("apellidos"),
+                    rs.getDate("fechaNacimiento").toLocalDate(),
+                    rs.getString("direccion"),
+                    rs.getDate("fechaInscripcion").toLocalDate(),
+                    rs.getBoolean("esTitular"),
+                    rs.getBoolean("tieneTituloPatron")
+                );
+            }
+        });
+    } catch (DataAccessException exception) {
+        System.err.println("Unable to find all socios");
+        exception.printStackTrace();
+        return null;
+    }
+}
+}

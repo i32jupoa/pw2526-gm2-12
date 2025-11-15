@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Añadir Patrón</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>Añadir Nuevo Patrón</h1>
+    
+    <form action="/addPatron" method="get">
+        <div>
+            <label for="dni">DNI:</label>
+            <input type="text" id="dni" name="dni" 
+                   pattern="[0-9]{8}[A-Za-z]" 
+                   placeholder="12345678A" required>
+        </div>
+        
+        <div>
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" 
+                   placeholder="Juan" required>
+        </div>
+        
+        <div>
+            <label for="apellidos">Apellidos:</label>
+            <input type="text" id="apellidos" name="apellidos" 
+                   placeholder="Pérez García" required>
+        </div>
+        
+        <div>
+            <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+            <input type="date" id="fechaNacimiento" name="fechaNacimiento" required>
+        </div>
+        
+        <div>
+            <label for="fechaExpedicionTitulo">Fecha de Expedición del Título:</label>
+            <input type="date" id="fechaExpedicionTitulo" name="fechaExpedicionTitulo" required>
+        </div>
+        
+        <button type="submit">Añadir Patrón</button>
+        <a href="/">Cancelar</a>
+    </form>
+</body>
+</html>

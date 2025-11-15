@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Listado de Alquiler-Socios</title>
+</head>
+<body>
+<h1>Listado de todos los Alquiler-Socios</h1>
+
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>ID Alquiler</th>
+        <th>DNI Socio</th>
+    </tr>
+
+    <tr th:each="relacion : ${alquilerSocios}">
+        <td th:text="${relacion.id}">1</td>
+        <td th:text="${relacion.idAlquiler}">10</td>
+        <td th:text="${relacion.dniSocio}">12345678A</td>
+    </tr>
+</table>
+
+<a href="/">Volver al inicio</a>
+</body>
+</html>

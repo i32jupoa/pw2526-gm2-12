@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Patrón añadido</title>
+</head>
+<body>
+    <h1>Patrón añadido correctamente</h1>
+    <p>El patrón se ha guardado en la base de datos con éxito.</p>
+
+    <p><strong>DNI:</strong> <span th:text="${patron.dni}">NULL</span></p>
+    <p><strong>Nombre:</strong> <span th:text="${patron.nombre}">NULL</span></p>
+    <p><strong>Apellidos:</strong> <span th:text="${patron.apellidos}">NULL</span></p>
+    <p><strong>Fecha de nacimiento:</strong> <span th:text="${patron.fechaNacimiento}">NULL</span></p>
+    <p><strong>Fecha de expedicion del título:</strong> <span th:text="${patron.fechaExpedicionTitulo}">NULL</span></p>
+
+    <a href="/addPatronForm">Añadir otro patrón</a> |
+    <a href="/">Volver al inicio</a>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Listado de Reservas</title>
+</head>
+<body>
+  <h1>Listado de Reservas</h1>
+
+  <!-- Mostrar tabla si hay reservas -->
+  <div th:if="${reservas != null and !reservas.isEmpty()}">
+    <table border="1">
+      <tr>
+        <th>ID</th>
+        <th>DNI Socio</th>
+        <th>Matrícula</th>
+        <th>Fecha</th>
+        <th>Plazas Reservadas</th>
+        <th>Propósito</th>
+        <th>Precio Total</th>
+      </tr>
+      <tr th:each="reserva : ${reservas}">
+        <td th:text="${reserva.id}">ID</td>
+        <td th:text="${reserva.dniSocio}">DNI Socio</td>
+        <td th:text="${reserva.matricula}">Matrícula</td>
+        <td th:text="${reserva.fecha}">Fecha</td>
+        <td th:text="${reserva.plazasReservadas}">Plazas</td>
+        <td th:text="${reserva.proposito}">Propósito</td>
+        <td th:text="${reserva.precioTotal}">Precio</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Mostrar mensaje si NO hay reservas -->
+  <div th:if="${reservas == null or reservas.isEmpty()}">
+    <p>No hay reservas registradas.</p>
+  </div>
+
+  <br>
+  <a href="/">Volver al inicio</a>
+</body>
+</html>
