@@ -14,8 +14,7 @@ import es.uco.pw.demo.model.repository.InscripcionRepository;
 @Controller
 public class ShowInscripcionesByTipoController {
 
-    private InscripcionRepository inscripcionRepository;
-    private ModelAndView modelAndView = new ModelAndView();
+    private final InscripcionRepository inscripcionRepository;
 
     public ShowInscripcionesByTipoController(InscripcionRepository inscripcionRepository) {
         this.inscripcionRepository = inscripcionRepository;
@@ -25,32 +24,36 @@ public class ShowInscripcionesByTipoController {
 
     @GetMapping("/showInscripcionesByTipo")
     public ModelAndView showInscripcionesByTipo() {
-        this.modelAndView.setViewName("showInscripcionesByTipoView.html");
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("showInscripcionesByTipoView.html");
 
-        TipoInscripcion[] tipos = TipoInscripcion.values();
+        List<Inscripcion> todas = inscripcionRepository.findAllInscripciones();
+
         List<ResumenTipo> resumenTipos = new ArrayList<>();
-
-        for (TipoInscripcion tipo : tipos) {
-            List<Inscripcion> inscripciones = this.inscripcionRepository.findInscripcionesByTipo(tipo);
-            int cantidad = (inscripciones != null) ? inscripciones.size() : 0;
+        for (TipoInscripcion tipo : TipoInscripcion.values()) {
+            int cantidad = (int) todas.stream().filter(i -> i.getTipo() == tipo).count();
             resumenTipos.add(new ResumenTipo(tipo.name(), cantidad));
         }
 
-        this.modelAndView.addObject("resumenTipos", resumenTipos);
-        return this.modelAndView;
+        modelAndView.addObject("resumenTipos", resumenTipos);
+        return modelAndView;
     }
 
-    /** Clase auxiliar para mostrar el resumen **/
     public static class ResumenTipo {
-        private String tipo;
-        private int cantidad;
+        private final String tipo;
+        private final int cantidad;
 
         public ResumenTipo(String tipo, int cantidad) {
             this.tipo = tipo;
             this.cantidad = cantidad;
         }
 
-        public String getTipo() { return tipo; }
-        public int getCantidad() { return cantidad; }
+        public String getTipo() {
+            return tipo;
+        }
+
+        public int getCantidad() {
+            return cantidad;
+        }
     }
 }
