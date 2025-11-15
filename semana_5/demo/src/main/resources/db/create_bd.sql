@@ -42,15 +42,15 @@ DROP TABLE IF EXISTS `Inscripcion`;
 CREATE TABLE IF NOT EXISTS `Inscripcion` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `fechaCreacion` DATE NOT NULL,
-  `tipo` ENUM('COMPLETA','INFANTIL','ADULTO'),
+  `tipo` ENUM('INDIVIDUAL','FAMILIAR'),
   `cuotaActual` DOUBLE NOT NULL,
   `dniTitular` VARCHAR(15) NOT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`dniTitular`) REFERENCES `Socio`(`dni`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `Inscripcion` (`fechaCreacion`,`tipo`,`cuotaActual`,`dniTitular`) VALUES ('2022-01-15','INFANTIL',300.00,'12345678A');
-INSERT INTO `Inscripcion` (`fechaCreacion`,`tipo`,`cuotaActual`,`dniTitular`) VALUES ('2021-09-02','COMPLETA',500.00,'45678912C');
+INSERT INTO `Inscripcion` (`fechaCreacion`,`tipo`,`cuotaActual`,`dniTitular`) VALUES ('2022-01-15','INDIVIDUAL',300.00,'12345678A');
+INSERT INTO `Inscripcion` (`fechaCreacion`,`tipo`,`cuotaActual`,`dniTitular`) VALUES ('2021-09-02','FAMILIAR',500.00,'45678912C');
 
 
 -- TABLA: SocioInscripcion
