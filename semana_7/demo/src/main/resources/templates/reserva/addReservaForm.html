@@ -2,52 +2,90 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Añadir Reserva</title>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Añadir Reserva</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-    <h1>Añadir Nueva Reserva</h1>
-    
-    <form action="/addReserva" method="post">
-        <div>
-            <label for="dniSocio">DNI del Socio:</label>
-            <input type="text" id="dniSocio" name="dniSocio" 
-                   pattern="[0-9]{8}[A-Za-z]" 
-                   placeholder="12345678A" required>
-        </div>
+    <div class="container">
+        <h1>Añadir Nueva Reserva</h1>
         
-        <div>
-            <label for="matricula">Matrícula de la Embarcación:</label>
-            <input type="text" id="matricula" name="matricula" 
-                   placeholder="ABC123" required>
-        </div>
-        
-        <div>
-            <label for="fecha">Fecha de Reserva:</label>
-            <input type="date" id="fecha" name="fecha" required>
-        </div>
-        
-        <div>
-            <label for="plazasReservadas">Plazas Reservadas:</label>
-            <input type="number" id="plazasReservadas" name="plazasReservadas" 
-                   min="1" required>
-        </div>
-        
-        <div>
-            <label for="proposito">Propósito:</label>
-            <textarea id="proposito" name="proposito" 
-                      rows="3" placeholder="Excursión familiar" required></textarea>
-        </div>
-        
-        <div>
-            <label for="precioTotal">Precio Total (€):</label>
-            <input type="number" id="precioTotal" name="precioTotal" 
-                   step="0.01" min="0" required>
-        </div>
-        
-        <button type="submit">Añadir Reserva</button>
-        <a href="/">Cancelar</a>
-    </form>
+        <form action="/addReserva" method="post">
+            <div class="form-group">
+                <label for="dniSocio">
+                    DNI del Socio <span class="required">*</span>
+                </label>
+                <input type="text" 
+                       id="dniSocio" 
+                       name="dniSocio" 
+                       pattern="[0-9]{8}[A-Za-z]" 
+                       placeholder="12345678A" 
+                       required>
+            </div>
+            
+            <div class="form-group">
+                <label for="matricula">
+                    Matrícula de la Embarcación <span class="required">*</span>
+                </label>
+                <input type="text" 
+                       id="matricula" 
+                       name="matricula" 
+                       placeholder="ABC123" 
+                       required>
+            </div>
+            
+            <div class="form-group">
+                <label for="fecha">
+                    Fecha de Reserva <span class="required">*</span>
+                </label>
+                <input type="date" 
+                       id="fecha" 
+                       name="fecha" 
+                       required>
+            </div>
+            
+            <div class="form-group">
+                <label for="plazasReservadas">
+                    Plazas Reservadas <span class="required">*</span>
+                </label>
+                <input type="number" 
+                       id="plazasReservadas" 
+                       name="plazasReservadas" 
+                       min="1" 
+                       placeholder="4"
+                       required>
+            </div>
+            
+            <div class="form-group">
+                <label for="proposito">
+                    Propósito <span class="required">*</span>
+                </label>
+                <textarea id="proposito" 
+                          name="proposito" 
+                          rows="3" 
+                          placeholder="Excursión familiar" 
+                          required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="precioTotal">
+                    Precio Total (€) <span class="required">*</span>
+                </label>
+                <input type="number" 
+                       id="precioTotal" 
+                       name="precioTotal" 
+                       step="0.01" 
+                       min="0" 
+                       placeholder="150.00"
+                       required>
+            </div>
+            
+            <div class="btn-group">
+                <button type="submit" class="btn btn-success">Añadir Reserva</button>
+                <a href="/" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
 </body>
 </html>
