@@ -9,6 +9,7 @@ public class Inscripcion {
     private double cuotaActual;
     private String dniTitular;
 
+    // Constructor completo (el que ya tenías)
     public Inscripcion(int id, LocalDate fechaCreacion, TipoInscripcion tipo, double cuotaActual, String dniTitular) {
         this.id = id;
         this.fechaCreacion = fechaCreacion;
@@ -16,7 +17,16 @@ public class Inscripcion {
         this.cuotaActual = cuotaActual;
         this.dniTitular = dniTitular;
     }
+    
+    //Constructor para crear una nueva inscripción (sin ID)
+    public Inscripcion(LocalDate fechaCreacion, TipoInscripcion tipo, double cuotaActual, String dniTitular) {
+        this.fechaCreacion = fechaCreacion;
+        this.tipo = tipo;
+        this.cuotaActual = cuotaActual;
+        this.dniTitular = dniTitular;
+    }
 
+    // Getters y Setters (los que ya tenías)
     public int getId() { return id; }
     public LocalDate getFechaCreacion() { return fechaCreacion; }
     public TipoInscripcion getTipo() { return tipo; }

@@ -1,6 +1,7 @@
 package es.uco.pw.demo.model.repository;
 
 import es.uco.pw.demo.model.domain.Socio;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -17,47 +18,39 @@ import java.util.Properties;
 @Repository
 public class SocioRepository {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
     private Properties sqlQueries;
 
+    @Autowired
     public SocioRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        setSQLQueriesFileName("db/sql.properties");
     }
 
-    public void setSQLQueriesFileName(String sqlQueriesFileName) {
-        createProperties(sqlQueriesFileName);
-    }
-
-    private void createProperties(String sqlQueriesFileName) {
-        sqlQueries = new Properties();
+    public final void setSQLQueriesFileName(String sqlQueriesFileName) {
         try {
-            InputStream is = getClass().getClassLoader().getResourceAsStream(sqlQueriesFileName);
-            if (is == null) {
-                throw new IOException("No se encontrÃ³ " + sqlQueriesFileName + " en classpath");
-            }
-            sqlQueries.load(is);
+            this.sqlQueries = loadProperties(sqlQueriesFileName);
         } catch (IOException e) {
-            System.err.println("Error creating properties object for SQL queries");
+            System.err.println("Error cargando SQL properties en SocioRepository");
             e.printStackTrace();
         }
+    }
+
+    private Properties loadProperties(String fileName) throws IOException {
+        Properties properties = new Properties();
+        // Usamos ClassLoader para leer desde 'resources'
+        InputStream input = getClass().getClassLoader().getResourceAsStream(fileName);
+        if (input == null) {
+            throw new IOException("No se encontró el archivo: " + fileName);
+        }
+        properties.load(input);
+        return properties;
     }
 
     public Socio findSocioByDni(String dni) {
         try {
             String query = sqlQueries.getProperty("select-findSocioByDni");
-            List<Socio> result = jdbcTemplate.query(query, new RowMapper<Socio>() {
-                public Socio mapRow(ResultSet rs, int rowNumber) throws SQLException {
-                    return new Socio(
-                            rs.getString("dni"),
-                            rs.getString("nombre"),
-                            rs.getString("apellidos"),
-                            Date.valueOf(rs.getString("fechaNacimiento")).toLocalDate(),
-                            rs.getString("direccion"),
-                            Date.valueOf(rs.getString("fechaInscripcion")).toLocalDate(),
-                            rs.getBoolean("esTitular"),
-                            rs.getBoolean("tieneTituloPatron"));
-                }
-            }, dni);
+            List<Socio> result = jdbcTemplate.query(query, new SocioMapper(), dni);
             return result.isEmpty() ? null : result.get(0);
         } catch (DataAccessException exception) {
             System.err.println("Unable to find socio with dni=" + dni);
@@ -69,19 +62,17 @@ public class SocioRepository {
     public boolean addSocio(Socio socio) {
         try {
             String query = sqlQueries.getProperty("insert-addSocio");
-            if (query != null) {
-                int result = jdbcTemplate.update(query,
-                        socio.getDni(),
-                        socio.getNombre(),
-                        socio.getApellidos(),
-                        socio.getFechaNacimiento().toString(),
-                        socio.getDireccion(),
-                        socio.getFechaInscripcion().toString(),
-                        socio.isEsTitular(),
-                        socio.isTieneTituloPatron());
-                return result > 0;
-            } else
-                return false;
+            int result = jdbcTemplate.update(query,
+                    socio.getDni(),
+                    socio.getNombre(),
+                    socio.getApellidos(),
+                    Date.valueOf(socio.getFechaNacimiento()), // Usar Date.valueOf
+                    socio.getDireccion(),
+                    Date.valueOf(socio.getFechaInscripcion()), // Usar Date.valueOf
+                    socio.isEsTitular(),
+                    socio.isTieneTituloPatron());
+            return result > 0;
+
         } catch (DataAccessException exception) {
             System.err.println("Unable to insert socio in the database");
             exception.printStackTrace();
@@ -92,11 +83,8 @@ public class SocioRepository {
     public boolean deleteSocio(String dni) {
         try {
             String query = sqlQueries.getProperty("delete-deleteSocioByDni");
-            if (query != null) {
-                int result = jdbcTemplate.update(query, dni);
-                return result > 0;
-            } else
-                return false;
+            int result = jdbcTemplate.update(query, dni);
+            return result > 0;
         } catch (DataAccessException exception) {
             System.err.println("Unable to delete socio with dni=" + dni);
             exception.printStackTrace();
@@ -104,12 +92,33 @@ public class SocioRepository {
         }
     }
 
+    public boolean setTituloPatron(String dni, boolean tieneTitulo) {
+        try {
+            String query = sqlQueries.getProperty("update-setTituloPatron");
+            int result = jdbcTemplate.update(query, tieneTitulo, dni);
+            return result > 0;
+        } catch (DataAccessException exception) {
+            System.err.println("Unable to update patron status for dni=" + dni);
+            exception.printStackTrace();
+            return false;
+        }
+    }
+
     public List<Socio> findAllSocios() {
-    try {
-        String query = sqlQueries.getProperty("select-findAllSocios");
-        return jdbcTemplate.query(query, new RowMapper<Socio>() {
-            public Socio mapRow(ResultSet rs, int rowNumber) throws SQLException {
-                return new Socio(
+        try {
+            String query = sqlQueries.getProperty("select-findAllSocios");
+            return jdbcTemplate.query(query, new SocioMapper());
+        } catch (DataAccessException exception) {
+            System.err.println("Unable to find all socios");
+            exception.printStackTrace();
+            return null;
+        }
+    }
+    
+    // Mapper reutilizable para Socio
+    private static final class SocioMapper implements RowMapper<Socio> {
+        public Socio mapRow(ResultSet rs, int rowNumber) throws SQLException {
+            return new Socio(
                     rs.getString("dni"),
                     rs.getString("nombre"),
                     rs.getString("apellidos"),
@@ -117,14 +126,7 @@ public class SocioRepository {
                     rs.getString("direccion"),
                     rs.getDate("fechaInscripcion").toLocalDate(),
                     rs.getBoolean("esTitular"),
-                    rs.getBoolean("tieneTituloPatron")
-                );
-            }
-        });
-    } catch (DataAccessException exception) {
-        System.err.println("Unable to find all socios");
-        exception.printStackTrace();
-        return null;
+                    rs.getBoolean("tieneTituloPatron"));
+        }
     }
-}
 }

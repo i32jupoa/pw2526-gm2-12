@@ -23,6 +23,16 @@ public class Reserva {
         this.precioTotal = precioTotal;
     }
 
+    public Reserva(String dniSocio, String matricula, LocalDate fecha,
+                   int plazasReservadas, String proposito, double precioTotal) {
+        this.dniSocio = dniSocio;
+        this.matricula = matricula;
+        this.fecha = fecha;
+        this.plazasReservadas = plazasReservadas;
+        this.proposito = proposito;
+        this.precioTotal = precioTotal;
+    }
+
     public int getId() { return id; }
     public String getDniSocio() { return dniSocio; }
     public String getMatricula() { return matricula; }

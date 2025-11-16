@@ -1,7 +1,7 @@
 package es.uco.pw.demo.model.repository;
 
 import es.uco.pw.demo.model.domain.AlquilerSocio;
-import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -20,43 +20,50 @@ public class AlquilerSocioRepository {
     private final JdbcTemplate jdbcTemplate;
     private Properties sqlQueries;
 
+    @Autowired
     public AlquilerSocioRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        setSQLQueriesFileName("db/sql.properties");
     }
 
-    @PostConstruct
-    private void loadSqlQueries() {
-        sqlQueries = new Properties();
-        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("db/sql.properties")) {
-            if (inputStream != null) {
-                sqlQueries.load(inputStream);
-            } else {
-                System.err.println("sql.properties not found in /db/");
-            }
+    public final void setSQLQueriesFileName(String sqlQueriesFileName) {
+        try {
+            this.sqlQueries = loadProperties(sqlQueriesFileName);
         } catch (IOException e) {
-            System.err.println("Error loading SQL properties for AlquilerSocioRepository");
+            System.err.println("Error cargando SQL properties en AlquilerSocioRepository");
             e.printStackTrace();
         }
     }
 
-    // Consultas
+    private Properties loadProperties(String fileName) throws IOException {
+        Properties properties = new Properties();
+        InputStream input = getClass().getClassLoader().getResourceAsStream(fileName);
+        if (input == null) {
+            throw new IOException("No se encontró el archivo: " + fileName);
+        }
+        properties.load(input);
+        return properties;
+    }
+
+    // Mapper reutilizable
+    private static final class AlquilerSocioMapper implements RowMapper<AlquilerSocio> {
+        @Override
+        public AlquilerSocio mapRow(ResultSet rs, int rowNum) throws SQLException {
+            // BUG CORREGIDO: Usamos la columna 'id' que añadimos al SQL
+            return new AlquilerSocio(
+                    rs.getInt("id"), 
+                    rs.getInt("idAlquiler"),
+                    rs.getString("dniSocio")
+            );
+        }
+    }
+
     public List<AlquilerSocio> findAllAlquilerSocios() {
         try {
             String query = sqlQueries.getProperty("select-findAllAlquilerSocios");
-            if (query != null) {
-                return jdbcTemplate.query(query, new RowMapper<AlquilerSocio>() {
-                    @Override
-                    public AlquilerSocio mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        return new AlquilerSocio(
-                                rs.getInt("idAlquiler"),
-                                rs.getInt("idAlquiler"),
-                                rs.getString("dniSocio")
-                        );
-                    }
-                });
-            } else {
-                return null;
-            }
+            // Tu SQL no selecciona 'id', vamos a añadirlo
+            query = "SELECT id, idAlquiler, dniSocio FROM AlquilerSocio";
+            return jdbcTemplate.query(query, new AlquilerSocioMapper());
         } catch (DataAccessException e) {
             e.printStackTrace();
             return null;
@@ -66,20 +73,9 @@ public class AlquilerSocioRepository {
     public List<AlquilerSocio> findByIdAlquiler(int idAlquiler) {
         try {
             String query = sqlQueries.getProperty("select-findAlquilerSocioByIdAlquiler");
-            if (query != null) {
-                return jdbcTemplate.query(query, new RowMapper<AlquilerSocio>() {
-                    @Override
-                    public AlquilerSocio mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        return new AlquilerSocio(
-                                rs.getInt("idAlquiler"),
-                                rs.getInt("idAlquiler"),
-                                rs.getString("dniSocio")
-                        );
-                    }
-                }, idAlquiler);
-            } else {
-                return null;
-            }
+            // Tu SQL no selecciona 'id', vamos a añadirlo
+            query = "SELECT id, idAlquiler, dniSocio FROM AlquilerSocio WHERE idAlquiler = ?";
+            return jdbcTemplate.query(query, new AlquilerSocioMapper(), idAlquiler);
         } catch (DataAccessException e) {
             e.printStackTrace();
             return null;
@@ -89,39 +85,23 @@ public class AlquilerSocioRepository {
     public List<AlquilerSocio> findByDniSocio(String dniSocio) {
         try {
             String query = sqlQueries.getProperty("select-findAlquilerSocioByDni");
-            if (query != null) {
-                return jdbcTemplate.query(query, new RowMapper<AlquilerSocio>() {
-                    @Override
-                    public AlquilerSocio mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        return new AlquilerSocio(
-                                rs.getInt("idAlquiler"),
-                                rs.getInt("idAlquiler"),
-                                rs.getString("dniSocio")
-                        );
-                    }
-                }, dniSocio);
-            } else {
-                return null;
-            }
+            // Tu SQL no selecciona 'id', vamos a añadirlo
+            query = "SELECT id, idAlquiler, dniSocio FROM AlquilerSocio WHERE dniSocio = ?";
+            return jdbcTemplate.query(query, new AlquilerSocioMapper(), dniSocio);
         } catch (DataAccessException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    // Inserción y eliminación
     public boolean addAlquilerSocio(AlquilerSocio alquilerSocio) {
         try {
             String query = sqlQueries.getProperty("insert-addAlquilerSocio");
-            if (query != null) {
-                jdbcTemplate.update(query,
-                        alquilerSocio.getIdAlquiler(),
-                        alquilerSocio.getDniSocio()
-                );
-                return true;
-            } else {
-                return false;
-            }
+            int rows = jdbcTemplate.update(query,
+                    alquilerSocio.getIdAlquiler(),
+                    alquilerSocio.getDniSocio()
+            );
+            return rows > 0;
         } catch (DataAccessException e) {
             e.printStackTrace();
             return false;
@@ -131,12 +111,8 @@ public class AlquilerSocioRepository {
     public boolean deleteAlquilerSocio(int idAlquiler, String dniSocio) {
         try {
             String query = sqlQueries.getProperty("delete-deleteAlquilerSocio");
-            if (query != null) {
-                int result = jdbcTemplate.update(query, idAlquiler, dniSocio);
-                return result > 0;
-            } else {
-                return false;
-            }
+            int result = jdbcTemplate.update(query, idAlquiler, dniSocio);
+            return result > 0;
         } catch (DataAccessException e) {
             e.printStackTrace();
             return false;

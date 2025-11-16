@@ -1,7 +1,7 @@
 package es.uco.pw.demo.model.domain;
 
 public class AlquilerSocio {
-    private int id;          // Generado automáticamente por la BD
+    private int id;          
     private int idAlquiler;
     private String dniSocio;
 

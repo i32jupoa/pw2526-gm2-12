@@ -1,6 +1,7 @@
 package es.uco.pw.demo.model.repository;
 
 import es.uco.pw.demo.model.domain.Alquiler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -16,28 +17,38 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
+import java.sql.ResultSet;
+
 
 @Repository
 public class AlquilerRepository {
 
     private final JdbcTemplate jdbcTemplate;
-    private final Properties sqlQueries = new Properties();
+    private Properties sqlQueries;
 
+    @Autowired
     public AlquilerRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        loadSQLQueries();
+        setSQLQueriesFileName("db/sql.properties");
     }
 
-    private void loadSQLQueries() {
-        try (InputStream is = getClass().getClassLoader().getResourceAsStream("db/sql.properties")) {
-            if (is == null) {
-                throw new IOException("No se encontró el archivo sql.properties en resources.");
-            }
-            sqlQueries.load(is);
+    public final void setSQLQueriesFileName(String sqlQueriesFileName) {
+        try {
+            this.sqlQueries = loadProperties(sqlQueriesFileName);
         } catch (IOException e) {
-            System.err.println("Error cargando archivo sql.properties");
+            System.err.println("Error cargando SQL properties en AlquilerRepository");
             e.printStackTrace();
         }
+    }
+
+    private Properties loadProperties(String fileName) throws IOException {
+        Properties properties = new Properties();
+        InputStream input = getClass().getClassLoader().getResourceAsStream(fileName);
+        if (input == null) {
+            throw new IOException("No se encontró el archivo: " + fileName);
+        }
+        properties.load(input);
+        return properties;
     }
 
     public List<Alquiler> findAllAlquileres() {
@@ -54,7 +65,8 @@ public class AlquilerRepository {
     public Alquiler findAlquilerById(int id) {
         try {
             String query = sqlQueries.getProperty("select-findAlquilerById");
-            return jdbcTemplate.queryForObject(query, new Object[]{id}, new AlquilerRowMapper());
+            List<Alquiler> results = jdbcTemplate.query(query, new AlquilerRowMapper(), id);
+            return results.isEmpty() ? null : results.get(0);
         } catch (DataAccessException e) {
             System.err.println("Unable to find alquiler with id=" + id);
             e.printStackTrace();
@@ -78,7 +90,7 @@ public class AlquilerRepository {
             String query = sqlQueries.getProperty("insert-addAlquiler");
             KeyHolder keyHolder = new GeneratedKeyHolder();
 
-            jdbcTemplate.update(connection -> {
+            int rows = jdbcTemplate.update(connection -> {
                 PreparedStatement ps = connection.prepareStatement(query, new String[]{"id"});
                 ps.setInt(1, alquiler.getIdInscripcion());
                 ps.setString(2, alquiler.getMatricula());
@@ -90,8 +102,11 @@ public class AlquilerRepository {
             }, keyHolder);
 
             // Asignamos el ID generado al objeto alquiler
-            alquiler.setId(keyHolder.getKey().intValue());
-            return true;
+            if (keyHolder.getKey() != null) {
+                 alquiler.setId(keyHolder.getKey().intValue());
+            }
+           
+            return rows > 0;
         } catch (DataAccessException e) {
             System.err.println("Unable to insert alquiler into the database");
             e.printStackTrace();
