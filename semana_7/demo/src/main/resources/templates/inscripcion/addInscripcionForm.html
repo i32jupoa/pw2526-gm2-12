@@ -2,38 +2,39 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Añadir Inscripción</title>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Añadir Inscripción</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-    <h1>Añadir Nueva Inscripción</h1>
-    
-    <form action="/addInscripcion" method="get">
-        <div>
-            <label for="tipo">Tipo de Inscripción:</label>
-            <select id="tipo" name="tipo" required>
-                <option value="">Seleccione un tipo</option>
-                <option value="INDIVIDUAL">Individual</option>
-                <option value="FAMILIAR">Familiar</option>
-            </select>
+    <div class="container text-center">
+        <h1>Añadir Nueva Inscripción</h1>
+        <form th:action="@{/addInscripcion}" method="get" class="form-centered">
+            <div class="form-group">
+                <label for="tipo">Tipo de Inscripción:</label>
+                <select id="tipo" name="tipo" required class="form-control">
+                    <option value="">Seleccione un tipo</option>
+                    <option value="INDIVIDUAL">Individual</option>
+                    <option value="FAMILIAR">Familiar</option>
+                </select>
+            </div>           
+            <div class="form-group">
+                <label for="cuotaActual">Cuota Actual (€):</label>
+                <input type="number" id="cuotaActual" name="cuotaActual" 
+                       step="0.01" min="0" required class="form-control">
+            </div>         
+            <div class="form-group">
+                <label for="dniTitular">DNI del Titular:</label>
+                <input type="text" id="dniTitular" name="dniTitular" 
+                       pattern="[0-9]{8}[A-Za-z]" 
+                       placeholder="12345678A" required class="form-control">
+            </div>
+            <button type="submit" class="btn">Añadir Inscripción</button>
+        </form>
+        <div class="btn-group-inline">
+            <a th:href="@{/}" class="btn btn-secondary">Cancelar</a>
         </div>
-        
-        <div>
-            <label for="cuotaActual">Cuota Actual (€):</label>
-            <input type="number" id="cuotaActual" name="cuotaActual" 
-                   step="0.01" min="0" required>
-        </div>
-        
-        <div>
-            <label for="dniTitular">DNI del Titular:</label>
-            <input type="text" id="dniTitular" name="dniTitular" 
-                   pattern="[0-9]{8}[A-Za-z]" 
-                   placeholder="12345678A" required>
-        </div>
-        
-        <button type="submit">Añadir Inscripción</button>
-        <a href="/">Cancelar</a>
-    </form>
+    </div>
 </body>
 </html>
