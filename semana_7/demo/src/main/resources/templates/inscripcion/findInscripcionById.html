@@ -9,14 +9,17 @@
 </head>
 <body>
     <div class="container text-center">
-        <h1>Buscar Inscripción por ID</h1>
+        <h1>Buscar Inscripción por ID</h1>       
         <form method="GET" th:action="@{/findInscripcionById}" class="form-centered">
             <div class="form-group">
                 <label for="id">ID de inscripción:</label>
                 <input type="number" id="id" name="id" required class="form-control">
+            </div>           
+            <div class="btn-group-inline">
+                <button type="submit" class="btn">Buscar</button>
+                <a th:href="@{/}" class="btn btn-secondary">Volver al inicio</a>
             </div>
-            <button type="submit" class="btn">Buscar</button>
-        </form>
+        </form>  
         <div th:if="${inscripcion != null}" class="card card-centered">
             <h3>Resultado</h3>
             <p><strong>ID:</strong> <span th:text="${inscripcion.id}">0</span></p>
@@ -27,9 +30,6 @@
         </div>
         <div th:if="${error != null}" class="error-box">
             <span th:text="${error}">Error</span>
-        </div>
-        <div class="btn-group-inline">
-            <a th:href="@{/}" class="btn btn-secondary">Volver al inicio</a>
         </div>
     </div>
 </body>

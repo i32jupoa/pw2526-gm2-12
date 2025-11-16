@@ -1,43 +1,42 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Listado de Relaciones Socio-Inscripción</title>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de Relaciones Socio-Inscripción</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-
-<h1>Listado de Relaciones Socio-Inscripción</h1>
-
-<!-- Si hay relaciones -->
-<div th:if="${relaciones != null and !relaciones.isEmpty()}">
-    <h2>Total de relaciones: <span th:text="${relaciones.size()}">0</span></h2>
-
-    <table border="1" cellpadding="5" cellspacing="0">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>ID Inscripción</th>
-                <th>DNI Socio</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="relacion : ${relaciones}">
-                <td th:text="${relacion.id}">1</td>
-                <td th:text="${relacion.idInscripcion}">1</td>
-                <td th:text="${relacion.dniSocio}">12345678A</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<!-- Si no hay relaciones -->
-<div th:if="${relaciones == null or relaciones.isEmpty()}">
-    <p><strong>No hay relaciones Socio-Inscripción registradas en la base de datos.</strong></p>
-</div>
-
-<br/>
-<a th:href="@{/}">Volver al inicio</a>
-
+    <div class="container text-center">
+        <h1>Listado de Relaciones Socio-Inscripción</h1>       
+        <div th:if="${relaciones != null and !relaciones.isEmpty()}">
+            <div class="card card-centered">
+                <p><strong>Total de relaciones:</strong> <span th:text="${relaciones.size()}">0</span></p>
+            </div> 
+            <table class="table-centered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>ID Inscripción</th>
+                        <th>DNI Socio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="relacion : ${relaciones}">
+                        <td th:text="${relacion.id}">1</td>
+                        <td th:text="${relacion.idInscripcion}">1</td>
+                        <td th:text="${relacion.dniSocio}">12345678A</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div> 
+        <div th:if="${relaciones == null or relaciones.isEmpty()}" class="error-box">
+            No hay relaciones Socio-Inscripción registradas en la base de datos.
+        </div>
+        <div class="btn-group-inline">
+            <a th:href="@{/}" class="btn btn-secondary">Volver al inicio</a>
+        </div>
+    </div>
 </body>
 </html>
