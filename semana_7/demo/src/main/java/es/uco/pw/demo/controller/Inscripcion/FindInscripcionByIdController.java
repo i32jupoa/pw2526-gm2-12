@@ -1,5 +1,6 @@
 package es.uco.pw.demo.controller.Inscripcion;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,10 +14,9 @@ public class FindInscripcionByIdController {
 
     private InscripcionRepository inscripcionRepository;
 
+    @Autowired
     public FindInscripcionByIdController(InscripcionRepository inscripcionRepository){
         this.inscripcionRepository = inscripcionRepository;
-        String sqlQueriesFileName = "./src/main/resources/db/sql.properties";
-        this.inscripcionRepository.setSQLQueriesFileName(sqlQueriesFileName);
     }
 
     // Mostrar el formulario vacío

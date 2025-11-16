@@ -1,6 +1,7 @@
 package es.uco.pw.demo.controller.Socio;
 
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -13,17 +14,15 @@ public class ShowSocioController {
     
     private SocioRepository socioRepository;
     
+    @Autowired
     public ShowSocioController(SocioRepository socioRepository) {
         this.socioRepository = socioRepository;
-        String sqlQueriesFileName = "db/sql.properties";
-        this.socioRepository.setSQLQueriesFileName(sqlQueriesFileName);
     }
     
     @GetMapping("/showSocio")
     public ModelAndView showSocio() {
         ModelAndView modelAndView = new ModelAndView("socio/showSocioView");
         
-        // Obtener todos los socios
         List<Socio> allSocios = this.socioRepository.findAllSocios();
         
         modelAndView.addObject("socios", allSocios);

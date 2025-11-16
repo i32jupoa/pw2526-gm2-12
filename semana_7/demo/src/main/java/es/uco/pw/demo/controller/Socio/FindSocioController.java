@@ -21,7 +21,6 @@ public class FindSocioController {
 
     @GetMapping("/findSocio")
     public ModelAndView findSocio(@RequestParam("dni") String dni) {
-        socioRepository.setSQLQueriesFileName("db/sql.properties");
         Socio socio = socioRepository.findSocioByDni(dni);
 
         if (socio != null) {

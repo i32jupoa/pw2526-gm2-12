@@ -3,6 +3,7 @@ package es.uco.pw.demo.controller.Inscripcion;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,11 +17,9 @@ public class ShowInscripcionesByTipoController {
 
     private final InscripcionRepository inscripcionRepository;
 
+    @Autowired
     public ShowInscripcionesByTipoController(InscripcionRepository inscripcionRepository) {
         this.inscripcionRepository = inscripcionRepository;
-
-        String sqlQueriesFileName = "./src/main/resources/db/sql.properties";
-        this.inscripcionRepository.setSQLQueriesFileName(sqlQueriesFileName);
     }
 
     @GetMapping("/showInscripcionesByTipo")

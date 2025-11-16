@@ -17,12 +17,10 @@ public class ShowPatronController {
 
     @GetMapping("/showPatrones")
     public ModelAndView showAllPatrones() {
-        // Aseguramos que se carguen las consultas SQL
-        patronRepository.setSQLQueriesFileName("db/sql.properties");
 
         List<Patron> patrons = patronRepository.findAllPatrones();
 
-        ModelAndView mv = new ModelAndView("showPatronView");
+        ModelAndView mv = new ModelAndView("patron/showPatronView");
         mv.addObject("patrons", patrons);
         return mv;
     }

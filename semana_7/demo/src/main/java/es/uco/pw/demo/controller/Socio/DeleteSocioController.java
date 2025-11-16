@@ -20,7 +20,6 @@ public class DeleteSocioController {
 
     @GetMapping("/deleteSocio")
     public ModelAndView deleteSocio(@RequestParam("dni") String dni) {
-        socioRepository.setSQLQueriesFileName("db/sql.properties");
 
         boolean deleted = socioRepository.deleteSocio(dni);
 

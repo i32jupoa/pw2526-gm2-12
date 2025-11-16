@@ -296,42 +296,169 @@
 <body>
     <div class="main-wrapper">
         <div class="content-container">
-            <!-- Header -->
             <div class="hero-header">
                 <h1>CLUB NÁUTICO</h1>
                 <p class="subtitle">Sistema de Gestión Integral</p>
             </div>
 
-            <!-- Grid de Módulos -->
             <div class="main-grid">
-                <!-- Módulo Alquileres -->
+
                 <div class="module-card">
                     <div class="module-header">
-                        <h2>Alquileres</h2>
+                        <h2>Socios</h2>
                     </div>
                     <div class="module-body">
                         <div class="action-list">
-                            <a href="/addAlquiler" class="action-button">
-                                <span class="action-text">Añadir alquiler</span>
+                            <a href="/addSocioForm" class="action-button">
+                                <span class="action-text">Inscribir socio</span>
                                 <span class="action-arrow">→</span>
                             </a>
-                            <a href="/findAlquiler" class="action-button">
-                                <span class="action-text">Buscar por ID</span>
+                            <a href="/updatePatronStatusForm" class="action-button">
+                                <span class="action-text">Actualizar Título Patrón</span>
                                 <span class="action-arrow">→</span>
                             </a>
-                            <a href="/deleteAlquiler" class="action-button">
-                                <span class="action-text">Eliminar alquiler</span>
+                            <a href="/findSocioForm" class="action-button">
+                                <span class="action-text">Buscar por DNI</span>
                                 <span class="action-arrow">→</span>
                             </a>
-                            <a href="/showAlquileres" class="action-button">
-                                <span class="action-text">Ver todos</span>
+                            <a href="/deleteSocioForm" class="action-button">
+                                <span class="action-text">Eliminar socio</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/showSocio" class="action-button">
+                                <span class="action-text">Ver todos los socios</span>
                                 <span class="action-arrow">→</span>
                             </a>
                         </div>
                     </div>
                 </div>
 
-                <!-- Módulo Alquiler-Socios -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <h2>Inscripciones</h2>
+                    </div>
+                    <div class="module-body">
+                        <div class="action-list">
+                            <a href="/addInscripcionForm" class="action-button">
+                                <span class="action-text">Añadir familiar</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/findInscripcionByIdForm" class="action-button">
+                                <span class="action-text">Buscar inscripcion por ID</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/listInscripciones" class="action-button">
+                                <span class="action-text">Listar inscripciones</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/showInscripcionesByTipo" class="action-button">
+                                <span class="action-text">Ver resumen por tipos</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-header">
+                        <h2>Embarcaciones</h2>
+                    </div>
+                    <div class="module-body">
+                        <div class="action-list">
+                             <a href="/addEmbarcacionForm" class="action-button">
+                                <span class="action-text">Añadir embarcación</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/findEmbarcacionByTipo" class="action-button">
+                                <span class="action-text">Consultar por tipo</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                             <a href="/findEmbarcacionByMatricula" class="action-button">
+                                <span class="action-text">Buscar embarcación por Matrícula</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/showTiposEmbarcacion" class="action-button">
+                                <span class="action-text">Ver tipos de embarcaciones</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-header">
+                        <h2>Patrones</h2>
+                    </div>
+                    <div class="module-body">
+                        <div class="action-list">
+                            <a href="/addPatronForm" class="action-button">
+                                <span class="action-text">Añadir patrón</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/findPatronForm" class="action-button">
+                                <span class="action-text">Buscar patron por DNI</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-header">
+                        <h2>Alquileres</h2>
+                    </div>
+                    <div class="module-body">
+                        <div class="action-list">
+                            <a href="/findEmbarcacionDisponible" class="action-button">
+                                <span class="action-text">Buscar disponible</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/addAlquilerForm" class="action-button">
+                                <span class="action-text">Añadir alquiler</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/showAlquileres" class="action-button">
+                                <span class="action-text">Ver todos los alquileres</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/findAlquiler" class="action-button">
+                                <span class="action-text">Buscar alquiler por ID</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/deleteAlquiler" class="action-button">
+                                <span class="action-text">Eliminar alquiler</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-header">
+                        <h2>Reservas</h2>
+                    </div>
+                    <div class="module-body">
+                        <div class="action-list">
+                            <a href="/addReservaForm" class="action-button">
+                                <span class="action-text">Añadir reserva</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/showReservas" class="action-button">
+                                <span class="action-text">Ver todas las reservas</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/findReserva" class="action-button">
+                                <span class="action-text">Buscar por ID</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/deleteReservaForm" class="action-button">
+                                <span class="action-text">Eliminar reserva</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="module-card">
                     <div class="module-header">
                         <h2>Alquiler - Socios</h2>
@@ -355,137 +482,13 @@
                                 <span class="action-arrow">→</span>
                             </a>
                             <a href="/showAlquilerSocio" class="action-button">
-                                <span class="action-text">Ver todas</span>
+                                <span class="action-text">Ver todas las relaciones</span>
                                 <span class="action-arrow">→</span>
                             </a>
                         </div>
                     </div>
                 </div>
 
-                <!-- Módulo Embarcaciones -->
-                <div class="module-card">
-                    <div class="module-header">
-                        <h2>Embarcaciones</h2>
-                    </div>
-                    <div class="module-body">
-                        <div class="action-list">
-                            <a href="/addEmbarcacion" class="action-button">
-                                <span class="action-text">Añadir embarcación</span>
-                                <span class="action-arrow">→</span>
-                            </a>
-                            <a href="/findEmbarcacionByMatricula" class="action-button">
-                                <span class="action-text">Buscar por matrícula</span>
-                                <span class="action-arrow">→</span>
-                            </a>
-                            <a href="/findEmbarcacionByTipo" class="action-button">
-                                <span class="action-text">Buscar por tipo</span>
-                                <span class="action-arrow">→</span>
-                            </a>
-                            <a href="/showTiposEmbarcacion" class="action-button">
-                                <span class="action-text">Ver tipos</span>
-                                <span class="action-arrow">→</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Módulo Inscripciones -->
-                <div class="module-card">
-                    <div class="module-header">
-                        <h2>Inscripciones</h2>
-                    </div>
-                    <div class="module-body">
-                        <div class="action-list">
-                            <a href="/addInscripcionForm" class="action-button">
-                                <span class="action-text">Añadir inscripción</span>
-                                <span class="action-arrow">→</span>
-                            </a>
-                            <a href="/findInscripcionByIdForm" class="action-button">
-                                <span class="action-text">Buscar por ID</span>
-                                <span class="action-arrow">→</span>
-                            </a>
-                            <a href="/showInscripcionesByTipo" class="action-button">
-                                <span class="action-text">Ver todas</span>
-                                <span class="action-arrow">→</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Módulo Patrones -->
-                <div class="module-card">
-                    <div class="module-header">
-                        <h2>Patrones</h2>
-                    </div>
-                    <div class="module-body">
-                        <div class="action-list">
-                            <a href="/addPatronForm" class="action-button">
-                                <span class="action-text">Añadir patrón</span>
-                                <span class="action-arrow">→</span>
-                            </a>
-                            <a href="/findPatronForm" class="action-button">
-                                <span class="action-text">Buscar por ID</span>
-                                <span class="action-arrow">→</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Módulo Reservas -->
-                <div class="module-card">
-                    <div class="module-header">
-                        <h2>Reservas</h2>
-                    </div>
-                    <div class="module-body">
-                        <div class="action-list">
-                            <a href="/addReservaForm" class="action-button">
-                                <span class="action-text">Añadir reserva</span>
-                                <span class="action-arrow">→</span>
-                            </a>
-                            <a href="/findReserva" class="action-button">
-                                <span class="action-text">Buscar por ID</span>
-                                <span class="action-arrow">→</span>
-                            </a>
-                            <a href="/deleteReservaForm" class="action-button">
-                                <span class="action-text">Eliminar reserva</span>
-                                <span class="action-arrow">→</span>
-                            </a>
-                            <a href="/showReservas" class="action-button">
-                                <span class="action-text">Ver todas</span>
-                                <span class="action-arrow">→</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Módulo Socios -->
-                <div class="module-card">
-                    <div class="module-header">
-                        <h2>Socios</h2>
-                    </div>
-                    <div class="module-body">
-                        <div class="action-list">
-                            <a href="/addSocioForm" class="action-button">
-                                <span class="action-text">Añadir socio</span>
-                                <span class="action-arrow">→</span>
-                            </a>
-                            <a href="/findSocioForm" class="action-button">
-                                <span class="action-text">Buscar por DNI</span>
-                                <span class="action-arrow">→</span>
-                            </a>
-                            <a href="/deleteSocioForm" class="action-button">
-                                <span class="action-text">Eliminar socio</span>
-                                <span class="action-arrow">→</span>
-                            </a>
-                            <a href="/showSocio" class="action-button">
-                                <span class="action-text">Ver todos</span>
-                                <span class="action-arrow">→</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Módulo Socio-Inscripción -->
                 <div class="module-card">
                     <div class="module-header">
                         <h2>Socio - Inscripción</h2>
@@ -509,7 +512,7 @@
                                 <span class="action-arrow">→</span>
                             </a>
                             <a href="/showSocioInscripcion" class="action-button">
-                                <span class="action-text">Ver todas</span>
+                                <span class="action-text">Ver todas las relaciones</span>
                                 <span class="action-arrow">→</span>
                             </a>
                         </div>
@@ -517,7 +520,6 @@
                 </div>
             </div>
 
-            <!-- Footer -->
             <div class="footer-card">
                 <img th:src="@{/images/UCO.png}" alt="Logo UCO"/>
             </div>

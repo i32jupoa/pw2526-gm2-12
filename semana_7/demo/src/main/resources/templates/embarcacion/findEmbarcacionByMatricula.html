@@ -9,18 +9,14 @@
 </head>
 <body>
     <div class="container text-center">
-        <h1>Buscar Embarcación por Matrícula</h1>        
+        <h1>Buscar Embarcación por Matrícula</h1>
         <form method="GET" th:action="@{/findEmbarcacionByMatricula}" class="form-centered">
             <div class="form-group">
                 <label for="matricula">Matrícula:</label>
                 <input type="text" id="matricula" name="matricula" required class="form-control">
             </div>
-            
-            <div class="btn-group-inline">
-                <button type="submit" class="btn">Buscar</button>
-                <a th:href="@{/}" class="btn btn-secondary">Volver al inicio</a>
-            </div>
-        </form>        
+            <button type="submit" class="btn">Buscar</button>
+        </form>
         <div th:if="${buscado}">
             <div th:if="${embarcacion != null}" class="card card-centered">
                 <h3>Resultado</h3>
@@ -34,6 +30,9 @@
             <div th:if="${embarcacion == null}" class="error-box">
                 No se encontró ninguna embarcación con esa matrícula.
             </div>
+        </div>
+        <div class="btn-group-inline">
+            <a th:href="@{/}" class="btn btn-secondary">Volver al inicio</a>
         </div>
     </div>
 </body>

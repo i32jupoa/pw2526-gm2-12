@@ -23,7 +23,6 @@ public class FindPatronController {
     // Procesar la búsqueda
     @GetMapping("/findPatron")
     public ModelAndView findPatron(@RequestParam("dni") String dni) {
-        patronRepository.setSQLQueriesFileName("src/main/resources/db/sql.properties");
         Patron patron = patronRepository.findPatronByDni(dni);
         
         ModelAndView mv;

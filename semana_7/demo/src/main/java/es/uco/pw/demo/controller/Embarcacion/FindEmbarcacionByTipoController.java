@@ -3,6 +3,7 @@ package es.uco.pw.demo.controller.Embarcacion;
 import es.uco.pw.demo.model.domain.Embarcacion;
 import es.uco.pw.demo.model.domain.TipoEmbarcacion;
 import es.uco.pw.demo.model.repository.EmbarcacionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,9 +16,9 @@ public class FindEmbarcacionByTipoController {
 
     private final EmbarcacionRepository embarcacionRepository;
 
+    @Autowired
     public FindEmbarcacionByTipoController(EmbarcacionRepository repo) {
         this.embarcacionRepository = repo;
-        this.embarcacionRepository.setSQLQueriesFileName("./src/main/resources/db/sql.properties");
     }
 
     @GetMapping("/findEmbarcacionByTipo")
@@ -27,9 +28,14 @@ public class FindEmbarcacionByTipoController {
         ModelAndView model = new ModelAndView("embarcacion/findEmbarcacionByTipo");
 
         if (tipo != null && !tipo.isEmpty()) {
-            TipoEmbarcacion tipoEnum = TipoEmbarcacion.valueOf(tipo.toUpperCase());
-            List<Embarcacion> lista = embarcacionRepository.findEmbarcacionByTipo(tipoEnum);
-            model.addObject("embarcaciones", lista);
+            try {
+                TipoEmbarcacion tipoEnum = TipoEmbarcacion.valueOf(tipo.toUpperCase());
+                List<Embarcacion> lista = embarcacionRepository.findEmbarcacionByTipo(tipoEnum);
+                model.addObject("embarcaciones", lista);
+            } catch (IllegalArgumentException e) {
+                model.addObject("embarcaciones", null);
+                System.err.println("Tipo de embarcación no válido: " + tipo);
+            }
             model.addObject("buscado", true);
         } else {
             model.addObject("buscado", false);

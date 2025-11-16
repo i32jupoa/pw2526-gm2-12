@@ -3,6 +3,7 @@ package es.uco.pw.demo.controller.Embarcacion;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -17,10 +18,9 @@ public class ShowTiposEmbarcacionController {
     private EmbarcacionRepository embarcacionRepository;
     private ModelAndView modelAndView = new ModelAndView();
     
+    @Autowired
     public ShowTiposEmbarcacionController(EmbarcacionRepository embarcacionRepository) {
         this.embarcacionRepository = embarcacionRepository;
-        String sqlQueriesFileName = "./src/main/resources/db/sql.properties";
-        this.embarcacionRepository.setSQLQueriesFileName(sqlQueriesFileName);
     }
 
     @GetMapping("/showTiposEmbarcacion")
