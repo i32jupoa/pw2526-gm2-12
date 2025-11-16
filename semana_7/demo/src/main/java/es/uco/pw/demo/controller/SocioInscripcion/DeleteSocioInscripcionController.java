@@ -23,7 +23,6 @@ public class DeleteSocioInscripcionController {
             @RequestParam("idInscripcion") int idInscripcion,
             @RequestParam("dniSocio") String dniSocio) {
 
-        socioInscripcionRepository.setSQLQueriesFileName("db/sql.properties");
         boolean deleted = socioInscripcionRepository.deleteSocioInscripcion(idInscripcion, dniSocio);
 
         ModelAndView mv;

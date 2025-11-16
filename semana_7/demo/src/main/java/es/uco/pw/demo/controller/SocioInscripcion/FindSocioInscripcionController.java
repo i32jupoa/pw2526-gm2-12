@@ -16,23 +16,23 @@ public class FindSocioInscripcionController {
     private SocioInscripcionRepository socioInscripcionRepository;
 
     @GetMapping("/findSocioInscripcionById")
-public ModelAndView findSocioInscripcionById(@RequestParam(value = "id", required = false) Integer id) {
-    ModelAndView mv = new ModelAndView("socioInscripcion/findSocioInscripcionById");
+    public ModelAndView findSocioInscripcionById(@RequestParam(value = "id", required = false) Integer id) {
+        ModelAndView mv = new ModelAndView("socioInscripcion/findSocioInscripcionById");
 
-    if (id == null) {
-        mv.addObject("socioInscripciones", null);
-        mv.addObject("busquedaRealizada", false);
+        if (id == null) {
+            mv.addObject("socioInscripciones", null);
+            mv.addObject("busquedaRealizada", false);
+            return mv;
+        }
+
+        // Se llama al método corregido: findByIdInscripcion()
+        List<SocioInscripcion> socioInscripciones = socioInscripcionRepository.findByIdInscripcion(id);
+
+        mv.addObject("socioInscripciones", socioInscripciones);
+        mv.addObject("busquedaRealizada", true);
+
         return mv;
     }
-
-    // Llamar al método que ya maneja la conexión
-    List<SocioInscripcion> socioInscripciones = socioInscripcionRepository.findByIdInscripcionPublic(id);
-
-    mv.addObject("socioInscripciones", socioInscripciones);
-    mv.addObject("busquedaRealizada", true);
-
-    return mv;
-}
 
 
     @GetMapping("/findSocioInscripcionByDni")
@@ -44,8 +44,7 @@ public ModelAndView findSocioInscripcionById(@RequestParam(value = "id", require
             mv.addObject("busquedaRealizada", false);
             return mv;
         }
-
-        socioInscripcionRepository.setSQLQueriesFileName("db/sql.properties");
+        
         List<SocioInscripcion> socioInscripciones = socioInscripcionRepository.findByDniSocio(dniSocio);
 
         mv.addObject("socioInscripciones", socioInscripciones);

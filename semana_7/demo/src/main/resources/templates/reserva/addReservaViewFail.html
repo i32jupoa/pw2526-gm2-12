@@ -11,11 +11,12 @@
     <div class="container text-center">
         <h1>Error al añadir la reserva</h1>
         
-        <div class="error-box">
+        <div class="error-box" th:if="${errorMessage != null}">
+            <span th:text="${errorMessage}">Error desconocido.</span>
+        </div>
+        
+        <div class="error-box" th:unless="${errorMessage != null}">
             Hubo un problema al intentar guardar la reserva en la base de datos.
-            <span th:if="${errorMessage}">
-                <br><strong>Detalles:</strong> <span th:text="${errorMessage}"></span>
-            </span>
         </div>
         
         <div class="btn-group-inline">

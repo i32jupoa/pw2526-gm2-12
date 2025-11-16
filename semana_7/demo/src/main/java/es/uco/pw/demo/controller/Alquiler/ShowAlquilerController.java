@@ -17,7 +17,7 @@ public class ShowAlquilerController {
 
     @GetMapping("/showAlquileres")
     public ModelAndView showAlquileres() {
-        // Usamos el método correcto del repositorio
+        // REVERTIDO: Volvemos a llamar a findAllAlquileres
         List<Alquiler> alquileres = alquilerRepository.findAllAlquileres();
 
         ModelAndView mv = new ModelAndView("alquiler/showAlquileresView");

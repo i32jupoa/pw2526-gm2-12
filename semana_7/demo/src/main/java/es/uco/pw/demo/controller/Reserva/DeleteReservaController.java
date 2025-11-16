@@ -20,8 +20,6 @@ public class DeleteReservaController {
 
     @GetMapping("/deleteReserva")
     public ModelAndView deleteReserva(@RequestParam("id") int id) {
-        // Cargar SQL queries desde classpath
-        reservaRepository.setSQLQueriesFileName("db/sql.properties");
         boolean deleted = reservaRepository.deleteReservaById(id);
 
         ModelAndView mv;

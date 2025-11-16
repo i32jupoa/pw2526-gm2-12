@@ -22,7 +22,7 @@ public class AddAlquilerSocioController {
     @GetMapping("/addAlquilerSocio")
     public ModelAndView showAddAlquilerSocioForm() {
         ModelAndView modelAndView = new ModelAndView("alquilerSocios/addAlquilerSocioForm");
-        // Se crea el objeto sin id, porque lo genera la DB
+        // Se crea el objeto sin id, porque lo genera la BD automáticamente
         modelAndView.addObject("alquilerSocio", new AlquilerSocio(0, ""));
         return modelAndView;
     }
@@ -31,7 +31,7 @@ public class AddAlquilerSocioController {
     @PostMapping("/addAlquilerSocio")
     public ModelAndView processAddAlquilerSocio(@ModelAttribute("alquilerSocio") AlquilerSocio alquilerSocio, SessionStatus status) {
         ModelAndView modelAndView;
-        // Usamos el constructor sin id, la DB generará automáticamente el id
+        // Usamos el constructor sin id, la BD generará automáticamente el id
         AlquilerSocio nuevoAlquilerSocio = new AlquilerSocio(
                 alquilerSocio.getIdAlquiler(),
                 alquilerSocio.getDniSocio()

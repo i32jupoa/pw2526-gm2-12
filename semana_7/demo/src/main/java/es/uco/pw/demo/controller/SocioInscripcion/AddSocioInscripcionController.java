@@ -19,15 +19,12 @@ public class AddSocioInscripcionController {
             @RequestParam(required = false) Integer idInscripcion,
             @RequestParam(required = false) String dniSocio
     ) {
-        // Si no hay parámetros, mostrar el formulario
         if (idInscripcion == null || dniSocio == null) {
             return new ModelAndView("socioInscripcion/addSocioInscripcionForm");
         }
 
-        // Crear relación sin pasar id (se genera en la DB)
         SocioInscripcion socioInscripcion = new SocioInscripcion(idInscripcion, dniSocio);
 
-        socioInscripcionRepository.setSQLQueriesFileName("db/sql.properties");
         boolean success = socioInscripcionRepository.addSocioInscripcion(socioInscripcion);
 
         ModelAndView mv;

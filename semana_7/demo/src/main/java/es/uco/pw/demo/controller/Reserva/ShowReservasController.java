@@ -17,8 +17,6 @@ public class ShowReservasController {
 
     @GetMapping("/showReservas")
     public ModelAndView showReservas() {
-        // Cargamos las consultas SQL
-        reservaRepository.setSQLQueriesFileName("db/sql.properties");
 
         List<Reserva> reservas = reservaRepository.findAllReservas();
 
