@@ -18,9 +18,6 @@ public class InscripcionRestController {
     @Autowired
     private InscripcionRepository inscripcionRepository;
 
-    /**
-     * Obtiene todas las inscripciones (Opcional, general).
-     */
     @GetMapping
     public ResponseEntity<List<Inscripcion>> getAllInscripciones() {
         List<Inscripcion> lista = inscripcionRepository.findAllInscripciones();
@@ -30,10 +27,6 @@ public class InscripcionRestController {
         return new ResponseEntity<>(lista, HttpStatus.OK);
     }
 
-    /**
-     * Obtiene la lista de inscripciones INDIVIDUALES (Requisito A.4.1).
-     * GET /api/inscripciones/individual
-     */
     @GetMapping("/individual")
     public ResponseEntity<List<Inscripcion>> getInscripcionesIndividuales() {
         List<Inscripcion> lista = inscripcionRepository.findInscripcionesByTipo(TipoInscripcion.INDIVIDUAL);
@@ -43,10 +36,6 @@ public class InscripcionRestController {
         return new ResponseEntity<>(lista, HttpStatus.OK);
     }
 
-    /**
-     * Obtiene la lista de inscripciones FAMILIARES (Requisito A.4.2).
-     * GET /api/inscripciones/familiar
-     */
     @GetMapping("/familiar")
     public ResponseEntity<List<Inscripcion>> getInscripcionesFamiliares() {
         List<Inscripcion> lista = inscripcionRepository.findInscripcionesByTipo(TipoInscripcion.FAMILIAR);
@@ -56,14 +45,8 @@ public class InscripcionRestController {
         return new ResponseEntity<>(lista, HttpStatus.OK);
     }
 
-    /**
-     * Obtiene la información de una inscripción dado el DNI del titular (Requisito A.4.3).
-     * GET /api/inscripciones/titular/{dni}
-     */
     @GetMapping("/titular/{dni}")
     public ResponseEntity<Inscripcion> getInscripcionByTitular(@PathVariable String dni) {
-        // NOTA: Asegúrate de tener este método 'findInscripcionByDniTitular' en tu repositorio
-        // Si no lo tienes, créalo en InscripcionRepository igual que los otros finders.
         Inscripcion inscripcion = inscripcionRepository.findInscripcionByDniTitular(dni);
         
         if (inscripcion != null) {
@@ -73,14 +56,8 @@ public class InscripcionRestController {
         }
     }
 
-    /**
-     * Crea una inscripción para un socio titular (Requisito A.4.4).
-     * POST /api/inscripciones
-     */
     @PostMapping(consumes="application/json")
-    public ResponseEntity<Inscripcion> createInscripcion(@RequestBody Inscripcion inscripcion) {
-        // Aquí podrías validar si el socio existe antes de crear la inscripción
-        
+    public ResponseEntity<Inscripcion> createInscripcion(@RequestBody Inscripcion inscripcion) { 
         boolean created = inscripcionRepository.addInscripcion(inscripcion);
         if (created) {
             return new ResponseEntity<>(inscripcion, HttpStatus.CREATED);
