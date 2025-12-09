@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión del Club Náutico</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        body {
+            background: #f0f4f8;
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Patrón de ondas sutiles */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(66, 153, 225, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(66, 153, 225, 0.04) 0%, transparent 50%);
+            z-index: 0;
+        }
+        
+        .main-wrapper {
+            min-height: 100vh;
+            padding: 60px 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .content-container {
+            max-width: 1500px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        /* Header limpio y elegante */
+        .hero-header {
+            text-align: center;
+            margin-bottom: 80px;
+            animation: fadeInDown 1s ease-out;
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .hero-header h1 {
+            font-size: 5em;
+            color: #2c5282;
+            margin-bottom: 20px;
+            font-weight: 900;
+            letter-spacing: -2px;
+            position: relative;
+        }
+        
+        .hero-header h1::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 6px;
+            background: #4299e1;
+            border-radius: 3px;
+        }
+        
+        .hero-header .subtitle {
+            font-size: 1.5em;
+            color: #4a5568;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 35px;
+        }
+        
+        /* Grid limpio */
+        .main-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 35px;
+            margin-bottom: 60px;
+        }
+        
+        /* Tarjetas con diseño limpio y moderno */
+        .module-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 0;
+            box-shadow: 
+                0 10px 40px rgba(66, 153, 225, 0.12),
+                0 2px 8px rgba(0, 0, 0, 0.04);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+            position: relative;
+            border: 2px solid #e2e8f0;
+            animation: fadeInUp 0.7s ease-out backwards;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .module-card:nth-child(1) { animation-delay: 0.05s; }
+        .module-card:nth-child(2) { animation-delay: 0.1s; }
+        .module-card:nth-child(3) { animation-delay: 0.15s; }
+        .module-card:nth-child(4) { animation-delay: 0.2s; }
+        .module-card:nth-child(5) { animation-delay: 0.25s; }
+        .module-card:nth-child(6) { animation-delay: 0.3s; }
+        .module-card:nth-child(7) { animation-delay: 0.35s; }
+        .module-card:nth-child(8) { animation-delay: 0.4s; }
+        
+        .module-card:hover {
+            transform: translateY(-16px);
+            box-shadow: 
+                0 20px 60px rgba(66, 153, 225, 0.2),
+                0 4px 16px rgba(0, 0, 0, 0.08);
+            border-color: #4299e1;
+        }
+        
+        .module-header {
+            background: #4299e1;
+            padding: 32px 32px;
+            position: relative;
+        }
+        
+        .module-header h2 {
+            color: #ffffff;
+            font-size: 1.75em;
+            margin: 0;
+            font-weight: 800;
+            text-align: left;
+            letter-spacing: 0.5px;
+        }
+        
+        .module-body {
+            padding: 28px;
+            background: #ffffff;
+        }
+        
+        .action-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .action-button {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 22px;
+            background: #ffffff;
+            border: 2px solid #cbd5e0;
+            border-radius: 14px;
+            text-decoration: none;
+            color: #2d3748;
+            font-size: 15.5px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+        
+        .action-button:hover {
+            background: #4299e1;
+            border-color: #3182ce;
+            transform: translateX(10px);
+            color: #ffffff;
+            box-shadow: 0 8px 20px rgba(66, 153, 225, 0.25);
+        }
+        
+        .action-text {
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .action-arrow {
+            width: 34px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #4299e1;
+            color: white;
+            border-radius: 50%;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .action-button:hover .action-arrow {
+            transform: translateX(6px) rotate(360deg);
+            background: #ffffff;
+            color: #4299e1;
+        }
+        
+        /* Footer limpio */
+        .footer-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 50px;
+            text-align: center;
+            box-shadow: 
+                0 10px 40px rgba(66, 153, 225, 0.12),
+                0 2px 8px rgba(0, 0, 0, 0.04);
+            margin-top: 60px;
+            animation: fadeInUp 0.7s ease-out 0.45s backwards;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .footer-card img {
+            max-width: 240px;
+            filter: drop-shadow(0 4px 12px rgba(66, 153, 225, 0.15));
+            transition: all 0.4s ease;
+        }
+        
+        .footer-card img:hover {
+            transform: scale(1.06) translateY(-4px);
+            filter: drop-shadow(0 8px 20px rgba(66, 153, 225, 0.25));
+        }
+        
+        /* Responsive */
+        @media (max-width: 968px) {
+            .hero-header h1 {
+                font-size: 4em;
+            }
+            
+            .main-grid {
+                grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+                gap: 28px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-header h1 {
+                font-size: 3.2em;
+            }
+            
+            .hero-header .subtitle {
+                font-size: 1.2em;
+            }
+            
+            .main-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            
+            .module-card:hover {
+                transform: translateY(-10px);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero-header h1 {
+                font-size: 2.5em;
+                letter-spacing: -1px;
+            }
+            
+            .main-wrapper {
+                padding: 40px 15px;
+            }
+            
+            .action-button:hover {
+                transform: translateX(8px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-wrapper">
+        <div class="content-container">
+            <div class="hero-header">
+                <h1>CLUB NÁUTICO</h1>
+                <p class="subtitle">Sistema de Gestión Integral</p>
+            </div>
+
+            <div class="main-grid">
+
+                <div class="module-card">
+                    <div class="module-header">
+                        <h2>Socios</h2>
+                    </div>
+                    <div class="module-body">
+                        <div class="action-list">
+                            <a href="/addSocioForm" class="action-button">
+                                <span class="action-text">Inscribir socio</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/updatePatronStatusForm" class="action-button">
+                                <span class="action-text">Actualizar Título Patrón</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/findSocioForm" class="action-button">
+                                <span class="action-text">Buscar por DNI</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/deleteSocioForm" class="action-button">
+                                <span class="action-text">Eliminar socio</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/showSocio" class="action-button">
+                                <span class="action-text">Ver todos los socios</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-header">
+                        <h2>Inscripciones</h2>
+                    </div>
+                    <div class="module-body">
+                        <div class="action-list">
+                            <a href="/addInscripcionForm" class="action-button">
+                                <span class="action-text">Añadir familiar</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/findInscripcionByIdForm" class="action-button">
+                                <span class="action-text">Buscar inscripcion por ID</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/listInscripciones" class="action-button">
+                                <span class="action-text">Listar inscripciones</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/showInscripcionesByTipo" class="action-button">
+                                <span class="action-text">Ver resumen por tipos</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-header">
+                        <h2>Embarcaciones</h2>
+                    </div>
+                    <div class="module-body">
+                        <div class="action-list">
+                             <a href="/addEmbarcacionForm" class="action-button">
+                                <span class="action-text">Añadir embarcación</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/findEmbarcacionByTipo" class="action-button">
+                                <span class="action-text">Consultar por tipo</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                             <a href="/findEmbarcacionByMatricula" class="action-button">
+                                <span class="action-text">Buscar embarcación por Matrícula</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/showTiposEmbarcacion" class="action-button">
+                                <span class="action-text">Ver tipos de embarcaciones</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-header">
+                        <h2>Patrones</h2>
+                    </div>
+                    <div class="module-body">
+                        <div class="action-list">
+                            <a href="/addPatronForm" class="action-button">
+                                <span class="action-text">Añadir patrón</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/findPatronForm" class="action-button">
+                                <span class="action-text">Buscar patron por DNI</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-header">
+                        <h2>Alquileres</h2>
+                    </div>
+                    <div class="module-body">
+                        <div class="action-list">
+                            <a href="/findEmbarcacionDisponible" class="action-button">
+                                <span class="action-text">Buscar disponible</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/addAlquilerForm" class="action-button">
+                                <span class="action-text">Añadir alquiler</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/showAlquileres" class="action-button">
+                                <span class="action-text">Ver todos los alquileres</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/findAlquiler" class="action-button">
+                                <span class="action-text">Buscar alquiler por ID</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/deleteAlquiler" class="action-button">
+                                <span class="action-text">Eliminar alquiler</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-header">
+                        <h2>Reservas</h2>
+                    </div>
+                    <div class="module-body">
+                        <div class="action-list">
+                            <a href="/addReservaForm" class="action-button">
+                                <span class="action-text">Añadir reserva</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/showReservas" class="action-button">
+                                <span class="action-text">Ver todas las reservas</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/findReserva" class="action-button">
+                                <span class="action-text">Buscar por ID</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/deleteReservaForm" class="action-button">
+                                <span class="action-text">Eliminar reserva</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-header">
+                        <h2>Alquiler - Socios</h2>
+                    </div>
+                    <div class="module-body">
+                        <div class="action-list">
+                            <a href="/addAlquilerSocio" class="action-button">
+                                <span class="action-text">Añadir relación</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/findAlquilerSocioByIdForm" class="action-button">
+                                <span class="action-text">Buscar por ID alquiler</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/findAlquilerSocioByDniForm" class="action-button">
+                                <span class="action-text">Buscar por DNI socio</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/deleteAlquilerSocioForm" class="action-button">
+                                <span class="action-text">Eliminar relación</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/showAlquilerSocio" class="action-button">
+                                <span class="action-text">Ver todas las relaciones</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-header">
+                        <h2>Socio - Inscripción</h2>
+                    </div>
+                    <div class="module-body">
+                        <div class="action-list">
+                            <a href="/addSocioInscripcion" class="action-button">
+                                <span class="action-text">Añadir relación</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/findSocioInscripcionById" class="action-button">
+                                <span class="action-text">Buscar por ID inscripción</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/findSocioInscripcionByDni" class="action-button">
+                                <span class="action-text">Buscar por DNI socio</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/deleteSocioInscripcionForm" class="action-button">
+                                <span class="action-text">Eliminar relación</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                            <a href="/showSocioInscripcion" class="action-button">
+                                <span class="action-text">Ver todas las relaciones</span>
+                                <span class="action-arrow">→</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-card">
+                <img th:src="@{/images/UCO.png}" alt="Logo UCO"/>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
