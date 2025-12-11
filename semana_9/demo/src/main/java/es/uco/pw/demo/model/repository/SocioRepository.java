@@ -31,18 +31,14 @@ public class SocioRepository {
         try {
             this.sqlQueries = loadProperties(sqlQueriesFileName);
         } catch (IOException e) {
-            System.err.println("Error cargando SQL properties en SocioRepository");
             e.printStackTrace();
         }
     }
 
     private Properties loadProperties(String fileName) throws IOException {
         Properties properties = new Properties();
-        // Usamos ClassLoader para leer desde 'resources'
         InputStream input = getClass().getClassLoader().getResourceAsStream(fileName);
-        if (input == null) {
-            throw new IOException("No se encontró el archivo: " + fileName);
-        }
+        if (input == null) throw new IOException("No se encontró el archivo: " + fileName);
         properties.load(input);
         return properties;
     }
@@ -53,54 +49,7 @@ public class SocioRepository {
             List<Socio> result = jdbcTemplate.query(query, new SocioMapper(), dni);
             return result.isEmpty() ? null : result.get(0);
         } catch (DataAccessException exception) {
-            System.err.println("Unable to find socio with dni=" + dni);
-            exception.printStackTrace();
             return null;
-        }
-    }
-
-    public boolean addSocio(Socio socio) {
-        try {
-            String query = sqlQueries.getProperty("insert-addSocio");
-            int result = jdbcTemplate.update(query,
-                    socio.getDni(),
-                    socio.getNombre(),
-                    socio.getApellidos(),
-                    Date.valueOf(socio.getFechaNacimiento()), // Usar Date.valueOf
-                    socio.getDireccion(),
-                    Date.valueOf(socio.getFechaInscripcion()), // Usar Date.valueOf
-                    socio.isEsTitular(),
-                    socio.isTieneTituloPatron());
-            return result > 0;
-
-        } catch (DataAccessException exception) {
-            System.err.println("Unable to insert socio in the database");
-            exception.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean deleteSocio(String dni) {
-        try {
-            String query = sqlQueries.getProperty("delete-deleteSocioByDni");
-            int result = jdbcTemplate.update(query, dni);
-            return result > 0;
-        } catch (DataAccessException exception) {
-            System.err.println("Unable to delete socio with dni=" + dni);
-            exception.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean setTituloPatron(String dni, boolean tieneTitulo) {
-        try {
-            String query = sqlQueries.getProperty("update-setTituloPatron");
-            int result = jdbcTemplate.update(query, tieneTitulo, dni);
-            return result > 0;
-        } catch (DataAccessException exception) {
-            System.err.println("Unable to update patron status for dni=" + dni);
-            exception.printStackTrace();
-            return false;
         }
     }
 
@@ -109,24 +58,54 @@ public class SocioRepository {
             String query = sqlQueries.getProperty("select-findAllSocios");
             return jdbcTemplate.query(query, new SocioMapper());
         } catch (DataAccessException exception) {
-            System.err.println("Unable to find all socios");
-            exception.printStackTrace();
             return null;
         }
     }
-    
-    // Mapper reutilizable para Socio
+
+    public boolean addSocio(Socio socio) {
+        try {
+            String query = sqlQueries.getProperty("insert-addSocio");
+            int result = jdbcTemplate.update(query,
+                    socio.getDni(), socio.getNombre(), socio.getApellidos(),
+                    Date.valueOf(socio.getFechaNacimiento()), socio.getDireccion(),
+                    Date.valueOf(socio.getFechaInscripcion()), socio.isEsTitular(), socio.isTieneTituloPatron());
+            return result > 0;
+        } catch (DataAccessException exception) { return false; }
+    }
+
+    // --- MÉTODO QUE FALTABA ---
+    public boolean updateSocio(Socio socio) {
+        try {
+            String query = sqlQueries.getProperty("update-updateSocio");
+            int result = jdbcTemplate.update(query,
+                    socio.getNombre(), socio.getApellidos(),
+                    Date.valueOf(socio.getFechaNacimiento()), socio.getDireccion(),
+                    Date.valueOf(socio.getFechaInscripcion()), socio.isEsTitular(),
+                    socio.isTieneTituloPatron(), socio.getDni());
+            return result > 0;
+        } catch (DataAccessException exception) { return false; }
+    }
+
+    public boolean setTituloPatron(String dni, boolean tieneTitulo) {
+        try {
+            String query = sqlQueries.getProperty("update-setTituloPatron");
+            return jdbcTemplate.update(query, tieneTitulo, dni) > 0;
+        } catch (DataAccessException exception) { return false; }
+    }
+
+    public boolean deleteSocio(String dni) {
+        try {
+            String query = sqlQueries.getProperty("delete-deleteSocioByDni");
+            return jdbcTemplate.update(query, dni) > 0;
+        } catch (DataAccessException exception) { return false; }
+    }
+
     private static final class SocioMapper implements RowMapper<Socio> {
         public Socio mapRow(ResultSet rs, int rowNumber) throws SQLException {
             return new Socio(
-                    rs.getString("dni"),
-                    rs.getString("nombre"),
-                    rs.getString("apellidos"),
-                    rs.getDate("fechaNacimiento").toLocalDate(),
-                    rs.getString("direccion"),
-                    rs.getDate("fechaInscripcion").toLocalDate(),
-                    rs.getBoolean("esTitular"),
-                    rs.getBoolean("tieneTituloPatron"));
+                    rs.getString("dni"), rs.getString("nombre"), rs.getString("apellidos"),
+                    rs.getDate("fechaNacimiento").toLocalDate(), rs.getString("direccion"),
+                    rs.getDate("fechaInscripcion").toLocalDate(), rs.getBoolean("esTitular"), rs.getBoolean("tieneTituloPatron"));
         }
     }
 }

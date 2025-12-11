@@ -15,6 +15,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Properties;
@@ -79,7 +80,6 @@ public class ReservaRepository {
         } catch (DataAccessException e) { return false; }
     }
 
-    // Update general para PATCH/PUT
     public boolean updateReserva(Reserva r) {
         try {
             return jdbcTemplate.update(sqlQueries.getProperty("update-updateReserva"),
@@ -89,9 +89,15 @@ public class ReservaRepository {
         } catch (DataAccessException e) { return false; }
     }
 
-    public boolean deleteReserva(int id) {
+    // --- RENOMBRADO A deleteReservaById ---
+    public boolean deleteReservaById(int id) {
         try { return jdbcTemplate.update(sqlQueries.getProperty("delete-deleteReservaById"), id) > 0; }
         catch (DataAccessException e) { return false; }
+    }
+    
+    // Alias
+    public boolean deleteReserva(int id) {
+        return deleteReservaById(id);
     }
 
     public boolean isReservada(String matricula, LocalDate fecha) {
