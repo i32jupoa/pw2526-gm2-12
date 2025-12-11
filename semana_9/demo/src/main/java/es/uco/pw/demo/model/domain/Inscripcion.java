@@ -17,6 +17,8 @@ public class Inscripcion {
         this.cuotaActual = cuotaActual;
         this.dniTitular = dniTitular;
     }
+
+    public Inscripcion() {}
     
     //Constructor para crear una nueva inscripción (sin ID)
     public Inscripcion(LocalDate fechaCreacion, TipoInscripcion tipo, double cuotaActual, String dniTitular) {

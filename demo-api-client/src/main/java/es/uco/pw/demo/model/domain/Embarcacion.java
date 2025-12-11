@@ -17,6 +17,8 @@ public class Embarcacion {
         this.dniPatron = dniPatron;
     }
 
+    public Embarcacion() {}
+
     public String getMatricula() { return matricula; }
     public String getNombre() { return nombre; }
     public TipoEmbarcacion getTipo() { return tipo; }

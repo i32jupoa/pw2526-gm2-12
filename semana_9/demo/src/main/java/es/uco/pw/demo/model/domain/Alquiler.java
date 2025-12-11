@@ -36,6 +36,8 @@ public class Alquiler {
         this.plazasReservadas = plazasReservadas;
         this.precioTotal = precioTotal;
     }
+
+    public Alquiler() {}
     
     // --- GETTERS Y SETTERS ---
 

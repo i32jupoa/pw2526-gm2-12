@@ -18,6 +18,8 @@ public class AlquilerSocio {
         this.dniSocio = dniSocio;
     }
 
+    public AlquilerSocio() {}
+
     // Getters y setters
     public int getId() { return id; }
     public int getIdAlquiler() { return idAlquiler; }

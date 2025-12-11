@@ -33,6 +33,8 @@ public class Reserva {
         this.precioTotal = precioTotal;
     }
 
+    public Reserva() {}
+
     public int getId() { return id; }
     public String getDniSocio() { return dniSocio; }
     public String getMatricula() { return matricula; }
