@@ -15,10 +15,9 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Properties;
-import java.sql.ResultSet;
-
 
 @Repository
 public class AlquilerRepository {
@@ -32,112 +31,72 @@ public class AlquilerRepository {
         setSQLQueriesFileName("db/sql.properties");
     }
 
-    public final void setSQLQueriesFileName(String sqlQueriesFileName) {
-        try {
-            this.sqlQueries = loadProperties(sqlQueriesFileName);
-        } catch (IOException e) {
-            System.err.println("Error cargando SQL properties en AlquilerRepository");
-            e.printStackTrace();
-        }
+    public final void setSQLQueriesFileName(String file) {
+        try { this.sqlQueries = loadProperties(file); } catch (IOException e) { e.printStackTrace(); }
     }
 
     private Properties loadProperties(String fileName) throws IOException {
-        Properties properties = new Properties();
+        Properties props = new Properties();
         InputStream input = getClass().getClassLoader().getResourceAsStream(fileName);
-        if (input == null) {
-            throw new IOException("No se encontró el archivo: " + fileName);
-        }
-        properties.load(input);
-        return properties;
+        if (input == null) throw new IOException("No se encontró: " + fileName);
+        props.load(input);
+        return props;
     }
 
     public List<Alquiler> findAllAlquileres() {
+        try { return jdbcTemplate.query(sqlQueries.getProperty("select-findAllAlquileres"), new AlquilerMapper()); }
+        catch (DataAccessException e) { return null; }
+    }
+
+    public List<Alquiler> findAlquileresFuturos(LocalDate fecha) {
         try {
-            String query = sqlQueries.getProperty("select-findAllAlquileres");
-            return jdbcTemplate.query(query, new AlquilerRowMapper());
-        } catch (DataAccessException e) {
-            System.err.println("Unable to find alquileres");
-            e.printStackTrace();
-            return null;
-        }
+            return jdbcTemplate.query(sqlQueries.getProperty("select-findAlquileresFuturos"), new AlquilerMapper(), Date.valueOf(fecha));
+        } catch (DataAccessException e) { return null; }
     }
 
     public Alquiler findAlquilerById(int id) {
         try {
-            String query = sqlQueries.getProperty("select-findAlquilerById");
-            List<Alquiler> results = jdbcTemplate.query(query, new AlquilerRowMapper(), id);
-            return results.isEmpty() ? null : results.get(0);
-        } catch (DataAccessException e) {
-            System.err.println("Unable to find alquiler with id=" + id);
-            e.printStackTrace();
-            return null;
-        }
+            List<Alquiler> r = jdbcTemplate.query(sqlQueries.getProperty("select-findAlquilerById"), new AlquilerMapper(), id);
+            return r.isEmpty() ? null : r.get(0);
+        } catch (DataAccessException e) { return null; }
     }
 
-    public List<Alquiler> findAlquileresByMatricula(String matricula) {
+    public boolean addAlquiler(Alquiler a) {
         try {
-            String query = sqlQueries.getProperty("select-findAlquileresByMatricula");
-            return jdbcTemplate.query(query, new AlquilerRowMapper(), matricula);
-        } catch (DataAccessException e) {
-            System.err.println("Unable to find alquileres with matricula=" + matricula);
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public boolean addAlquiler(Alquiler alquiler) {
-        try {
-            String query = sqlQueries.getProperty("insert-addAlquiler");
             KeyHolder keyHolder = new GeneratedKeyHolder();
-
-            int rows = jdbcTemplate.update(connection -> {
-                PreparedStatement ps = connection.prepareStatement(query, new String[]{"id"});
-                ps.setInt(1, alquiler.getIdInscripcion());
-                ps.setString(2, alquiler.getMatricula());
-                ps.setDate(3, Date.valueOf(alquiler.getFechaInicio()));
-                ps.setDate(4, Date.valueOf(alquiler.getFechaFin()));
-                ps.setInt(5, alquiler.getPlazasReservadas());
-                ps.setDouble(6, alquiler.getPrecioTotal());
+            int rows = jdbcTemplate.update(conn -> {
+                PreparedStatement ps = conn.prepareStatement(sqlQueries.getProperty("insert-addAlquiler"), new String[]{"id"});
+                ps.setInt(1, a.getIdInscripcion());
+                ps.setString(2, a.getMatricula());
+                ps.setDate(3, Date.valueOf(a.getFechaInicio()));
+                ps.setDate(4, Date.valueOf(a.getFechaFin()));
+                ps.setInt(5, a.getPlazasReservadas());
+                ps.setDouble(6, a.getPrecioTotal());
                 return ps;
             }, keyHolder);
-
-            // Asignamos el ID generado al objeto alquiler
-            if (keyHolder.getKey() != null) {
-                 alquiler.setId(keyHolder.getKey().intValue());
-            }
-           
+            if (keyHolder.getKey() != null) a.setId(keyHolder.getKey().intValue());
             return rows > 0;
-        } catch (DataAccessException e) {
-            System.err.println("Unable to insert alquiler into the database");
-            e.printStackTrace();
-            return false;
-        }
+        } catch (DataAccessException e) { return false; }
     }
 
-    public boolean deleteAlquilerById(int id) {
+    // Nuevo: Para PATCH (actualizar precio y plazas al añadir socio)
+    public boolean updateAlquilerPlazasPrecio(int id, int plazas, double precio) {
         try {
-            String query = sqlQueries.getProperty("delete-alquilerById");
-            int result = jdbcTemplate.update(query, id);
-            return result > 0;
-        } catch (DataAccessException e) {
-            System.err.println("Unable to delete alquiler with id=" + id);
-            e.printStackTrace();
-            return false;
-        }
+            return jdbcTemplate.update(sqlQueries.getProperty("update-updateAlquilerPlazasPrecio"), plazas, precio, id) > 0;
+        } catch (DataAccessException e) { return false; }
     }
 
-    private static class AlquilerRowMapper implements RowMapper<Alquiler> {
-        @Override
-        public Alquiler mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Alquiler(
-                    rs.getInt("id"),
-                    rs.getInt("idInscripcion"),
-                    rs.getString("matricula"),
-                    rs.getDate("fechaInicio").toLocalDate(),
-                    rs.getDate("fechaFin").toLocalDate(),
-                    rs.getInt("plazasReservadas"),
-                    rs.getDouble("precioTotal")
-            );
+    public boolean deleteAlquiler(int id) {
+        try {
+            return jdbcTemplate.update(sqlQueries.getProperty("delete-alquilerById"), id) > 0;
+        } catch (DataAccessException e) { return false; }
+    }
+
+    private static class AlquilerMapper implements RowMapper<Alquiler> {
+        public Alquiler mapRow(ResultSet rs, int i) throws SQLException {
+            return new Alquiler(rs.getInt("id"), rs.getInt("idInscripcion"), rs.getString("matricula"),
+                    rs.getDate("fechaInicio").toLocalDate(), rs.getDate("fechaFin").toLocalDate(),
+                    rs.getInt("plazasReservadas"), rs.getDouble("precioTotal"));
         }
     }
 }

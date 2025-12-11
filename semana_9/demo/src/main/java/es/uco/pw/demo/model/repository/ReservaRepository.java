@@ -15,7 +15,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Properties;
@@ -32,118 +31,87 @@ public class ReservaRepository {
         setSQLQueriesFileName("db/sql.properties");
     }
 
-    public final void setSQLQueriesFileName(String sqlQueriesFileName) {
-        try {
-            this.sqlQueries = loadProperties(sqlQueriesFileName);
-        } catch (IOException e) {
-            System.err.println("Error cargando SQL properties en ReservaRepository");
-            e.printStackTrace();
-        }
+    public final void setSQLQueriesFileName(String file) {
+        try { this.sqlQueries = loadProperties(file); } catch (IOException e) { e.printStackTrace(); }
     }
 
     private Properties loadProperties(String fileName) throws IOException {
-        Properties properties = new Properties();
+        Properties props = new Properties();
         InputStream input = getClass().getClassLoader().getResourceAsStream(fileName);
-        if (input == null) {
-            throw new IOException("No se encontró el archivo: " + fileName);
-        }
-        properties.load(input);
-        return properties;
-    }
-
-    // Mapper reutilizable
-    private static final class ReservaMapper implements RowMapper<Reserva> {
-        public Reserva mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Reserva(
-                    rs.getInt("id"),
-                    rs.getString("dniSocio"),
-                    rs.getString("matricula"),
-                    rs.getDate("fecha").toLocalDate(),
-                    rs.getInt("plazasReservadas"),
-                    rs.getString("proposito"),
-                    rs.getDouble("precioTotal")
-            );
-        }
+        if (input == null) throw new IOException("No se encontró: " + fileName);
+        props.load(input);
+        return props;
     }
 
     public List<Reserva> findAllReservas() {
+        try { return jdbcTemplate.query(sqlQueries.getProperty("select-findAllReservas"), new ReservaMapper()); }
+        catch (DataAccessException e) { return null; }
+    }
+
+    public List<Reserva> findReservasFuturas(LocalDate fecha) {
         try {
-            String query = sqlQueries.getProperty("select-findAllReservas");
-            return jdbcTemplate.query(query, new ReservaMapper());
-        } catch (DataAccessException e) {
-            e.printStackTrace();
-            return null;
-        }
+            return jdbcTemplate.query(sqlQueries.getProperty("select-findReservasFuturas"), new ReservaMapper(), Date.valueOf(fecha));
+        } catch (DataAccessException e) { return null; }
     }
 
     public Reserva findReservaById(int id) {
         try {
-            String query = sqlQueries.getProperty("select-findReservaById");
-            List<Reserva> results = jdbcTemplate.query(query, new ReservaMapper(), id);
-            return results.isEmpty() ? null : results.get(0);
-        } catch (DataAccessException e) {
-            e.printStackTrace();
-            return null;
-        }
+            List<Reserva> r = jdbcTemplate.query(sqlQueries.getProperty("select-findReservaById"), new ReservaMapper(), id);
+            return r.isEmpty() ? null : r.get(0);
+        } catch (DataAccessException e) { return null; }
     }
 
-    public boolean addReserva(Reserva reserva) {
+    public boolean addReserva(Reserva r) {
         try {
-            String query = sqlQueries.getProperty("insert-addReserva");
             KeyHolder keyHolder = new GeneratedKeyHolder();
-
-            int rows = jdbcTemplate.update(connection -> {
-                PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-                ps.setString(1, reserva.getDniSocio());
-                ps.setString(2, reserva.getMatricula());
-                ps.setDate(3, Date.valueOf(reserva.getFecha()));
-                ps.setInt(4, reserva.getPlazasReservadas());
-                ps.setString(5, reserva.getProposito());
-                ps.setDouble(6, reserva.getPrecioTotal());
+            int rows = jdbcTemplate.update(conn -> {
+                PreparedStatement ps = conn.prepareStatement(sqlQueries.getProperty("insert-addReserva"), new String[]{"id"});
+                ps.setString(1, r.getDniSocio());
+                ps.setString(2, r.getMatricula());
+                ps.setDate(3, Date.valueOf(r.getFecha()));
+                ps.setInt(4, r.getPlazasReservadas());
+                ps.setString(5, r.getProposito());
+                ps.setDouble(6, r.getPrecioTotal());
                 return ps;
             }, keyHolder);
-
-            Number generatedId = keyHolder.getKey();
-            if (generatedId != null) {
-                reserva.setId(generatedId.intValue()); // asigna el ID generado
-            }
+            if (keyHolder.getKey() != null) r.setId(keyHolder.getKey().intValue());
             return rows > 0;
-        } catch (DataAccessException e) {
-            e.printStackTrace();
-            return false;
-        }
+        } catch (DataAccessException e) { return false; }
     }
 
-    public boolean deleteReservaById(int id) {
+    // Nuevo: Update general para PATCH/PUT
+    public boolean updateReserva(Reserva r) {
         try {
-            String query = sqlQueries.getProperty("delete-deleteReservaById");
-            int result = jdbcTemplate.update(query, id);
-            return result > 0;
-        } catch (DataAccessException e) {
-            e.printStackTrace();
-            return false;
-        }
+            return jdbcTemplate.update(sqlQueries.getProperty("update-updateReserva"),
+                    r.getDniSocio(), r.getMatricula(), Date.valueOf(r.getFecha()),
+                    r.getPlazasReservadas(), r.getProposito(), r.getPrecioTotal(),
+                    r.getId()) > 0;
+        } catch (DataAccessException e) { return false; }
+    }
+
+    public boolean deleteReserva(int id) {
+        try { return jdbcTemplate.update(sqlQueries.getProperty("delete-deleteReservaById"), id) > 0; }
+        catch (DataAccessException e) { return false; }
     }
 
     public boolean isReservada(String matricula, LocalDate fecha) {
         try {
-            String query = sqlQueries.getProperty("select-isReservaDisponible");
-            Integer count = jdbcTemplate.queryForObject(query, Integer.class, matricula, Date.valueOf(fecha));
-            return (count != null && count > 0);
-        } catch (DataAccessException e) {
-            e.printStackTrace();
-            return true; // Asumir no disponible en caso de error
-        }
+            Integer count = jdbcTemplate.queryForObject(sqlQueries.getProperty("select-isReservaDisponible"), Integer.class, matricula, Date.valueOf(fecha));
+            return count != null && count > 0;
+        } catch (DataAccessException e) { return true; }
     }
-    
+
     public boolean isAlquilada(String matricula, LocalDate fecha) {
         try {
-            String query = sqlQueries.getProperty("select-isAlquilerDisponible");
-            Integer count = jdbcTemplate.queryForObject(query, Integer.class, matricula, Date.valueOf(fecha));
-            return (count != null && count > 0);
-        } catch (DataAccessException e) {
-            e.printStackTrace();
-            return true; // Asumir no disponible en caso de error
+            Integer count = jdbcTemplate.queryForObject(sqlQueries.getProperty("select-isAlquilerDisponible"), Integer.class, matricula, Date.valueOf(fecha));
+            return count != null && count > 0;
+        } catch (DataAccessException e) { return true; }
+    }
+
+    private static class ReservaMapper implements RowMapper<Reserva> {
+        public Reserva mapRow(ResultSet rs, int i) throws SQLException {
+            return new Reserva(rs.getInt("id"), rs.getString("dniSocio"), rs.getString("matricula"),
+                    rs.getDate("fecha").toLocalDate(), rs.getInt("plazasReservadas"), rs.getString("proposito"), rs.getDouble("precioTotal"));
         }
     }
 }
