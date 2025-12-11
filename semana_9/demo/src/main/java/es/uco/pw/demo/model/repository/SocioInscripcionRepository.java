@@ -56,7 +56,7 @@ public class SocioInscripcionRepository {
         } catch (DataAccessException e) { return null; }
     }
 
-    // Nuevo: Vital para saber si un socio se puede borrar
+    // Vital para saber si un socio se puede borrar
     public int countInscripcionesBySocio(String dniSocio) {
         try {
             Integer count = jdbcTemplate.queryForObject(sqlQueries.getProperty("select-countSocioInscripcionesByDniSocio"), Integer.class, dniSocio);

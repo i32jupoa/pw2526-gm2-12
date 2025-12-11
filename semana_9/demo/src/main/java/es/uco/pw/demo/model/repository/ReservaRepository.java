@@ -79,7 +79,7 @@ public class ReservaRepository {
         } catch (DataAccessException e) { return false; }
     }
 
-    // Nuevo: Update general para PATCH/PUT
+    // Update general para PATCH/PUT
     public boolean updateReserva(Reserva r) {
         try {
             return jdbcTemplate.update(sqlQueries.getProperty("update-updateReserva"),

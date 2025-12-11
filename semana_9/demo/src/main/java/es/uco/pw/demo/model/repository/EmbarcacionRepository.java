@@ -168,7 +168,7 @@ public class EmbarcacionRepository {
         }
     }
 
-    // Para validar borrado de Embarcación (Req B.5)
+    // Para validar borrado de Embarcación
     public int countReservasByMatricula(String matricula) {
         try {
             String query = sqlQueries.getProperty("select-countReservasByMatricula");
@@ -179,7 +179,7 @@ public class EmbarcacionRepository {
         }
     }
 
-    // Para validar borrado de Patrón (Req B.6)
+    // Para validar borrado de Patrón
     public int countEmbarcacionesByPatron(String dniPatron) {
         try {
             String query = sqlQueries.getProperty("select-countEmbarcacionesByPatron");
