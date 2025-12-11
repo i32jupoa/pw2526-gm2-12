@@ -28,106 +28,67 @@ public class PatronRepository {
     }
 
     public final void setSQLQueriesFileName(String sqlQueriesFileName) {
-        try {
-            this.sqlQueries = loadProperties(sqlQueriesFileName);
-        } catch (IOException e) {
-            System.err.println("Error cargando SQL properties en PatronRepository");
-            e.printStackTrace();
-        }
+        try { this.sqlQueries = loadProperties(sqlQueriesFileName); } catch (IOException e) { e.printStackTrace(); }
     }
 
     private Properties loadProperties(String fileName) throws IOException {
         Properties properties = new Properties();
         InputStream input = getClass().getClassLoader().getResourceAsStream(fileName);
-        if (input == null) {
-            throw new IOException("No se encontró el archivo: " + fileName);
-        }
+        if (input == null) throw new IOException("No se encontró: " + fileName);
         properties.load(input);
         return properties;
     }
 
-    // Mapper reutilizable
-    private static final class PatronMapper implements RowMapper<Patron> {
-        @Override
-        public Patron mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Patron(
-                rs.getString("dni"),
-                rs.getString("nombre"),
-                rs.getString("apellidos"),
-                rs.getDate("fechaNacimiento").toLocalDate(),
-                rs.getDate("fechaExpedicionTitulo").toLocalDate()
-            );
-        }
-    }
-
     public List<Patron> findAllPatrones() {
         try {
-            String query = sqlQueries.getProperty("select-findAllPatrones");
-            return jdbcTemplate.query(query, new PatronMapper());
-        } catch (DataAccessException e) {
-            System.err.println("Unable to retrieve patrones from the database");
-            e.printStackTrace();
-            return null;
-        }
+            return jdbcTemplate.query(sqlQueries.getProperty("select-findAllPatrones"), new PatronMapper());
+        } catch (DataAccessException e) { return null; }
     }
 
     public Patron findPatronByDni(String dni) {
         try {
-            String query = sqlQueries.getProperty("select-findPatronByDni");
-            List<Patron> results = jdbcTemplate.query(query, new PatronMapper(), dni);
-            return results.isEmpty() ? null : results.get(0);
-        } catch (DataAccessException e) {
-            System.err.println("Unable to find patron with DNI = " + dni);
-            e.printStackTrace();
-            return null;
-        }
+            List<Patron> r = jdbcTemplate.query(sqlQueries.getProperty("select-findPatronByDni"), new PatronMapper(), dni);
+            return r.isEmpty() ? null : r.get(0);
+        } catch (DataAccessException e) { return null; }
     }
 
-    public boolean addPatron(Patron patron) {
+    public boolean addPatron(Patron p) {
         try {
-            String query = sqlQueries.getProperty("insert-addPatron");
-            int result = jdbcTemplate.update(query,
-                patron.getDni(),
-                patron.getNombre(),
-                patron.getApellidos(),
-                Date.valueOf(patron.getFechaNacimiento()),
-                Date.valueOf(patron.getFechaExpedicionTitulo())
-            );
-            return result > 0;
-        } catch (DataAccessException e) {
-            System.err.println("Unable to insert patron into the database");
-            e.printStackTrace();
-            return false;
-        }
+            return jdbcTemplate.update(sqlQueries.getProperty("insert-addPatron"),
+                    p.getDni(), p.getNombre(), p.getApellidos(),
+                    Date.valueOf(p.getFechaNacimiento()), Date.valueOf(p.getFechaExpedicionTitulo())) > 0;
+        } catch (DataAccessException e) { return false; }
     }
 
-    public boolean updatePatron(Patron patron) {
+    // Nuevo: Update para PATCH
+    public boolean updatePatron(Patron p) {
         try {
-            String query = sqlQueries.getProperty("update-updatePatron");
-            int result = jdbcTemplate.update(query,
-                patron.getNombre(),
-                patron.getApellidos(),
-                Date.valueOf(patron.getFechaNacimiento()),
-                Date.valueOf(patron.getFechaExpedicionTitulo()),
-                patron.getDni()
-            );
-            return result > 0;
-        } catch (DataAccessException e) {
-            System.err.println("Unable to update patron with DNI = " + patron.getDni());
-            e.printStackTrace();
-            return false;
-        }
+            return jdbcTemplate.update(sqlQueries.getProperty("update-updatePatron"),
+                    p.getNombre(), p.getApellidos(),
+                    Date.valueOf(p.getFechaNacimiento()), Date.valueOf(p.getFechaExpedicionTitulo()),
+                    p.getDni()) > 0;
+        } catch (DataAccessException e) { return false; }
+    }
+
+    // Nuevo: Validación para DELETE
+    public int countEmbarcacionesVinculadas(String dniPatron) {
+        try {
+            Integer count = jdbcTemplate.queryForObject(sqlQueries.getProperty("select-countEmbarcacionesByPatron"), Integer.class, dniPatron);
+            return count != null ? count : 0;
+        } catch (DataAccessException e) { return 0; }
     }
 
     public boolean deletePatron(String dni) {
         try {
-            String query = sqlQueries.getProperty("delete-deletePatronByDni"); // Corregido nombre de query
-            int result = jdbcTemplate.update(query, dni);
-            return result > 0;
-        } catch (DataAccessException e) {
-            System.err.println("Unable to delete patron with DNI = " + dni);
-            e.printStackTrace();
-            return false;
+            return jdbcTemplate.update(sqlQueries.getProperty("delete-deletePatronByDni"), dni) > 0;
+        } catch (DataAccessException e) { return false; }
+    }
+
+    private static final class PatronMapper implements RowMapper<Patron> {
+        public Patron mapRow(ResultSet rs, int i) throws SQLException {
+            return new Patron(
+                    rs.getString("dni"), rs.getString("nombre"), rs.getString("apellidos"),
+                    rs.getDate("fechaNacimiento").toLocalDate(), rs.getDate("fechaExpedicionTitulo").toLocalDate());
         }
     }
 }

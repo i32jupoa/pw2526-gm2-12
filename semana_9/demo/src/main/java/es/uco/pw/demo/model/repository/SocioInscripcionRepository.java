@@ -26,100 +26,53 @@ public class SocioInscripcionRepository {
         setSQLQueriesFileName("db/sql.properties");
     }
 
-    public final void setSQLQueriesFileName(String sqlQueriesFileName) {
-        try {
-            this.sqlQueries = loadProperties(sqlQueriesFileName);
-        } catch (IOException e) {
-            System.err.println("Error cargando SQL properties en SocioInscripcionRepository");
-            e.printStackTrace();
-        }
+    public final void setSQLQueriesFileName(String file) {
+        try { this.sqlQueries = loadProperties(file); } catch (IOException e) { e.printStackTrace(); }
     }
 
     private Properties loadProperties(String fileName) throws IOException {
-        Properties properties = new Properties();
+        Properties props = new Properties();
         InputStream input = getClass().getClassLoader().getResourceAsStream(fileName);
-        if (input == null) {
-            throw new IOException("No se encontró el archivo: " + fileName);
-        }
-        properties.load(input);
-        return properties;
+        if (input == null) throw new IOException("Archivo no encontrado: " + fileName);
+        props.load(input);
+        return props;
+    }
+
+    public boolean addSocioInscripcion(SocioInscripcion si) {
+        try {
+            return jdbcTemplate.update(sqlQueries.getProperty("insert-addSocioInscripcion"), si.getIdInscripcion(), si.getDniSocio()) > 0;
+        } catch (DataAccessException e) { return false; }
+    }
+
+    public boolean removeSocioFromInscripcion(int idInscripcion, String dniSocio) {
+        try {
+            return jdbcTemplate.update(sqlQueries.getProperty("delete-deleteSocioInscripcion"), idInscripcion, dniSocio) > 0;
+        } catch (DataAccessException e) { return false; }
     }
 
     public List<SocioInscripcion> findByIdInscripcion(int idInscripcion) {
         try {
-            String sql = sqlQueries.getProperty("select-findSocioInscripcionByIdInscripcion");
-            return jdbcTemplate.query(sql, new SocioInscripcionMapper(), idInscripcion);
-        } catch (DataAccessException e) {
-            System.err.println("Error en findByIdInscripcion: " + idInscripcion);
-            e.printStackTrace();
-            return null; // O List.of()
-        }
+            return jdbcTemplate.query(sqlQueries.getProperty("select-findSocioInscripcionByIdInscripcion"), new SIMapper(), idInscripcion);
+        } catch (DataAccessException e) { return null; }
     }
 
-    public List<SocioInscripcion> findByDniSocio(String dni) {
+    // Nuevo: Vital para saber si un socio se puede borrar
+    public int countInscripcionesBySocio(String dniSocio) {
         try {
-            String sql = sqlQueries.getProperty("select-findSocioInscripcionByDni");
-            return jdbcTemplate.query(sql, new SocioInscripcionMapper(), dni);
-        } catch (DataAccessException e) {
-            System.err.println("Error en findByDniSocio: " + dni);
-            e.printStackTrace();
-            return null;
-        }
+            Integer count = jdbcTemplate.queryForObject(sqlQueries.getProperty("select-countSocioInscripcionesByDniSocio"), Integer.class, dniSocio);
+            return count != null ? count : 0;
+        } catch (DataAccessException e) { return 0; }
     }
 
-    public boolean addSocioInscripcion(SocioInscripcion socioInscripcion) {
+    public int countMiembrosInInscripcion(int idInscripcion) {
         try {
-            String sql = sqlQueries.getProperty("insert-addSocioInscripcion");
-            int rows = jdbcTemplate.update(sql,
-                    socioInscripcion.getIdInscripcion(),
-                    socioInscripcion.getDniSocio());
-            return rows > 0;
-        } catch (DataAccessException e) {
-            System.err.println("Error en addSocioInscripcion");
-            e.printStackTrace();
-            return false;
-        }
+            Integer count = jdbcTemplate.queryForObject(sqlQueries.getProperty("select-countByInscripcionId"), Integer.class, idInscripcion);
+            return count != null ? count : 0;
+        } catch (DataAccessException e) { return 0; }
     }
 
-    public boolean deleteSocioInscripcion(int idInscripcion, String dniSocio) {
-        try {
-            String sql = sqlQueries.getProperty("delete-deleteSocioInscripcion");
-            int rows = jdbcTemplate.update(sql, idInscripcion, dniSocio);
-            return rows > 0;
-        } catch (DataAccessException e) {
-            System.err.println("Error en deleteSocioInscripcion");
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public List<SocioInscripcion> findAllSocioInscripciones() {
-        try {
-            String sql = sqlQueries.getProperty("select-findAllSocioInscripciones");
-            return jdbcTemplate.query(sql, new SocioInscripcionMapper());
-        } catch (DataAccessException e) {
-            System.err.println("Error en findAllSocioInscripciones");
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public int countByInscripcionId(int idInscripcion) {
-        try {
-            String sql = sqlQueries.getProperty("select-countByInscripcionId");
-            // queryForObject(sql, tipoDeRetorno, argumentos...)
-            Integer count = jdbcTemplate.queryForObject(sql, Integer.class, idInscripcion);
-            return (count != null) ? count : 0;
-        } catch (DataAccessException e) {
-            System.err.println("Error al contar socios para idInscripcion=" + idInscripcion);
-            e.printStackTrace();
-            return 0;
-        }
-    }
-
-    // Mapper reutilizable para SocioInscripcion
-    private static final class SocioInscripcionMapper implements RowMapper<SocioInscripcion> {
-        public SocioInscripcion mapRow(ResultSet rs, int rowNum) throws SQLException {
+    private static final class SIMapper implements RowMapper<SocioInscripcion> {
+        public SocioInscripcion mapRow(ResultSet rs, int i) throws SQLException {
             SocioInscripcion si = new SocioInscripcion();
             si.setId(rs.getInt("id"));
             si.setIdInscripcion(rs.getInt("idInscripcion"));
