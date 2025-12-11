@@ -14,8 +14,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
-import java.sql.Date; 
-import java.time.LocalDate; 
+import java.sql.Date;
+import java.time.LocalDate;
 
 @Repository
 public class EmbarcacionRepository {
@@ -48,6 +48,8 @@ public class EmbarcacionRepository {
         return properties;
     }
 
+    // --- MÉTODOS DE LECTURA (GET) ---
+
     public List<Embarcacion> findAllEmbarcaciones() {
         try {
             String query = sqlQueries.getProperty("select-findAllEmbarcaciones");
@@ -73,7 +75,7 @@ public class EmbarcacionRepository {
 
     public List<Embarcacion> findEmbarcacionByTipo(TipoEmbarcacion tipo) {
         try {
-            String query = sqlQueries.getProperty("select-findEmbarcacionByTipo"); 
+            String query = sqlQueries.getProperty("select-findEmbarcacionByTipo");
             return jdbcTemplate.query(query, embarcacionMapper, tipo.name());
         } catch (DataAccessException e) {
             System.err.println("Unable to find embarcaciones of tipo=" + tipo);
@@ -97,20 +99,22 @@ public class EmbarcacionRepository {
     public List<Embarcacion> findEmbarcacionesDisponibles(LocalDate fechaInicio, LocalDate fechaFin) {
         try {
             String query = sqlQueries.getProperty("select-findEmbarcacionesDisponibles");
-            
+           
             return jdbcTemplate.query(query, embarcacionMapper,
                 Date.valueOf(fechaFin), Date.valueOf(fechaInicio),
                 Date.valueOf(fechaInicio), Date.valueOf(fechaFin),
                 Date.valueOf(fechaInicio), Date.valueOf(fechaFin),
                 Date.valueOf(fechaInicio), Date.valueOf(fechaFin)
             );
-            
+           
         } catch (DataAccessException e) {
             System.err.println("Error al buscar embarcaciones disponibles");
             e.printStackTrace();
             return null;
         }
     }
+
+    // --- MÉTODOS DE CREACIÓN (POST) ---
 
     public boolean addEmbarcacion(Embarcacion embarcacion) {
         try {
@@ -131,15 +135,58 @@ public class EmbarcacionRepository {
         }
     }
 
-    public boolean deleteEmbarcacionByMatricula(String matricula) {
+    // --- MÉTODOS NUEVOS PARA SEMANA 2 (PUT, PATCH, DELETE y VALIDACIONES) ---
+
+    public boolean updateEmbarcacion(Embarcacion embarcacion) {
         try {
-            String query = sqlQueries.getProperty("delete-deleteEmbarcacionByMatricula");
+            String query = sqlQueries.getProperty("update-updateEmbarcacion");
+            int result = jdbcTemplate.update(query,
+                    embarcacion.getNombre(),
+                    embarcacion.getTipo().name(),
+                    embarcacion.getNumPlazas(),
+                    embarcacion.getDimensiones(),
+                    embarcacion.getDniPatron(),
+                    embarcacion.getMatricula() // El ID va al final en el WHERE
+            );
+            return result > 0;
+        } catch (DataAccessException e) {
+            System.err.println("Unable to update embarcacion: " + embarcacion.getMatricula());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteEmbarcacion(String matricula) {
+        try {
+            String query = sqlQueries.getProperty("delete-deleteEmbarcacion");
             int result = jdbcTemplate.update(query, matricula);
             return result > 0;
         } catch (DataAccessException e) {
             System.err.println("Unable to delete embarcacion with matricula=" + matricula);
             e.printStackTrace();
             return false;
+        }
+    }
+
+    // Para validar borrado de Embarcación (Req B.5)
+    public int countReservasByMatricula(String matricula) {
+        try {
+            String query = sqlQueries.getProperty("select-countReservasByMatricula");
+            Integer count = jdbcTemplate.queryForObject(query, Integer.class, matricula);
+            return count != null ? count : 0;
+        } catch (DataAccessException e) {
+            return 0;
+        }
+    }
+
+    // Para validar borrado de Patrón (Req B.6)
+    public int countEmbarcacionesByPatron(String dniPatron) {
+        try {
+            String query = sqlQueries.getProperty("select-countEmbarcacionesByPatron");
+            Integer count = jdbcTemplate.queryForObject(query, Integer.class, dniPatron);
+            return count != null ? count : 0;
+        } catch (DataAccessException e) {
+            return 0;
         }
     }
 
