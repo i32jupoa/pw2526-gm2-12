@@ -19,65 +19,75 @@ public class DemoAPI {
         RestTemplate rest = new RestTemplate();
         String baseURL = "http://localhost:8080/api";
 
-        System.out.println("\n=== INICIO DEMO CLIENTE 1 (SOCIOS Y FLOTA) ===\n");
+        System.out.println("\n=============================================");
+        System.out.println("   DEMO API 1: RECURSOS BÁSICOS");
+        System.out.println("=============================================\n");
 
-        // TEST 1: GET Socios
-        try {
-            System.out.println("--> 1. GET /api/socios");
-            ResponseEntity<Socio[]> response = rest.getForEntity(baseURL + "/socios", Socio[].class);
-            List<Socio> socios = Arrays.asList(response.getBody());
-            System.out.println("Status: " + response.getStatusCode());
-            if (socios.isEmpty()) System.out.println("   [!] No hay socios.");
-            else socios.forEach(s -> System.out.println("   - " + s.getNombre() + " (DNI: " + s.getDni() + ")"));
-        } catch (Exception e) {
-            System.err.println("ERROR TEST 1: " + e.getMessage());
-        }
+        System.out.println("--> 1. Creando Socio (POST)...");
+        Socio nuevoSocio = new Socio(
+            "CLIENTE01", 
+            "Juan", 
+            "Pérez", 
+            LocalDate.of(1990, 5, 20), 
+            "Av. Libertad 12", 
+            LocalDate.now(), 
+            true, // esTitular
+            true  // tieneTituloPatron
+        );
 
-        // TEST 2: POST Socio
         try {
-            System.out.println("\n--> 2. POST /api/socios");
-            Socio nuevo = new Socio("CLIENTE01", "Test", "Api", LocalDate.of(1990, 1, 1), "Calle Test", LocalDate.now(), false, true);
-            ResponseEntity<Socio> response = rest.postForEntity(baseURL + "/socios", nuevo, Socio.class);
-            System.out.println("Status: " + response.getStatusCode());
-            System.out.println("   Creado: " + response.getBody().getNombre());
+            ResponseEntity<Socio> res = rest.postForEntity(baseURL + "/socios", nuevoSocio, Socio.class);
+            System.out.println("   [OK] Socio creado: " + res.getBody().getNombre());
         } catch (HttpClientErrorException e) {
-            System.out.println("   [!] Error esperado o conflicto: " + e.getStatusCode());
+            System.out.println("   [INFO] El socio ya existía (" + e.getStatusCode() + ")");
         } catch (Exception e) {
-            System.err.println("ERROR TEST 2: " + e.getMessage());
+            System.err.println("   [ERROR] " + e.getMessage());
         }
 
-        // TEST 3: GET Embarcaciones
+        System.out.println("\n--> 2. Creando Patrón (POST)...");
+        Patron nuevoPatron = new Patron(
+            "PATRON-CLI", 
+            "Capitán", 
+            "Haddock", 
+            LocalDate.of(1975, 2, 10), 
+            LocalDate.of(2000, 1, 15)
+        );
+
         try {
-            System.out.println("\n--> 3. GET /api/embarcaciones");
-            ResponseEntity<Embarcacion[]> response = rest.getForEntity(baseURL + "/embarcaciones", Embarcacion[].class);
-            Arrays.asList(response.getBody()).forEach(e -> System.out.println("   - " + e.getNombre() + " (" + e.getMatricula() + ")"));
+            ResponseEntity<Patron> res = rest.postForEntity(baseURL + "/patrones", nuevoPatron, Patron.class);
+            System.out.println("   [OK] Patrón creado: " + res.getBody().getNombre());
+        } catch (HttpClientErrorException e) {
+            System.out.println("   [INFO] El patrón ya existía (" + e.getStatusCode() + ")");
+        }
+
+        System.out.println("\n--> 3. Creando Embarcación (POST)...");
+        Embarcacion nuevaEmb = new Embarcacion(
+            "CLIENTE-EMB", 
+            "La Perla Negra", 
+            TipoEmbarcacion.VELERO, 
+            6, 
+            "12 metros", 
+            null 
+        );
+
+        try {
+            ResponseEntity<Embarcacion> res = rest.postForEntity(baseURL + "/embarcaciones", nuevaEmb, Embarcacion.class);
+            System.out.println("   [OK] Embarcación creada: " + res.getBody().getNombre());
+        } catch (HttpClientErrorException e) {
+            System.out.println("   [INFO] La embarcación ya existía (" + e.getStatusCode() + ")");
+        }
+
+        System.out.println("\n--> 4. Verificando datos (GET)...");
+        try {
+            ResponseEntity<Socio[]> socios = rest.getForEntity(baseURL + "/socios", Socio[].class);
+            System.out.println("   Socios en BD: " + (socios.getBody() != null ? socios.getBody().length : 0));
+            
+            ResponseEntity<Embarcacion[]> barcos = rest.getForEntity(baseURL + "/embarcaciones", Embarcacion[].class);
+            System.out.println("   Barcos en BD: " + (barcos.getBody() != null ? barcos.getBody().length : 0));
         } catch (Exception e) {
-            System.err.println("ERROR TEST 3: " + e.getMessage());
-        }
-
-        // TEST 4: POST Embarcacion
-        try {
-            System.out.println("\n--> 4. POST /api/embarcaciones");
-            Embarcacion nuevaEmb = new Embarcacion("CLIENTE-EMB", "La Rapida", TipoEmbarcacion.LANCHA, 4, "5m", null);
-            ResponseEntity<Embarcacion> response = rest.postForEntity(baseURL + "/embarcaciones", nuevaEmb, Embarcacion.class);
-            System.out.println("Status: " + response.getStatusCode());
-            System.out.println("   Creada: " + response.getBody().getNombre());
-        } catch (HttpClientErrorException e) {
-            System.out.println("   [!] Error (posible duplicado): " + e.getStatusCode());
-        }
-
-        // TEST 5: POST Patron
-        try {
-            System.out.println("\n--> 5. POST /api/patrones");
-            Patron nuevoPatron = new Patron("PATRON-CLI", "Capitan", "Hook", LocalDate.of(1980, 5, 5), LocalDate.of(2010, 1, 1));
-            ResponseEntity<Patron> response = rest.postForEntity(baseURL + "/patrones", nuevoPatron, Patron.class);
-            System.out.println("Status: " + response.getStatusCode());
-            System.out.println("   Creado: " + response.getBody().getNombre());
-        } catch (HttpClientErrorException e) {
-            System.out.println("   [!] Error (posible duplicado): " + e.getStatusCode());
+            System.err.println("   [ERROR] Fallo al listar: " + e.getMessage());
         }
 
         System.out.println("\n=== FIN DEMO 1 ===");
     }
 }
-

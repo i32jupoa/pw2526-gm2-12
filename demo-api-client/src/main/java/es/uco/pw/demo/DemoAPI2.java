@@ -4,121 +4,62 @@ import java.time.LocalDate;
 import java.util.Arrays;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import es.uco.pw.demo.model.domain.Alquiler;
-import es.uco.pw.demo.model.domain.AlquilerSocio;
-import es.uco.pw.demo.model.domain.Embarcacion;
 import es.uco.pw.demo.model.domain.Inscripcion;
 import es.uco.pw.demo.model.domain.Reserva;
-import es.uco.pw.demo.model.domain.Socio;
-import es.uco.pw.demo.model.domain.SocioInscripcion;
 import es.uco.pw.demo.model.domain.TipoInscripcion;
 
 public class DemoAPI2 {
 
     public static void main(String[] args) {
-        RestTemplate rest = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
+        RestTemplate rest = new RestTemplate();
         String baseURL = "http://localhost:8080/api";
-        
-        Integer idInscripcionGenerado = null;
-        Integer idAlquilerGenerado = null;
-        Integer idReservaGenerada = null;
 
-        System.out.println("\n=============================================");
-        System.out.println("   DEMO API 2: OPERACIONES Y PRUEBAS SEMANA 2");
-        System.out.println("=============================================\n");
-        
-        System.out.println("--- PASO 1: CREACIÓN (POST) ---");
+        System.out.println("\n=== INICIO DEMO CLIENTE 2 (INSCRIPCIONES Y ALQUILERES) ===\n");
 
+        // TEST 1: POST Inscripci贸n
         try {
-            Inscripcion insc = new Inscripcion(LocalDate.now(), TipoInscripcion.INDIVIDUAL, 300.0, "CLIENTE01");
+            System.out.println("--> 1. POST /api/inscripciones");
+            Inscripcion insc = new Inscripcion(0, LocalDate.now(), TipoInscripcion.INDIVIDUAL, 300.0, "CLIENTE01");
             ResponseEntity<Inscripcion> response = rest.postForEntity(baseURL + "/inscripciones", insc, Inscripcion.class);
-            if (response.getBody() != null) {
-                idInscripcionGenerado = response.getBody().getId();
-                System.out.println("   [OK] Inscripción creada ID: " + idInscripcionGenerado);
-            }
+            System.out.println("Status: " + response.getStatusCode());
+            System.out.println("   Inscripci贸n creada con ID: " + response.getBody().getId());
         } catch (HttpClientErrorException e) {
-            System.out.println("   [INFO] Error al crear inscripción (¿Ya existe?): " + e.getStatusCode());
+            System.out.println("   [!] Error al crear inscripci贸n: " + e.getStatusCode());
         }
 
-        if (idInscripcionGenerado != null) {
-            try {
-                Alquiler alquiler = new Alquiler(idInscripcionGenerado, "CLIENTE-EMB", LocalDate.now().plusDays(10), LocalDate.now().plusDays(13), 2, 200.0);
-                ResponseEntity<Alquiler> response = rest.postForEntity(baseURL + "/alquileres", alquiler, Alquiler.class);
-                if (response.getBody() != null) {
-                    idAlquilerGenerado = response.getBody().getId();
-                    System.out.println("   [OK] Alquiler creado ID: " + idAlquilerGenerado);
-                }
-            } catch (HttpClientErrorException e) { System.out.println("   [ERROR] Fallo alquiler: " + e.getStatusCode()); }
-        }
-
+        // TEST 2: GET Inscripciones
         try {
-            Reserva reserva = new Reserva("CLIENTE01", "CLIENTE-EMB", LocalDate.now().plusDays(25), 3, "Fiesta API", 120.0);
+            System.out.println("\n--> 2. GET /api/inscripciones");
+            ResponseEntity<Inscripcion[]> response = rest.getForEntity(baseURL + "/inscripciones", Inscripcion[].class);
+            Arrays.asList(response.getBody()).forEach(i -> System.out.println("   - ID: " + i.getId() + " (Titular: " + i.getDniTitular() + ")"));
+        } catch (Exception e) {
+            System.err.println("ERROR TEST 2: " + e.getMessage());
+        }
+
+        // TEST 3: POST Alquiler
+        try {
+            System.out.println("\n--> 3. POST /api/alquileres");
+            Alquiler alquiler = new Alquiler(0, 1, "CLIENTE-EMB", LocalDate.now().plusDays(10), LocalDate.now().plusDays(13), 2, 200.0);
+            ResponseEntity<Alquiler> response = rest.postForEntity(baseURL + "/alquileres", alquiler, Alquiler.class);
+            System.out.println("Status: " + response.getStatusCode());
+            System.out.println("   Alquiler creado ID: " + response.getBody().getId());
+        } catch (HttpClientErrorException e) {
+            System.out.println("   [!] Error creando alquiler: " + e.getStatusCode());
+        }
+
+        // TEST 4: POST Reserva (Evento)
+        try {
+            System.out.println("\n--> 4. POST /api/reservas");
+            Reserva reserva = new Reserva(0, "CLIENTE01", "MAT001", LocalDate.now().plusDays(20), 3, "Fiesta API", 120.0);
             ResponseEntity<Reserva> response = rest.postForEntity(baseURL + "/reservas", reserva, Reserva.class);
-            if (response.getBody() != null) {
-                idReservaGenerada = response.getBody().getId();
-                System.out.println("   [OK] Reserva creada ID: " + idReservaGenerada);
-            }
-        } catch (HttpClientErrorException e) { System.out.println("   [INFO] Fallo reserva (¿Falta patrón?): " + e.getStatusCode()); }
-
-        System.out.println("\n--- PASO 2: MODIFICACIONES (PATCH/PUT) ---");
-
-        try {
-            System.out.println("--> Vinculando Patrón a Barco...");
-            Embarcacion updateBarco = new Embarcacion(null, null, null, 0, null, "PATRON-CLI");
-            rest.patchForObject(baseURL + "/embarcaciones/CLIENTE-EMB", updateBarco, Embarcacion.class);
-            System.out.println("   [OK] Patrón asignado.");
-        } catch (Exception e) { System.out.println("   [WARN] " + e.getMessage()); }
-
-        if (idInscripcionGenerado != null) {
-            try {
-                System.out.println("--> Convirtiendo Inscripción a Familiar...");
-                Inscripcion cambio = new Inscripcion(null, TipoInscripcion.FAMILIAR, 450.0, null);
-                rest.put(baseURL + "/inscripciones/" + idInscripcionGenerado, cambio);
-                System.out.println("   [OK] Tipo actualizado a FAMILIAR.");
-            } catch (Exception e) { System.out.println("   [WARN] " + e.getMessage()); }
-        }
-
-        if (idAlquilerGenerado != null) {
-            try {
-                System.out.println("--> Añadiendo pasajero a Alquiler...");
-                Socio pasajero = new Socio("PASAJERO1", "Pepe", "Test", LocalDate.of(2000, 1, 1), "C/Mar", LocalDate.now(), false, false);
-                try { rest.postForEntity(baseURL + "/socios", pasajero, Socio.class); } catch (Exception e) {}
-
-                AlquilerSocio vinculacion = new AlquilerSocio(0, "PASAJERO1");
-                Alquiler actualizado = rest.patchForObject(baseURL + "/alquileres/" + idAlquilerGenerado + "/socios", vinculacion, Alquiler.class);
-                System.out.println("   [OK] Pasajero añadido. Nuevo Precio: " + actualizado.getPrecioTotal());
-            } catch (Exception e) { System.out.println("   [WARN] " + e.getMessage()); }
-        }
-
-        if (idReservaGenerada != null) {
-            try {
-                System.out.println("--> Modificando fecha de Reserva...");
-                Reserva cambioFecha = new Reserva(null, null, LocalDate.now().plusDays(30), 0, null, 0.0);
-                rest.patchForObject(baseURL + "/reservas/" + idReservaGenerada + "/fecha", cambioFecha, Reserva.class);
-                System.out.println("   [OK] Fecha retrasada 5 días.");
-            } catch (Exception e) { System.out.println("   [WARN] " + e.getMessage()); }
-        }
-
-        System.out.println("\n--- PASO 3: BORRADOS Y RESTRICCIONES (DELETE) ---");
-
-        try {
-            System.out.println("--> Intentando borrar Patrón activo (Esperando Error)...");
-            rest.delete(baseURL + "/patrones/PATRON-CLI");
-            System.out.println("   [FAIL] El patrón se borró y no debería.");
+            System.out.println("Status: " + response.getStatusCode());
+            System.out.println("   Reserva creada ID: " + response.getBody().getId());
         } catch (HttpClientErrorException e) {
-            System.out.println("   [OK] Bloqueado correctamente: " + e.getStatusCode());
-        }
-
-        if (idReservaGenerada != null) {
-            try {
-                System.out.println("--> Cancelando Reserva futura...");
-                rest.delete(baseURL + "/reservas/" + idReservaGenerada);
-                System.out.println("   [OK] Reserva cancelada.");
-            } catch (Exception e) { System.out.println("   [WARN] " + e.getMessage()); }
+            System.out.println("   [!] Error creando reserva: " + e.getStatusCode() + " (Revise disponibilidad o patr贸n)");
         }
 
         System.out.println("\n=== FIN DEMO 2 ===");

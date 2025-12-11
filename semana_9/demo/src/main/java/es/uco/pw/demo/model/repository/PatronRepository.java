@@ -60,7 +60,7 @@ public class PatronRepository {
         } catch (DataAccessException e) { return false; }
     }
 
-    // Nuevo: Update para PATCH
+    // Update para PATCH
     public boolean updatePatron(Patron p) {
         try {
             return jdbcTemplate.update(sqlQueries.getProperty("update-updatePatron"),
@@ -70,7 +70,7 @@ public class PatronRepository {
         } catch (DataAccessException e) { return false; }
     }
 
-    // Nuevo: Validación para DELETE
+    // Validación para DELETE
     public int countEmbarcacionesVinculadas(String dniPatron) {
         try {
             Integer count = jdbcTemplate.queryForObject(sqlQueries.getProperty("select-countEmbarcacionesByPatron"), Integer.class, dniPatron);

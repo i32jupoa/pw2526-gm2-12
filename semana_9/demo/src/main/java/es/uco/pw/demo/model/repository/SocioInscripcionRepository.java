@@ -38,16 +38,12 @@ public class SocioInscripcionRepository {
         return props;
     }
 
-    public boolean addSocioInscripcion(SocioInscripcion si) {
+    // --- MÉTODOS QUE FALTABAN ---
+    
+    public List<SocioInscripcion> findAllSocioInscripciones() {
         try {
-            return jdbcTemplate.update(sqlQueries.getProperty("insert-addSocioInscripcion"), si.getIdInscripcion(), si.getDniSocio()) > 0;
-        } catch (DataAccessException e) { return false; }
-    }
-
-    public boolean removeSocioFromInscripcion(int idInscripcion, String dniSocio) {
-        try {
-            return jdbcTemplate.update(sqlQueries.getProperty("delete-deleteSocioInscripcion"), idInscripcion, dniSocio) > 0;
-        } catch (DataAccessException e) { return false; }
+            return jdbcTemplate.query(sqlQueries.getProperty("select-findAllSocioInscripciones"), new SIMapper());
+        } catch (DataAccessException e) { return null; }
     }
 
     public List<SocioInscripcion> findByIdInscripcion(int idInscripcion) {
@@ -55,8 +51,30 @@ public class SocioInscripcionRepository {
             return jdbcTemplate.query(sqlQueries.getProperty("select-findSocioInscripcionByIdInscripcion"), new SIMapper(), idInscripcion);
         } catch (DataAccessException e) { return null; }
     }
+    
+    public List<SocioInscripcion> findByDniSocio(String dni) {
+        try {
+            return jdbcTemplate.query(sqlQueries.getProperty("select-findSocioInscripcionByDni"), new SIMapper(), dni);
+        } catch (DataAccessException e) { return null; }
+    }
 
-    // Nuevo: Vital para saber si un socio se puede borrar
+    public boolean addSocioInscripcion(SocioInscripcion si) {
+        try {
+            return jdbcTemplate.update(sqlQueries.getProperty("insert-addSocioInscripcion"), si.getIdInscripcion(), si.getDniSocio()) > 0;
+        } catch (DataAccessException e) { return false; }
+    }
+
+    public boolean deleteSocioInscripcion(int idInscripcion, String dniSocio) {
+        try {
+            return jdbcTemplate.update(sqlQueries.getProperty("delete-deleteSocioInscripcion"), idInscripcion, dniSocio) > 0;
+        } catch (DataAccessException e) { return false; }
+    }
+    
+    // Alias para compatibilidad
+    public boolean removeSocioFromInscripcion(int id, String dni) {
+        return deleteSocioInscripcion(id, dni);
+    }
+
     public int countInscripcionesBySocio(String dniSocio) {
         try {
             Integer count = jdbcTemplate.queryForObject(sqlQueries.getProperty("select-countSocioInscripcionesByDniSocio"), Integer.class, dniSocio);
@@ -64,11 +82,16 @@ public class SocioInscripcionRepository {
         } catch (DataAccessException e) { return 0; }
     }
 
-    public int countMiembrosInInscripcion(int idInscripcion) {
+    public int countByInscripcionId(int idInscripcion) {
         try {
             Integer count = jdbcTemplate.queryForObject(sqlQueries.getProperty("select-countByInscripcionId"), Integer.class, idInscripcion);
             return count != null ? count : 0;
         } catch (DataAccessException e) { return 0; }
+    }
+    
+    // Alias para compatibilidad
+    public int countMiembrosInInscripcion(int id) {
+        return countByInscripcionId(id);
     }
 
     private static final class SIMapper implements RowMapper<SocioInscripcion> {

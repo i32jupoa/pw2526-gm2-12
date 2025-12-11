@@ -60,6 +60,12 @@ public class AlquilerRepository {
             return r.isEmpty() ? null : r.get(0);
         } catch (DataAccessException e) { return null; }
     }
+    
+    public List<Alquiler> findAlquileresByMatricula(String matricula) {
+        try {
+            return jdbcTemplate.query(sqlQueries.getProperty("select-findAlquileresByMatricula"), new AlquilerMapper(), matricula);
+        } catch (DataAccessException e) { return null; }
+    }
 
     public boolean addAlquiler(Alquiler a) {
         try {
@@ -79,17 +85,22 @@ public class AlquilerRepository {
         } catch (DataAccessException e) { return false; }
     }
 
-    // Nuevo: Para PATCH (actualizar precio y plazas al añadir socio)
     public boolean updateAlquilerPlazasPrecio(int id, int plazas, double precio) {
         try {
             return jdbcTemplate.update(sqlQueries.getProperty("update-updateAlquilerPlazasPrecio"), plazas, precio, id) > 0;
         } catch (DataAccessException e) { return false; }
     }
 
-    public boolean deleteAlquiler(int id) {
+    // --- RENOMBRADO A deleteAlquilerById PARA COMPATIBILIDAD ---
+    public boolean deleteAlquilerById(int id) {
         try {
             return jdbcTemplate.update(sqlQueries.getProperty("delete-alquilerById"), id) > 0;
         } catch (DataAccessException e) { return false; }
+    }
+    
+    // Método alias para que funcione también si el Controller nuevo llama a deleteAlquiler
+    public boolean deleteAlquiler(int id) {
+        return deleteAlquilerById(id);
     }
 
     private static class AlquilerMapper implements RowMapper<Alquiler> {
