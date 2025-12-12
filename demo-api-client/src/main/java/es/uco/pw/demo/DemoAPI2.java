@@ -1,7 +1,6 @@
 package es.uco.pw.demo;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -20,7 +19,7 @@ import es.uco.pw.demo.model.domain.TipoInscripcion;
 public class DemoAPI2 {
 
     public static void main(String[] args) {
-        // Configuración para soportar PATCH (Semana 2)
+        // Configuración para soportar PATCH
         RestTemplate rest = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
         String baseURL = "http://localhost:8080/api";
         
@@ -28,116 +27,128 @@ public class DemoAPI2 {
         Integer idAlquilerGenerado = null;
         Integer idReservaGenerada = null;
 
+        // DATOS COHERENTES CON DEMO 1
+        String DNI_SOCIO = "12345678Z";   // Creado en Demo 1
+        String DNI_PATRON = "87654321X";  // Creado en Demo 1
+        String MATRICULA = "MAT050";      // Creado en Demo 1
+        
+        // DATOS EXTRA PARA PRUEBAS (Pasajero adicional)
+        String DNI_PASAJERO = "11223344A"; 
+
         System.out.println("\n=============================================");
-        System.out.println("   DEMO API 2: OPERACIONES Y PRUEBAS SEMANA 2");
+        System.out.println("   DEMO API 2: OPERACIONES SEMANA 2");
         System.out.println("=============================================\n");
 
-        // ---------------------------------------------------------
-        // PARTE 1: CREACIÓN DE RECURSOS (POST)
-        // ---------------------------------------------------------
+        // --- PASO 1: CREACIÓN DE INSCRIPCIÓN Y ALQUILER ---
         
-        System.out.println("--- PASO 1: CREACIÓN (POST) ---");
-
-        // 1.1 Crear Inscripción
+        // 1.1 Inscripción (DNI titular correcto)
+        System.out.println("--> 1. Creando Inscripción...");
         try {
-            Inscripcion insc = new Inscripcion(LocalDate.now(), TipoInscripcion.INDIVIDUAL, 300.0, "CLIENTE01");
+            Inscripcion insc = new Inscripcion(LocalDate.now(), TipoInscripcion.INDIVIDUAL, 350.0, DNI_SOCIO);
             ResponseEntity<Inscripcion> response = rest.postForEntity(baseURL + "/inscripciones", insc, Inscripcion.class);
             if (response.getBody() != null) {
                 idInscripcionGenerado = response.getBody().getId();
                 System.out.println("   [OK] Inscripción creada ID: " + idInscripcionGenerado);
             }
         } catch (HttpClientErrorException e) {
-            System.out.println("   [INFO] Error al crear inscripción (¿Ya existe?): " + e.getStatusCode());
+            System.out.println("   [INFO] Error inscripción: " + e.getStatusCode());
         }
 
-        // 1.2 Crear Alquiler
+        // 1.2 Alquiler (Matrícula MATxxx correcta)
         if (idInscripcionGenerado != null) {
+            System.out.println("\n--> 2. Creando Alquiler...");
             try {
-                Alquiler alquiler = new Alquiler(idInscripcionGenerado, "CLIENTE-EMB", LocalDate.now().plusDays(10), LocalDate.now().plusDays(13), 2, 200.0);
+                Alquiler alquiler = new Alquiler(
+                    idInscripcionGenerado, 
+                    MATRICULA, 
+                    LocalDate.now().plusDays(5), // Fecha futura
+                    LocalDate.now().plusDays(7), 
+                    4, 
+                    400.0
+                );
                 ResponseEntity<Alquiler> response = rest.postForEntity(baseURL + "/alquileres", alquiler, Alquiler.class);
                 if (response.getBody() != null) {
                     idAlquilerGenerado = response.getBody().getId();
                     System.out.println("   [OK] Alquiler creado ID: " + idAlquilerGenerado);
                 }
-            } catch (HttpClientErrorException e) { System.out.println("   [ERROR] Fallo alquiler: " + e.getStatusCode()); }
+            } catch (HttpClientErrorException e) { System.out.println("   [ERROR] Alquiler: " + e.getStatusCode()); }
         }
 
-        // 1.3 Crear Reserva
+        // 1.3 Reserva (DNI Socio y Matrícula correctos, Propósito realista)
+        System.out.println("\n--> 3. Creando Reserva...");
         try {
-            Reserva reserva = new Reserva("CLIENTE01", "CLIENTE-EMB", LocalDate.now().plusDays(25), 3, "Fiesta API", 120.0);
+            Reserva reserva = new Reserva(
+                DNI_SOCIO, 
+                MATRICULA, 
+                LocalDate.now().plusDays(20), 
+                5, 
+                "Prácticas de navegación avanzada", // Propósito realista
+                150.0
+            );
             ResponseEntity<Reserva> response = rest.postForEntity(baseURL + "/reservas", reserva, Reserva.class);
             if (response.getBody() != null) {
                 idReservaGenerada = response.getBody().getId();
                 System.out.println("   [OK] Reserva creada ID: " + idReservaGenerada);
             }
-        } catch (HttpClientErrorException e) { System.out.println("   [INFO] Fallo reserva (¿Falta patrón?): " + e.getStatusCode()); }
+        } catch (HttpClientErrorException e) { 
+            System.out.println("   [INFO] Fallo reserva (Posiblemente falta patrón): " + e.getStatusCode()); 
+        }
 
-
-        // ---------------------------------------------------------
-        // PARTE 2: ACTUALIZACIONES (PUT / PATCH) - REQUISITOS SEMANA 2
-        // ---------------------------------------------------------
+        // --- PASO 2: MODIFICACIONES (PATCH) ---
         
-        System.out.println("\n--- PASO 2: MODIFICACIONES (PATCH/PUT) ---");
+        System.out.println("\n--- FASE DE ACTUALIZACIONES (PATCH) ---");
 
-        // 2.1 PATCH: Vincular Patrón a Barco
+        // 2.1 Vincular Patrón a Barco
         try {
-            System.out.println("--> Vinculando Patrón a Barco...");
-            Embarcacion updateBarco = new Embarcacion(null, null, null, 0, null, "PATRON-CLI");
-            rest.patchForObject(baseURL + "/embarcaciones/CLIENTE-EMB", updateBarco, Embarcacion.class);
-            System.out.println("   [OK] Patrón asignado.");
+            System.out.println("--> Vinculando Patrón (" + DNI_PATRON + ") a Barco (" + MATRICULA + ")...");
+            Embarcacion updateBarco = new Embarcacion();
+            updateBarco.setDniPatron(DNI_PATRON); // Usamos el objeto para enviar solo este campo
+            
+            rest.patchForObject(baseURL + "/embarcaciones/" + MATRICULA, updateBarco, Embarcacion.class);
+            System.out.println("   [OK] Patrón asignado correctamente.");
         } catch (Exception e) { System.out.println("   [WARN] " + e.getMessage()); }
 
-        // 2.2 PUT: Convertir Inscripción a Familiar
+        // 2.2 Actualizar Inscripción a Familiar
         if (idInscripcionGenerado != null) {
             try {
-                System.out.println("--> Convirtiendo Inscripción a Familiar...");
-                Inscripcion cambio = new Inscripcion(null, TipoInscripcion.FAMILIAR, 450.0, null);
-                rest.put(baseURL + "/inscripciones/" + idInscripcionGenerado, cambio);
-                System.out.println("   [OK] Tipo actualizado a FAMILIAR.");
+                System.out.println("--> Actualizando Inscripción a FAMILIAR...");
+                Inscripcion updateInsc = new Inscripcion();
+                updateInsc.setTipo(TipoInscripcion.FAMILIAR);
+                updateInsc.setCuotaActual(500.0);
+                
+                rest.put(baseURL + "/inscripciones/" + idInscripcionGenerado, updateInsc);
+                System.out.println("   [OK] Inscripción actualizada.");
             } catch (Exception e) { System.out.println("   [WARN] " + e.getMessage()); }
         }
 
-        // 2.3 PATCH: Añadir Socio a Alquiler (Recalculo de precio)
+        // 2.3 Añadir Socio Pasajero (PATCH)
         if (idAlquilerGenerado != null) {
             try {
-                System.out.println("--> Añadiendo pasajero a Alquiler...");
-                // Primero creamos un socio extra para probar
-                Socio pasajero = new Socio("PASAJERO1", "Pepe", "Test", LocalDate.of(2000, 1, 1), "C/Mar", LocalDate.now(), false, false);
+                System.out.println("--> Añadiendo pasajero extra al alquiler...");
+                // Creamos el pasajero primero
+                Socio pasajero = new Socio(DNI_PASAJERO, "Luis", "Ruiz", LocalDate.of(1990,1,1), "C/Sol", LocalDate.now(), false, false);
                 try { rest.postForEntity(baseURL + "/socios", pasajero, Socio.class); } catch (Exception e) {}
 
-                AlquilerSocio vinculacion = new AlquilerSocio(0, "PASAJERO1");
-                Alquiler actualizado = rest.patchForObject(baseURL + "/alquileres/" + idAlquilerGenerado + "/socios", vinculacion, Alquiler.class);
-                System.out.println("   [OK] Pasajero añadido. Nuevo Precio: " + actualizado.getPrecioTotal());
+                AlquilerSocio nuevoPasajero = new AlquilerSocio(0, DNI_PASAJERO);
+                rest.patchForObject(baseURL + "/alquileres/" + idAlquilerGenerado + "/socios", nuevoPasajero, Alquiler.class);
+                System.out.println("   [OK] Pasajero añadido y precio recalculado.");
             } catch (Exception e) { System.out.println("   [WARN] " + e.getMessage()); }
         }
 
-        // 2.4 PATCH: Modificar fecha Reserva
-        if (idReservaGenerada != null) {
-            try {
-                System.out.println("--> Modificando fecha de Reserva...");
-                Reserva cambioFecha = new Reserva(null, null, LocalDate.now().plusDays(30), 0, null, 0.0);
-                rest.patchForObject(baseURL + "/reservas/" + idReservaGenerada + "/fecha", cambioFecha, Reserva.class);
-                System.out.println("   [OK] Fecha retrasada 5 días.");
-            } catch (Exception e) { System.out.println("   [WARN] " + e.getMessage()); }
-        }
-
-
-        // ---------------------------------------------------------
-        // PARTE 3: BORRADOS (DELETE) - REQUISITOS SEMANA 2
-        // ---------------------------------------------------------
+        // --- PASO 3: BORRADOS (DELETE) ---
         
-        System.out.println("\n--- PASO 3: BORRADOS Y RESTRICCIONES (DELETE) ---");
+        System.out.println("\n--- FASE DE BORRADOS ---");
 
-        // 3.1 Intentar borrar patrón con barco (Debe fallar - 409 Conflict)
+        // 3.1 Restricción de borrado de Patrón
         try {
-            System.out.println("--> Intentando borrar Patrón activo (Esperando Error)...");
-            rest.delete(baseURL + "/patrones/PATRON-CLI");
-            System.out.println("   [FAIL] El patrón se borró y no debería.");
+            System.out.println("--> Intentando borrar Patrón con barco asignado...");
+            rest.delete(baseURL + "/patrones/" + DNI_PATRON);
+            System.out.println("   [FAIL] Se borró el patrón (ERROR).");
         } catch (HttpClientErrorException e) {
-            System.out.println("   [OK] Bloqueado correctamente: " + e.getStatusCode());
+            System.out.println("   [OK] Bloqueado correctamente (" + e.getStatusCode() + ")");
         }
 
-        // 3.2 Cancelar Reserva Futura (Debe funcionar)
+        // 3.2 Cancelar Reserva
         if (idReservaGenerada != null) {
             try {
                 System.out.println("--> Cancelando Reserva futura...");
