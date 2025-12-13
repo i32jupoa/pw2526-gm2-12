@@ -27,7 +27,7 @@ public class DemoAPI2 {
         Integer idAlquilerGenerado = null;
         Integer idReservaGenerada = null;
 
-        // DATOS COHERENTES CON DEMO 1
+        // DATOS
         String DNI_SOCIO = "12345678Z";   // Creado en Demo 1
         String DNI_PATRON = "87654321X";  // Creado en Demo 1
         String MATRICULA = "MAT050";      // Creado en Demo 1
@@ -39,9 +39,9 @@ public class DemoAPI2 {
         System.out.println("   DEMO API 2: OPERACIONES SEMANA 2");
         System.out.println("=============================================\n");
 
-        // --- PASO 1: CREACIÓN DE INSCRIPCIÓN Y ALQUILER ---
+        // --- CREACIÓN DE INSCRIPCIÓN Y ALQUILER ---
         
-        // 1.1 Inscripción (DNI titular correcto)
+        // 1.1 Inscripción
         System.out.println("--> 1. Creando Inscripción...");
         try {
             Inscripcion insc = new Inscripcion(LocalDate.now(), TipoInscripcion.INDIVIDUAL, 350.0, DNI_SOCIO);
@@ -54,7 +54,7 @@ public class DemoAPI2 {
             System.out.println("   [INFO] Error inscripción: " + e.getStatusCode());
         }
 
-        // 1.2 Alquiler (Matrícula MATxxx correcta)
+        // 1.2 Alquiler
         if (idInscripcionGenerado != null) {
             System.out.println("\n--> 2. Creando Alquiler...");
             try {
@@ -74,7 +74,7 @@ public class DemoAPI2 {
             } catch (HttpClientErrorException e) { System.out.println("   [ERROR] Alquiler: " + e.getStatusCode()); }
         }
 
-        // 1.3 Reserva (DNI Socio y Matrícula correctos, Propósito realista)
+        // 1.3 Reserva
         System.out.println("\n--> 3. Creando Reserva...");
         try {
             Reserva reserva = new Reserva(
@@ -82,7 +82,7 @@ public class DemoAPI2 {
                 MATRICULA, 
                 LocalDate.now().plusDays(20), 
                 5, 
-                "Prácticas de navegación avanzada", // Propósito realista
+                "Prácticas de navegación avanzada",
                 150.0
             );
             ResponseEntity<Reserva> response = rest.postForEntity(baseURL + "/reservas", reserva, Reserva.class);
@@ -94,7 +94,7 @@ public class DemoAPI2 {
             System.out.println("   [INFO] Fallo reserva (Posiblemente falta patrón): " + e.getStatusCode()); 
         }
 
-        // --- PASO 2: MODIFICACIONES (PATCH) ---
+        // --- PASO 2: MODIFICACIONES ---
         
         System.out.println("\n--- FASE DE ACTUALIZACIONES (PATCH) ---");
 
@@ -121,7 +121,7 @@ public class DemoAPI2 {
             } catch (Exception e) { System.out.println("   [WARN] " + e.getMessage()); }
         }
 
-        // 2.3 Añadir Socio Pasajero (PATCH)
+        // 2.3 Añadir Socio Pasajero
         if (idAlquilerGenerado != null) {
             try {
                 System.out.println("--> Añadiendo pasajero extra al alquiler...");
